@@ -36,36 +36,36 @@ import java.lang.annotation.RetentionPolicy;
 public @interface MultipartConfig {
 
     /**
-     * The directory location where files will be stored
+     * 用于存储文件的目录位置
      *
-     * @return the directory location where files will be stored
+     * @return 用于存储文件的目录位置
      */
     String location() default "";
 
     /**
-     * The maximum size allowed for uploaded files.
+     * 上传文件允许的最大大小。
      * 
      * <p>
-     * The default is <tt>-1L</tt>, which means unlimited.
+     * 默认值是<tt>-1L</tt>，这意味着无限制
      *
-     * @return the maximum size allowed for uploaded files
+     * @return 上传文件允许的最大大小
      */
     long maxFileSize() default -1L;
 
     /**
-     * The maximum size allowed for <tt>multipart/form-data</tt> requests
-     * 
-     * <p>
-     * The default is <tt>-1L</tt>, which means unlimited.
+     * <tt>multipart/form-data</tt>请求允许的最大大小
      *
-     * @return the maximum size allowed for <tt>multipart/form-data</tt> requests
+     * <p>
+     * 默认值是<tt>-1L</tt>，这意味着无限制
+     *
+     * @return <tt>multipart/form-data</tt>请求允许的最大大小
      */
     long maxRequestSize() default -1L;
 
     /**
-     * The size threshold after which the file will be written to disk
+     * 达到该阈值大小后，文件将被写入磁盘。
      *
-     * @return the size threshold after which the file will be written to disk
+     * @return 达到该阈值大小后，文件将被写入磁盘。
      */
     int fileSizeThreshold() default 0;
 }
