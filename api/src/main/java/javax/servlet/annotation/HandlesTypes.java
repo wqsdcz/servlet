@@ -23,8 +23,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * This annotation is used to declare the class types that a {@link javax.servlet.ServletContainerInitializer
- * ServletContainerInitializer} can handle.
+ * 这个注解用于声明 {@link javax.servlet.ServletContainerInitializer ServletContainerInitializer}表示感兴趣的类。
  *
  * @see javax.servlet.ServletContainerInitializer
  *
@@ -35,17 +34,12 @@ import java.lang.annotation.RetentionPolicy;
 public @interface HandlesTypes {
 
     /**
-     * The classes in which a {@link javax.servlet.ServletContainerInitializer ServletContainerInitializer} has
-     * expressed interest.
+     * {@link javax.servlet.ServletContainerInitializer ServletContainerInitializer}可以处理的class的集合。
      *
-     * <p>
-     * If an implementation of <tt>ServletContainerInitializer</tt> specifies this annotation, the Servlet container
-     * must pass the <tt>Set</tt> of application classes that extend, implement, or have been annotated with the class
-     * types listed by this annotation to the {@link javax.servlet.ServletContainerInitializer#onStartup} method of the
-     * ServletContainerInitializer (if no matching classes are found, <tt>null</tt> must be passed instead)
+     * <p>如果一个<tt>ServletContainerInitializer</tt>的实现类指定了这个注解，那么Servlet容器必须将该注解所列类类型、及其扩展、实现的所有类组成的<tt>Set</tt>集合，
+     * 传递给{@link javax.servlet.ServletContainerInitializer#onStartup}方法（如果未找到匹配的类，则必须传递<tt>null</tt>值）。
      * 
-     * @return the classes in which {@link javax.servlet.ServletContainerInitializer ServletContainerInitializer} has
-     *         expressed interest
+     * @return {@link javax.servlet.ServletContainerInitializer ServletContainerInitializer}表示感兴趣的类
      */
     Class<?>[] value();
 }
