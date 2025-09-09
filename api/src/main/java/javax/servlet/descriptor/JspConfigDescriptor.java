@@ -20,37 +20,31 @@ package javax.servlet.descriptor;
 import java.util.Collection;
 
 /**
- * This interface provides access to the <code>&lt;jsp-config&gt;</code> related configuration of a web application.
+ * 这个接口提供了访问web应用中与<code>&lt;jsp-config&gt;</code> 相关的配置的入口。
  *
- * <p>
- * The configuration is aggregated from the <code>web.xml</code> and <code>web-fragment.xml</code> descriptor files of
- * the web application.
+ * <p>这个配置聚集了来自web应用中的<code>web.xml</code> 和 <code>web-fragment.xml</code>描述符文件的内容。
  *
  * @since Servlet 3.0
  */
 public interface JspConfigDescriptor {
 
     /**
-     * Gets the <code>&lt;taglib&gt;</code> child elements of the <code>&lt;jsp-config&gt;</code> element represented by
-     * this <code>JspConfigDescriptor</code>.
+     * 获取由此<code>JspConfigDescriptor</code>所表示的<code>&lt;jsp-config&gt;</code>元素中包含的所有<code>&lt;taglib&gt;</code>子元素。
      *
      * <p>
-     * Any changes to the returned <code>Collection</code> must not affect this <code>JspConfigDescriptor</code>.
+     * 对返回的<code>Collection</code>进行的任何修改均不得影响本<code>JspConfigDescriptor</code>对象。
      *
-     * @return a (possibly empty) <code>Collection</code> of the <code>&lt;taglib&gt;</code> child elements of the
-     *         <code>&lt;jsp-config&gt;</code> element represented by this <code>JspConfigDescriptor</code>
+     * @return 可能为空的<code>Collection</code>，包含由此<code>JspConfigDescriptor</code>表示的<code>&lt;jsp-config&gt;</code>元素中的<code>&lt;taglib&gt;</code>子元素
      */
     public Collection<TaglibDescriptor> getTaglibs();
 
     /**
-     * Gets the <code>&lt;jsp-property-group&gt;</code> child elements of the <code>&lt;jsp-config&gt;</code> element
-     * represented by this <code>JspConfigDescriptor</code>.
+     * 获取由此<code>JspConfigDescriptor</code>表示的<code>&lt;jsp-config&gt;</code>元素中包含的所有<code>&lt;jsp-property-group&gt;</code>子元素。
      *
      * <p>
-     * Any changes to the returned <code>Collection</code> must not affect this <code>JspConfigDescriptor</code>.
+     * 对返回的<code>Collection</code>进行的任何修改均不得影响本<code>JspConfigDescriptor</code>对象。
      *
-     * @return a (possibly empty) <code>Collection</code> of the <code>&lt;jsp-property-group&gt;</code> child elements
-     *         of the <code>&lt;jsp-config&gt;</code> element represented by this <code>JspConfigDescriptor</code>
+     * @return 可能为空的<code>Collection</code>，包含由此<code>JspConfigDescriptor</code>表示的<code>&lt;jsp-config&gt;</code>元素中的<code>&lt;jsp-property-group&gt;</code>子元素
      */
     public Collection<JspPropertyGroupDescriptor> getJspPropertyGroups();
 }

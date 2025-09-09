@@ -20,128 +20,113 @@ package javax.servlet.descriptor;
 import java.util.Collection;
 
 /**
- * This interface provides access to the <code>&lt;jsp-property-group&gt;</code> related configuration of a web
- * application.
+ * 这个接口提供了访问web应用中与<code>&lt;jsp-property-group&gt;</code> 相关的配置的入口。
  *
- * <p>
- * The configuration is aggregated from the <code>web.xml</code> and <code>web-fragment.xml</code> descriptor files of
- * the web application.
+ * <p>这个配置聚集了来自web应用中的<code>web.xml</code> 和 <code>web-fragment.xml</code>描述符文件的内容。
  *
  * @since Servlet 3.0
  */
 public interface JspPropertyGroupDescriptor {
 
     /**
-     * Gets the URL patterns of the JSP property group represented by this <code>JspPropertyGroupDescriptor</code>.
+     * 获取由此<code>JspPropertyGroupDescriptor</code>所表示的JSP属性组的URL模式。
      *
      * <p>
-     * Any changes to the returned <code>Collection</code> must not affect this <code>JspPropertyGroupDescriptor</code>.
+     * 对返回的<code>Collection</code>进行的任何修改均不得影响此<code>JspPropertyGroupDescriptor</code>对象。
      *
-     * @return a (possibly empty) <code>Collection</code> of the URL patterns of the JSP property group represented by
-     *         this <code>JspPropertyGroupDescriptor</code>
+     * @return 可能为空的<code>Collection</code>，包含由此<code>JspPropertyGroupDescriptor</code>表示的JSP属性组的URL模式
      */
     public Collection<String> getUrlPatterns();
 
     /**
-     * Gets the value of the <code>el-ignored</code> configuration, which specifies whether Expression Language (EL)
-     * evaluation is enabled for any JSP pages mapped to the JSP property group represented by this
-     * <code>JspPropertyGroupDescriptor</code>.
+     * 获取<code>el-ignored</code>配置项的值，该配置项指定是否对映射到当前
+     * <code>JspPropertyGroupDescriptor</code>所表示JSP属性组的所有JSP页面启用表达式语言(EL)求值功能。
      *
-     * @return the value of the <code>el-ignored</code> configuration, or null if unspecified
+     * @return <code>el-ignored</code>配置项的值，若未指定则返回null
      */
     public String getElIgnored();
 
     /**
-     * Gets the value of the <code>page-encoding</code> configuration, which specifies the default page encoding for any
-     * JSP pages mapped to the JSP property group represented by this <code>JspPropertyGroupDescriptor</code>.
+     * 获取<code>page-encoding</code>配置项的值，该配置项指定映射到当前
+     * <code>JspPropertyGroupDescriptor</code>所表示JSP属性组的所有JSP页面的默认页面编码格式。
      *
-     * @return the value of the <code>page-encoding</code> configuration, or null if unspecified
+     * @return <code>page-encoding</code>配置项的值，若未指定则返回null
      */
     public String getPageEncoding();
 
     /**
-     * Gets the value of the <code>scripting-invalid</code> configuration, which specifies whether scripting is enabled
-     * for any JSP pages mapped to the JSP property group represented by this <code>JspPropertyGroupDescriptor</code>.
+     * 获取<code>scripting-invalid</code>配置项的值，该配置项指定是否对映射到当前
+     * <code>JspPropertyGroupDescriptor</code>所表示JSP属性组的所有JSP页面启用脚本功能。
      *
-     * @return the value of the <code>scripting-invalid</code> configuration, or null if unspecified
+     * @return <code>scripting-invalid</code>配置项的值，若未指定则返回null
      */
     public String getScriptingInvalid();
 
     /**
-     * Gets the value of the <code>is-xml</code> configuration, which specifies whether any JSP pages mapped to the JSP
-     * property group represented by this <code>JspPropertyGroupDescriptor</code> will be treated as JSP documents (XML
-     * syntax).
+     * 获取<code>is-xml</code>配置项的值，该配置项指定映射到当前<code>JspPropertyGroupDescriptor</code>所表示
+     * JSP属性组的所有JSP页面是否将被视为JSP文档（XML语法）进行处理。
      *
-     * @return the value of the <code>is-xml</code> configuration, or null if unspecified
+     * @return <code>is-xml</code>配置项的值，若未指定则返回null
      */
     public String getIsXml();
 
     /**
-     * Gets the <code>include-prelude</code> configuration of the JSP property group represented by this
-     * <code>JspPropertyGroupDescriptor</code>.
+     * 获取由此<code>JspPropertyGroupDescriptor</code>所表示的JSP属性组的<code>include-prelude</code>配置。
      *
      * <p>
-     * Any changes to the returned <code>Collection</code> must not affect this <code>JspPropertyGroupDescriptor</code>.
+     * 对返回的<code>Collection</code>进行的任何修改均不得影响此<code>JspPropertyGroupDescriptor</code>对象。
      *
-     * @return a (possibly empty) <code>Collection</code> of the <code>include-prelude</code> configuration of the JSP
-     *         property group represented by this <code>JspPropertyGroupDescriptor</code>
+     * @return 可能为空的<code>Collection</code>，包含由此<code>JspPropertyGroupDescriptor</code>表示的JSP属性组的<code>include-prelude</code>配置
      */
     public Collection<String> getIncludePreludes();
 
     /**
-     * Gets the <code>include-coda</code> configuration of the JSP property group represented by this
-     * <code>JspPropertyGroupDescriptor</code>.
+     * 获取由此<code>JspPropertyGroupDescriptor</code>所表示的JSP属性组的<code>include-coda</code>配置。
      *
      * <p>
-     * Any changes to the returned <code>Collection</code> must not affect this <code>JspPropertyGroupDescriptor</code>.
+     * 对返回的<code>Collection</code>进行的任何修改均不得影响此<code>JspPropertyGroupDescriptor</code>对象。
      *
-     * @return a (possibly empty) <code>Collection</code> of the <code>include-coda</code> configuration of the JSP
-     *         property group represented by this <code>JspPropertyGroupDescriptor</code>
+     * @return 可能为空的<code>Collection</code>，包含由此<code>JspPropertyGroupDescriptor</code>表示的JSP属性组的<code>include-coda</code>配置
      */
     public Collection<String> getIncludeCodas();
 
     /**
-     * Gets the value of the <code>deferred-syntax-allowed-as-literal</code> configuration, which specifies whether the
-     * character sequence <code>&quot;#{&quot;</code>, which is normally reserved for Expression Language (EL)
-     * expressions, will cause a translation error if it appears as a String literal in any JSP pages mapped to the JSP
-     * property group represented by this <code>JspPropertyGroupDescriptor</code>.
+     * 获取<code>deferred-syntax-allowed-as-literal</code>配置项的值，该配置项指定字符序列<code>"#{"</code>
+     * （通常保留用于表达式语言(EL)表达式）在映射到当前<code>JspPropertyGroupDescriptor</code>所表示JSP属性组的
+     * 任何JSP页面中作为字符串字面量出现时，是否会导致翻译时错误。
      *
-     * @return the value of the <code>deferred-syntax-allowed-as-literal</code> configuration, or null if unspecified
+     * @return <code>deferred-syntax-allowed-as-literal</code>配置项的值，若未指定则返回null
      */
     public String getDeferredSyntaxAllowedAsLiteral();
 
     /**
-     * Gets the value of the <code>trim-directive-whitespaces</code> configuration, which specifies whether template
-     * text containing only whitespaces must be removed from the response output of any JSP pages mapped to the JSP
-     * property group represented by this <code>JspPropertyGroupDescriptor</code>.
+     * 获取<code>trim-directive-whitespaces</code>配置项的值，该配置项指定是否必须从映射到当前
+     * <code>JspPropertyGroupDescriptor</code>所表示JSP属性组的所有JSP页面的响应输出中移除仅包含空白的模板文本。
      *
-     * @return the value of the <code>trim-directive-whitespaces</code> configuration, or null if unspecified
+     * @return <code>trim-directive-whitespaces</code>配置项的值，若未指定则返回null
      */
     public String getTrimDirectiveWhitespaces();
 
     /**
-     * Gets the value of the <code>default-content-type</code> configuration, which specifies the default response
-     * content type for any JSP pages mapped to the JSP property group represented by this
-     * <code>JspPropertyGroupDescriptor</code>.
+     * 获取<code>default-content-type</code>配置项的值，该配置项指定了映射到当前
+     * <code>JspPropertyGroupDescriptor</code>所表示JSP属性组的所有JSP页面的默认响应内容类型。
      *
-     * @return the value of the <code>default-content-type</code> configuration, or null if unspecified
+     * @return <code>default-content-type</code>配置项的值，若未指定则返回null
      */
     public String getDefaultContentType();
 
     /**
-     * Gets the value of the <code>buffer</code> configuration, which specifies the default size of the response buffer
-     * for any JSP pages mapped to the JSP property group represented by this <code>JspPropertyGroupDescriptor</code>.
+     * 获取<code>buffer</code>配置项的值，该配置项指定了映射到当前<code>JspPropertyGroupDescriptor</code>所表示JSP属性组的所有JSP页面的响应缓冲区默认大小。
      *
-     * @return the value of the <code>buffer</code> configuration, or null if unspecified
+     * @return <code>buffer</code>配置项的值，若未指定则返回null
      */
     public String getBuffer();
 
     /**
-     * Gets the value of the <code>error-on-undeclared-namespace</code> configuration, which specifies whether an error
-     * will be raised at translation time if tag with an undeclared namespace is used in any JSP pages mapped to the JSP
-     * property group represented by this <code>JspPropertyGroupDescriptor</code>.
+     * 获取<code>error-on-undeclared-namespace</code>配置项的值，该配置项指定了在翻译时若在任何映射到由此
+     * <code>JspPropertyGroupDescriptor</code>所表示的JSP属性组的JSP页面中使用了未声明命名空间的标签，是否将引发错误。
      *
-     * @return the value of the <code>error-on-undeclared-namespace</code> configuration, or null if unspecified
+     * @return <code>error-on-undeclared-namespace</code>配置项的值，如未指定则返回null
      */
     public String getErrorOnUndeclaredNamespace();
 }

@@ -18,27 +18,25 @@
 package javax.servlet.descriptor;
 
 /**
- * This interface provides access to the <code>&lt;taglib&gt;</code> related configuration of a web application.
+ * 这个接口提供了访问web应用中与 <code>&lt;taglib&gt;</code> 相关的配置的入口。
  *
- * <p>
- * The configuration is aggregated from the <code>web.xml</code> and <code>web-fragment.xml</code> descriptor files of
- * the web application.
+ * <p>这个配置聚集了来自web应用中的<code>web.xml</code> 和 <code>web-fragment.xml</code>描述符文件的内容。
  *
  * @since Servlet 3.0
  */
 public interface TaglibDescriptor {
 
     /**
-     * Gets the unique identifier of the tag library represented by this TaglibDescriptor.
-     * 
-     * @return the unique identifier of the tag library represented by this TaglibDescriptor
+     * 获取由此TaglibDescriptor实例所表示的标签库的唯一标识符。
+     *
+     * @return 由此TaglibDescriptor实例表示的标签库的唯一标识符
      */
     public String getTaglibURI();
 
     /**
-     * Gets the location of the tag library represented by this TaglibDescriptor.
-     * 
-     * @return the location of the tag library represented by this TaglibDescriptor
+     * 获取由此TaglibDescriptor实例所表示的标签库的位置信息。
+     *
+     * @return 由此TaglibDescriptor实例表示的标签库的位置信息
      */
     public String getTaglibLocation();
 }
