@@ -24,9 +24,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation is used to declare a WebListener.
+ * 用于声明WebListener的注解。
  *
- * Any class annotated with WebListener must implement one or more of the {@link javax.servlet.ServletContextListener},
+ * 任何使用WebListener标注过的类，都必须实现一个或多个如下接口：{@link javax.servlet.ServletContextListener},
  * {@link javax.servlet.ServletContextAttributeListener}, {@link javax.servlet.ServletRequestListener},
  * {@link javax.servlet.ServletRequestAttributeListener}, {@link javax.servlet.http.HttpSessionListener}, or
  * {@link javax.servlet.http.HttpSessionAttributeListener}, or {@link javax.servlet.http.HttpSessionIdListener}
@@ -39,9 +39,9 @@ import java.lang.annotation.Target;
 @Documented
 public @interface WebListener {
     /**
-     * Description of the listener
+     * 这个 listener 的说明描述
      *
-     * @return description of the listener
+     * @return 这个 listener 的说明描述
      */
     String value() default "";
 }
