@@ -24,8 +24,8 @@ import java.lang.annotation.Target;
 import java.lang.annotation.Documented;
 
 /**
- * This annotation is used on a Servlet or Filter implementation class to specify an initialization parameter.
- * 
+ * 这个注解被用在 Servlet 或 Filter 的实现类上，用来指定一个初始化参数。
+ *
  * @since Servlet 3.0
  */
 @Target({ ElementType.TYPE })
@@ -34,23 +34,23 @@ import java.lang.annotation.Documented;
 public @interface WebInitParam {
 
     /**
-     * Name of the initialization parameter
+     * 这个初始化参数的名称
      *
-     * @return name of the initialization parameter
+     * @return 这个初始化参数的名称
      */
     String name();
 
     /**
-     * Value of the initialization parameter
+     * 这个初始化参数的值
      *
-     * @return value of the initialization parameter
+     * @return 这个初始化参数的值
      */
     String value();
 
     /**
-     * Description of the initialization parameter
+     * 这个初始化参数的说明描述
      *
-     * @return description of the initialization parameter
+     * @return 这个初始化参数的说明描述
      */
     String description() default "";
 }
