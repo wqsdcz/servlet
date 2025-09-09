@@ -25,6 +25,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
+ * 这个注解被用在 Servlet 的实现类上，用来指定 Servlet 容器施加的安全约束（在HTTP协议的消息上）。Servlet 容器会针对映射到已注解类的 Servlet 的 URL 模式来执行这些约束条件。
  * This annotation is used on a Servlet implementation class to specify security constraints to be enforced by a Servlet
  * container on HTTP protocol messages. The Servlet container will enforce these constraints on the url-patterns mapped
  * to the servlets mapped to the annotated class.
@@ -38,29 +39,29 @@ import java.lang.annotation.RetentionPolicy;
 public @interface ServletSecurity {
 
     /**
-     * Defines the access semantic to be applied to an empty rolesAllowed array.
+     * 定义“rolesAllowed”数组为空时的访问语义。
      */
     enum EmptyRoleSemantic {
     /**
-     * access is to be permitted independent of authentication state and identity.
+     * 允许访问，不受身份验证状态和身份的影响
      */
     PERMIT,
     /**
-     * access is to be denied independent of authentication state and identity.
+     * 拒绝访问，不受身份验证状态和身份的影响
      */
     DENY
     }
 
     /**
-     * Defines the data protection requirements that must be satisfied by the transport
+     * 定义传输过程所必须满足的数据保护要求
      */
     enum TransportGuarantee {
         /**
-         * no protection of user data must be performed by the transport.
+         * 传输过程不为任何用户数据提供保护。
          */
         NONE,
         /**
-         * All user data must be encrypted by the transport (typically using SSL/TLS).
+         * 所有用户数据必须进行加密传输（通常使用SSL/TLS）。
          */
         CONFIDENTIAL
     }
