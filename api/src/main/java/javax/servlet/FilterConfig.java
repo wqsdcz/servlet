@@ -21,7 +21,7 @@ package javax.servlet;
 import java.util.Enumeration;
 
 /**
- * A filter configuration object used by a servlet container to pass information to a filter during initialization.
+ * 过滤器配置对象，由 Servlet 容器在初始化期间用于向过滤器传递信息。
  *
  * @see Filter
  * @since Servlet 2.3
@@ -29,38 +29,33 @@ import java.util.Enumeration;
 public interface FilterConfig {
 
     /**
-     * Returns the filter-name of this filter as defined in the deployment descriptor.
+     * 返回部署描述符中定义的此过滤器的过滤器名称。
      *
-     * @return the filter name of this filter
+     * @return 此过滤器的名称
      */
     public String getFilterName();
 
     /**
-     * Returns a reference to the {@link ServletContext} in which the caller is executing.
+     * 返回调用者正在执行的 {@link ServletContext} 的引用。
      *
-     * @return a {@link ServletContext} object, used by the caller to interact with its servlet container
-     * 
+     * @return 一个 {@link ServletContext} 对象，调用者使用该对象与其 servlet 容器进行交互
      * @see ServletContext
      */
     public ServletContext getServletContext();
 
     /**
-     * Returns a <code>String</code> containing the value of the named initialization parameter, or <code>null</code> if
-     * the initialization parameter does not exist.
+     * 返回包含指定初始化参数值的 <code>String</code>，如果该初始化参数不存在，则返回 <code>null</code>。
      *
-     * @param name a <code>String</code> specifying the name of the initialization parameter
-     *
-     * @return a <code>String</code> containing the value of the initialization parameter, or <code>null</code> if the
-     *         initialization parameter does not exist
+     * @param name 指定初始化参数名称的 <code>String</code>
+     * @return 包含初始化参数值的 <code>String</code>，如果初始化参数不存在，则返回 <code>null</code>
      */
     public String getInitParameter(String name);
 
     /**
-     * Returns the names of the filter's initialization parameters as an <code>Enumeration</code> of <code>String</code>
-     * objects, or an empty <code>Enumeration</code> if the filter has no initialization parameters.
+     * 以<code>String</code>对象的<code>Enumeration</code>形式返回过滤器的初始化参数名称，
+     * 如果过滤器没有初始化参数，则返回空的<code>Enumeration</code>。
      *
-     * @return an <code>Enumeration</code> of <code>String</code> objects containing the names of the filter's
-     *         initialization parameters
+     * @return 包含过滤器初始化参数名称的<code>String</code>对象的<code>Enumeration</code>
      */
     public Enumeration<String> getInitParameterNames();
 

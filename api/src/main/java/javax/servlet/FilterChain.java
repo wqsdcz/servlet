@@ -21,9 +21,8 @@ package javax.servlet;
 import java.io.IOException;
 
 /**
- * A FilterChain is an object provided by the servlet container to the developer giving a view into the invocation chain
- * of a filtered request for a resource. Filters use the FilterChain to invoke the next filter in the chain, or if the
- * calling filter is the last filter in the chain, to invoke the resource at the end of the chain.
+ * FilterChain 是由 Servlet 容器提供给开发者的对象，用于展示针对资源的过滤请求调用链视图。
+ * 过滤器使用 FilterChain 来调用链中的下一个过滤器，若当前过滤器为链中的最后一个过滤器，则调用链末端的资源。
  *
  * @see Filter
  * @since Servlet 2.3
@@ -31,13 +30,12 @@ import java.io.IOException;
 public interface FilterChain {
 
     /**
-     * Causes the next filter in the chain to be invoked, or if the calling filter is the last filter in the chain,
-     * causes the resource at the end of the chain to be invoked.
+     * 触发调用链中的下一个过滤器被调用，若当前过滤器为链中的最后一个过滤器，则触发链末端的资源被调用。
      *
-     * @param request  the request to pass along the chain.
-     * @param response the response to pass along the chain.
-     * @throws IOException      if an I/O related error has occurred during the processing
-     * @throws ServletException if an exception has occurred that interferes with the filterChain's normal operation
+     * @param request  沿传递链传递的请求
+     * @param response 沿传递链传递的响应
+     * @throws IOException      如果在处理过程中发生与I/O相关的错误
+     * @throws ServletException 如果发生影响过滤链正常操作的异常
      */
     public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException;
 

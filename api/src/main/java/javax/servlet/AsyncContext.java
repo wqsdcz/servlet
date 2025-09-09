@@ -18,22 +18,17 @@
 package javax.servlet;
 
 /**
- * Class representing the execution context for an asynchronous operation that was initiated on a ServletRequest.
+ * 表示在ServletRequest上发起的异步操作的执行上下文类。
  *
  * <p>
- * An AsyncContext is created and initialized by a call to {@link ServletRequest#startAsync()} or
- * {@link ServletRequest#startAsync(ServletRequest, ServletResponse)}. Repeated invocations of these methods will return
- * the same AsyncContext instance, reinitialized as appropriate.
+ * AsyncContext通过调用{@link ServletRequest#startAsync()}或{@link ServletRequest#startAsync(ServletRequest, ServletResponse)}方法创建并初始化。
+ * 重复调用这些方法将返回相同的AsyncContext实例，并会根据情况进行重新初始化。
  *
- * <p>
- * In the event that an asynchronous operation has timed out, the container must run through these steps:
+ * <p>当异步操作超时时，容器必须执行以下步骤：
  * <ol>
- * <li>Invoke, at their {@link AsyncListener#onTimeout onTimeout} method, all {@link AsyncListener} instances registered
- * with the ServletRequest on which the asynchronous operation was initiated.</li>
- * <li>If none of the listeners called {@link #complete} or any of the {@link #dispatch} methods, perform an error
- * dispatch with a status code equal to <tt>HttpServletResponse.SC_INTERNAL_SERVER_ERROR</tt>.</li>
- * <li>If no matching error page was found, or the error page did not call {@link #complete} or any of the
- * {@link #dispatch} methods, call {@link #complete}.</li>
+ * <li>调用所有注册在发起异步操作的ServletRequest上的{@link AsyncListener}实例的 {@link AsyncListener#onTimeout onTimeout}方法。</li>
+ * <li>如果没有任何监听器调用{@link #complete}或任何{@link #dispatch}方法，则执行错误分发，状态码等于<tt>HttpServletResponse.SC_INTERNAL_SERVER_ERROR</tt>。</li>
+ * <li>如果未找到匹配的错误页面，或者错误页面没有调用{@link #complete}或任何{@link #dispatch}方法，则调用{@link #complete}。</li>
  * </ol>
  *
  * @since Servlet 3.0
@@ -41,378 +36,309 @@ package javax.servlet;
 public interface AsyncContext {
 
     /**
-     * The name of the request attribute under which the original request URI is made available to the target of a
-     * {@link #dispatch(String)} or {@link #dispatch(ServletContext,String)}
+     * 请求属性的名称，通过该属性可将原始请求URI提供给
+     * {@link #dispatch(String)} 或 {@link #dispatch(ServletContext,String)} 方法调用的目标对象
      */
     static final String ASYNC_REQUEST_URI = "javax.servlet.async.request_uri";
 
     /**
-     * The name of the request attribute under which the original context path is made available to the target of a
-     * {@link #dispatch(String)} or {@link #dispatch(ServletContext,String)}
+     * 请求属性的名称，通过该属性可将原始上下文路径提供给
+     * {@link #dispatch(String)} 或 {@link #dispatch(ServletContext,String)} 方法调用的目标对象
      */
     static final String ASYNC_CONTEXT_PATH = "javax.servlet.async.context_path";
 
     /**
-     * The name of the request attribute under which the original {@link javax.servlet.http.HttpServletMapping} is made
-     * available to the target of a {@link #dispatch(String)} or {@link #dispatch(ServletContext,String)}
+     * 请求属性的名称，通过该属性可将原始{@link javax.servlet.http.HttpServletMapping}对象提供给
+     * {@link #dispatch(String)}或{@link #dispatch(ServletContext,String)}方法调用的目标对象
      */
     static final String ASYNC_MAPPING = "javax.servlet.async.mapping";
 
     /**
-     * The name of the request attribute under which the original path info is made available to the target of a
-     * {@link #dispatch(String)} or {@link #dispatch(ServletContext,String)}
+     * 请求属性的名称，通过该属性可将原始路径信息提供给{@link #dispatch(String)}或{@link #dispatch(ServletContext,String)}方法调用的目标对象
      */
     static final String ASYNC_PATH_INFO = "javax.servlet.async.path_info";
 
     /**
-     * The name of the request attribute under which the original servlet path is made available to the target of a
-     * {@link #dispatch(String)} or {@link #dispatch(ServletContext,String)}
+     * 请求属性的名称，通过该属性可将原始servlet路径提供给{@link #dispatch(String)}或{@link #dispatch(ServletContext,String)}方法调用的目标对象
      */
     static final String ASYNC_SERVLET_PATH = "javax.servlet.async.servlet_path";
 
     /**
-     * The name of the request attribute under which the original query string is made available to the target of a
-     * {@link #dispatch(String)} or {@link #dispatch(ServletContext,String)}
+     * 请求属性的名称，通过该属性可将原始查询字符串提供给{@link #dispatch(String)}或{@link #dispatch(ServletContext,String)}方法调用的目标对象
      */
     static final String ASYNC_QUERY_STRING = "javax.servlet.async.query_string";
 
     /**
-     * Gets the request that was used to initialize this AsyncContext by calling {@link ServletRequest#startAsync()} or
-     * {@link ServletRequest#startAsync(ServletRequest, ServletResponse)}.
+     * 获取通过调用{@link ServletRequest#startAsync()}或{@link ServletRequest#startAsync(ServletRequest, ServletResponse)}
+     * 初始化此异步上下文时使用的请求。
      *
-     * @return the request that was used to initialize this AsyncContext
+     * @return 用于初始化此异步上下文的请求
      *
-     * @exception IllegalStateException if {@link #complete} or any of the {@link #dispatch} methods has been called in
-     *                                  the asynchronous cycle
+     * @exception IllegalStateException 如果在异步周期内已调用{@link #complete}或任意{@link #dispatch}方法
      */
     public ServletRequest getRequest();
 
     /**
-     * Gets the response that was used to initialize this AsyncContext by calling {@link ServletRequest#startAsync()} or
-     * {@link ServletRequest#startAsync(ServletRequest, ServletResponse)}.
+     * 获取通过调用 {@link ServletRequest#startAsync()} 或
+     * {@link ServletRequest#startAsync(ServletRequest, ServletResponse)} 方法
+     * 初始化此 AsyncContext 时使用的响应对象。
      *
-     * @return the response that was used to initialize this AsyncContext
+     * @return 用于初始化此 AsyncContext 的响应对象
      *
-     * @exception IllegalStateException if {@link #complete} or any of the {@link #dispatch} methods has been called in
-     *                                  the asynchronous cycle
+     * @exception IllegalStateException 如果在异步周期中已经调用了 {@link #complete} 或任何 {@link #dispatch} 方法
      */
     public ServletResponse getResponse();
 
     /**
-     * Checks if this AsyncContext was initialized with the original or application-wrapped request and response
-     * objects.
-     * 
-     * <p>
-     * This information may be used by filters invoked in the <i>outbound</i> direction, after a request was put into
-     * asynchronous mode, to determine whether any request and/or response wrappers that they added during their
-     * <i>inbound</i> invocation need to be preserved for the duration of the asynchronous operation, or may be
-     * released.
+     * 检查此 AsyncContext 是否使用原始或应用包装的请求和响应对象进行初始化。
      *
-     * @return true if this AsyncContext was initialized with the original request and response objects by calling
-     *         {@link ServletRequest#startAsync()}, or if it was initialized by calling
-     *         {@link ServletRequest#startAsync(ServletRequest, ServletResponse)}, and neither the ServletRequest nor
-     *         ServletResponse arguments carried any application-provided wrappers; false otherwise
+     * <p>
+     * 此信息可被在请求进入异步模式后于<i>出站</i>方向调用的过滤器使用，以确定它们在<i>入站</i>调用期间添加的任何请求和/或响应包装器
+     * 是否需要在整个异步操作期间保留，或者是否可以释放。
+     *
+     * @return 如果此 AsyncContext 是通过调用 {@link ServletRequest#startAsync()} 使用原始请求和响应对象初始化的，
+     *         或者是通过调用 {@link ServletRequest#startAsync(ServletRequest, ServletResponse)} 初始化，
+     *         且 ServletRequest 和 ServletResponse 参数均未携带任何应用提供的包装器，则返回 true；否则返回 false
      */
     public boolean hasOriginalRequestAndResponse();
 
     /**
-     * Dispatches the request and response objects of this AsyncContext to the servlet container.
-     * 
-     * <p>
-     * If the asynchronous cycle was started with {@link ServletRequest#startAsync(ServletRequest, ServletResponse)},
-     * and the request passed is an instance of HttpServletRequest, then the dispatch is to the URI returned by
-     * {@link javax.servlet.http.HttpServletRequest#getRequestURI}. Otherwise, the dispatch is to the URI of the request
-     * when it was last dispatched by the container.
+     * 将此 AsyncContext 的请求和响应对象分发给 Servlet 容器。
      *
      * <p>
-     * The following sequence illustrates how this will work:
-     * 
+     * 如果异步周期是通过 {@link ServletRequest#startAsync(ServletRequest, ServletResponse)} 启动的，
+     * 且传入的请求是 HttpServletRequest 实例，则分发目标为 {@link javax.servlet.http.HttpServletRequest#getRequestURI}
+     * 返回的 URI。否则，分发目标为容器最后一次分发该请求时的 URI。
+     *
+     * <p>
+     * 以下序列说明了此方法的工作方式：
+     *
      * <pre>
      * {@code
-     * // REQUEST dispatch to /url/A
+     * // 请求分发到 /url/A
      * AsyncContext ac = request.startAsync();
      * ...
-     * ac.dispatch(); // ASYNC dispatch to /url/A
-     * 
-     * // REQUEST to /url/A
-     * // FORWARD dispatch to /url/B
+     * ac.dispatch(); // 异步分发到 /url/A
+     *
+     * // 请求到 /url/A
+     * // 转发分发到 /url/B
      * request.getRequestDispatcher("/url/B").forward(request,response);
-     * // Start async operation from within the target of the FORWARD
-     * // dispatch
+     * // 在 FORWARD 分发的目标中启动异步操作
      * ac = request.startAsync();
      * ...
-     * ac.dispatch(); // ASYNC dispatch to /url/A
-     * 
-     * // REQUEST to /url/A
-     * // FORWARD dispatch to /url/B
+     * ac.dispatch(); // 异步分发到 /url/A
+     *
+     * // 请求到 /url/A
+     * // 转发分发到 /url/B
      * request.getRequestDispatcher("/url/B").forward(request,response);
-     * // Start async operation from within the target of the FORWARD
-     * // dispatch
+     * // 在 FORWARD 分发的目标中启动异步操作
      * ac = request.startAsync(request,response);
      * ...
-     * ac.dispatch(); // ASYNC dispatch to /url/B
+     * ac.dispatch(); // 异步分发到 /url/B
      * }
      * </pre>
      *
      * <p>
-     * This method returns immediately after passing the request and response objects to a container managed thread, on
-     * which the dispatch operation will be performed. If this method is called before the container-initiated dispatch
-     * that called <tt>startAsync</tt> has returned to the container, the dispatch operation will be delayed until after
-     * the container-initiated dispatch has returned to the container.
+     * 此方法在将请求和响应对象传递给容器管理的线程后立即返回，分发操作将在该线程上执行。如果在调用 <tt>startAsync</tt> 的
+     * 容器初始化分发返回到容器之前调用此方法，则分发操作将被延迟，直到容器初始化分发返回到容器之后。
      *
      * <p>
-     * The dispatcher type of the request is set to <tt>DispatcherType.ASYNC</tt>. Unlike
-     * {@link RequestDispatcher#forward(ServletRequest, ServletResponse) forward dispatches}, the response buffer and
-     * headers will not be reset, and it is legal to dispatch even if the response has already been committed.
+     * 请求的分发器类型设置为 <tt>DispatcherType.ASYNC</tt>。与
+     * {@link RequestDispatcher#forward(ServletRequest, ServletResponse) 转发分发} 不同，响应缓冲区和头部不会被重置，
+     * 并且即使在响应已经提交的情况下，分发也是合法的。
      *
      * <p>
-     * Control over the request and response is delegated to the dispatch target, and the response will be closed when
-     * the dispatch target has completed execution, unless {@link ServletRequest#startAsync()} or
-     * {@link ServletRequest#startAsync(ServletRequest, ServletResponse)} are called.
-     * 
+     * 对请求和响应的控制权委托给分发目标，并且除非调用 {@link ServletRequest#startAsync()} 或
+     * {@link ServletRequest#startAsync(ServletRequest, ServletResponse)}，否则响应将在分发目标完成执行时关闭。
+     *
      * <p>
-     * Any errors or exceptions that may occur during the execution of this method must be caught and handled by the
-     * container, as follows:
+     * 此方法执行期间可能发生的任何错误或异常必须由容器捕获和处理，具体如下：
      * <ol>
-     * <li>Invoke, at their {@link AsyncListener#onError onError} method, all {@link AsyncListener} instances registered
-     * with the ServletRequest for which this AsyncContext was created, and make the caught <tt>Throwable</tt> available
-     * via {@link AsyncEvent#getThrowable}.</li>
-     * <li>If none of the listeners called {@link #complete} or any of the {@link #dispatch} methods, perform an error
-     * dispatch with a status code equal to <tt>HttpServletResponse.SC_INTERNAL_SERVER_ERROR</tt>, and make the above
-     * <tt>Throwable</tt> available as the value of the <tt>RequestDispatcher.ERROR_EXCEPTION</tt> request
-     * attribute.</li>
-     * <li>If no matching error page was found, or the error page did not call {@link #complete} or any of the
-     * {@link #dispatch} methods, call {@link #complete}.</li>
+     * <li>调用所有注册在创建此 AsyncContext 的 ServletRequest 上的 {@link AsyncListener} 实例的
+     * {@link AsyncListener#onError onError} 方法，并通过 {@link AsyncEvent#getThrowable} 提供捕获的 <tt>Throwable</tt>。</li>
+     * <li>如果没有任何监听器调用 {@link #complete} 或任何 {@link #dispatch} 方法，则执行错误分发，状态码为
+     * <tt>HttpServletResponse.SC_INTERNAL_SERVER_ERROR</tt>，并将上述 <tt>Throwable</tt> 作为
+     * <tt>RequestDispatcher.ERROR_EXCEPTION</tt> 请求属性的值提供。</li>
+     * <li>如果未找到匹配的错误页面，或者错误页面没有调用 {@link #complete} 或任何 {@link #dispatch} 方法，则调用 {@link #complete}。</li>
      * </ol>
      *
      * <p>
-     * There can be at most one asynchronous dispatch operation per asynchronous cycle, which is started by a call to
-     * one of the {@link ServletRequest#startAsync} methods. Any attempt to perform an additional asynchronous dispatch
-     * operation within the same asynchronous cycle will result in an IllegalStateException. If startAsync is
-     * subsequently called on the dispatched request, then any of the dispatch or {@link #complete} methods may be
-     * called.
+     * 每个异步周期（通过调用 {@link ServletRequest#startAsync} 方法之一启动）最多只能有一个异步分发操作。
+     * 在同一异步周期内尝试执行额外的异步分发操作将导致 IllegalStateException。如果在分发的请求上随后调用了 startAsync，
+     * 则可以调用任何分发或 {@link #complete} 方法。
      *
-     * @throws IllegalStateException if one of the dispatch methods has been called and the startAsync method has not
-     *                               been called during the resulting dispatch, or if {@link #complete} was called
+     * @throws IllegalStateException 如果已调用过分发方法且在结果分发期间未调用 startAsync 方法，或者已调用 {@link #complete}
      *
      * @see ServletRequest#getDispatcherType
      */
     public void dispatch();
 
     /**
-     * Dispatches the request and response objects of this AsyncContext to the given <tt>path</tt>.
+     * 将此 AsyncContext 的请求和响应对象分发到指定的 <tt>path</tt>。
      *
      * <p>
-     * The <tt>path</tt> parameter is interpreted in the same way as in
-     * {@link ServletRequest#getRequestDispatcher(String)}, within the scope of the {@link ServletContext} from which
-     * this AsyncContext was initialized.
+     * <tt>path</tt> 参数的解析方式与 {@link ServletRequest#getRequestDispatcher(String)} 相同，
+     * 但其范围限定于初始化此 AsyncContext 的 {@link ServletContext} 内。
      *
      * <p>
-     * All path related query methods of the request must reflect the dispatch target, while the original request URI,
-     * context path, path info, servlet path, and query string may be recovered from the {@link #ASYNC_REQUEST_URI},
-     * {@link #ASYNC_CONTEXT_PATH}, {@link #ASYNC_PATH_INFO}, {@link #ASYNC_SERVLET_PATH}, and
-     * {@link #ASYNC_QUERY_STRING} attributes of the request. These attributes will always reflect the original path
-     * elements, even under repeated dispatches.
+     * 请求的所有路径相关查询方法必须反映分发目标，而原始请求 URI、上下文路径、路径信息、servlet 路径和查询字符串
+     * 可以从请求的 {@link #ASYNC_REQUEST_URI}、{@link #ASYNC_CONTEXT_PATH}、{@link #ASYNC_PATH_INFO}、
+     * {@link #ASYNC_SERVLET_PATH} 和 {@link #ASYNC_QUERY_STRING} 属性中恢复。这些属性将始终反映原始路径元素，
+     * 即使在重复分发的情况下也是如此。
      *
      * <p>
-     * There can be at most one asynchronous dispatch operation per asynchronous cycle, which is started by a call to
-     * one of the {@link ServletRequest#startAsync} methods. Any attempt to perform an additional asynchronous dispatch
-     * operation within the same asynchronous cycle will result in an IllegalStateException. If startAsync is
-     * subsequently called on the dispatched request, then any of the dispatch or {@link #complete} methods may be
-     * called.
+     * 每个异步周期（通过调用 {@link ServletRequest#startAsync} 方法之一启动）最多只能有一个异步分发操作。
+     * 在同一异步周期内尝试执行额外的异步分发操作将导致 IllegalStateException。如果在分发的请求上随后调用了 startAsync，
+     * 则可以调用任何分发或 {@link #complete} 方法。
      *
      * <p>
-     * See {@link #dispatch()} for additional details, including error handling.
+     * 有关错误处理等其他详细信息，请参阅 {@link #dispatch()}。
      *
-     * @param path the path of the dispatch target, scoped to the ServletContext from which this AsyncContext was
-     *             initialized
+     * @param path 分发目标的路径，范围限定于初始化此 AsyncContext 的 ServletContext
      *
-     * @throws IllegalStateException if one of the dispatch methods has been called and the startAsync method has not
-     *                               been called during the resulting dispatch, or if {@link #complete} was called
+     * @throws IllegalStateException 如果已调用过分发方法且在结果分发期间未调用 startAsync 方法，或者已调用 {@link #complete}
      *
      * @see ServletRequest#getDispatcherType
      */
     public void dispatch(String path);
 
     /**
-     * Dispatches the request and response objects of this AsyncContext to the given <tt>path</tt> scoped to the given
-     * <tt>context</tt>.
+     * 将此AsyncContext的请求和响应对象分发到给定<tt>context</tt>范围内指定的<tt>path</tt>。
      *
      * <p>
-     * The <tt>path</tt> parameter is interpreted in the same way as in
-     * {@link ServletRequest#getRequestDispatcher(String)}, except that it is scoped to the given <tt>context</tt>.
+     * <tt>path</tt>参数的解析方式与{@link ServletRequest#getRequestDispatcher(String)}相同，
+     * 不同之处在于其范围限定于给定的<tt>context</tt>。
      *
      * <p>
-     * All path related query methods of the request must reflect the dispatch target, while the original request URI,
-     * context path, path info, servlet path, and query string may be recovered from the {@link #ASYNC_REQUEST_URI},
-     * {@link #ASYNC_CONTEXT_PATH}, {@link #ASYNC_PATH_INFO}, {@link #ASYNC_SERVLET_PATH}, and
-     * {@link #ASYNC_QUERY_STRING} attributes of the request. These attributes will always reflect the original path
-     * elements, even under repeated dispatches.
+     * 请求的所有路径相关查询方法必须反映分发目标，而原始请求URI、上下文路径、路径信息、servlet路径和查询字符串
+     * 可以从请求的{@link #ASYNC_REQUEST_URI}、{@link #ASYNC_CONTEXT_PATH}、{@link #ASYNC_PATH_INFO}、
+     * {@link #ASYNC_SERVLET_PATH}和{@link #ASYNC_QUERY_STRING}属性中恢复。这些属性将始终反映原始路径元素，
+     * 即使在重复分发的情况下也是如此。
      *
      * <p>
-     * There can be at most one asynchronous dispatch operation per asynchronous cycle, which is started by a call to
-     * one of the {@link ServletRequest#startAsync} methods. Any attempt to perform an additional asynchronous dispatch
-     * operation within the same asynchronous cycle will result in an IllegalStateException. If startAsync is
-     * subsequently called on the dispatched request, then any of the dispatch or {@link #complete} methods may be
-     * called.
+     * 每个异步周期（通过调用{@link ServletRequest#startAsync}方法之一启动）最多只能有一个异步分发操作。
+     * 在同一异步周期内尝试执行额外的异步分发操作将导致IllegalStateException。如果在分发的请求上随后调用了startAsync，
+     * 则可以调用任何分发或{@link #complete}方法。
      *
-     * <p>
-     * See {@link #dispatch()} for additional details, including error handling.
+     * <p>有关错误处理等其他详细信息，请参阅{@link #dispatch()}。
      *
-     * @param context the ServletContext of the dispatch target
-     * @param path    the path of the dispatch target, scoped to the given ServletContext
+     * @param context 分发目标的ServletContext
+     * @param path    分发目标的路径，范围限定于给定的ServletContext
      *
-     * @throws IllegalStateException if one of the dispatch methods has been called and the startAsync method has not
-     *                               been called during the resulting dispatch, or if {@link #complete} was called
+     * @throws IllegalStateException 如果已调用过分发方法且在结果分发期间未调用startAsync方法，或者已调用{@link #complete}
      *
      * @see ServletRequest#getDispatcherType
      */
     public void dispatch(ServletContext context, String path);
 
     /**
-     * Completes the asynchronous operation that was started on the request that was used to initialze this
-     * AsyncContext, closing the response that was used to initialize this AsyncContext.
+     * 完成在用于初始化此AsyncContext的请求上启动的异步操作，并关闭用于初始化此AsyncContext的响应。
      *
      * <p>
-     * Any listeners of type {@link AsyncListener} that were registered with the ServletRequest for which this
-     * AsyncContext was created will be invoked at their {@link AsyncListener#onComplete(AsyncEvent) onComplete} method.
+     * 所有注册在创建此AsyncContext的ServletRequest上的{@link AsyncListener}类型监听器，
+     * 都将在其{@link AsyncListener#onComplete(AsyncEvent) onComplete}方法中被调用。
      *
      * <p>
-     * It is legal to call this method any time after a call to {@link ServletRequest#startAsync()} or
-     * {@link ServletRequest#startAsync(ServletRequest, ServletResponse)}, and before a call to one of the
-     * <tt>dispatch</tt> methods of this class. If this method is called before the container-initiated dispatch that
-     * called <tt>startAsync</tt> has returned to the container, then the call will not take effect (and any invocations
-     * of {@link AsyncListener#onComplete(AsyncEvent)} will be delayed) until after the container-initiated dispatch has
-     * returned to the container.
+     * 在调用{@link ServletRequest#startAsync()}或{@link ServletRequest#startAsync(ServletRequest, ServletResponse)}之后，
+     * 以及调用此类的任何<tt>dispatch</tt>方法之前，都可以合法地调用此方法。如果在调用<tt>startAsync</tt>的容器初始化分发
+     * 返回到容器之前调用此方法，则该调用不会立即生效（并且任何对{@link AsyncListener#onComplete(AsyncEvent)}的调用都将被延迟），
+     * 直到容器初始化分发返回到容器之后才会生效。
      */
     public void complete();
 
     /**
-     * Causes the container to dispatch a thread, possibly from a managed thread pool, to run the specified
-     * <tt>Runnable</tt>. The container may propagate appropriate contextual information to the <tt>Runnable</tt>.
+     * 使容器分派一个线程（可能来自托管线程池）来运行指定的<tt>Runnable</tt>。
+     * 容器可能会将适当的上下文信息传播给该<tt>Runnable</tt>。
      *
-     * @param run the asynchronous handler
+     * @param run 异步处理器
      */
     public void start(Runnable run);
 
     /**
-     * Registers the given {@link AsyncListener} with the most recent asynchronous cycle that was started by a call to
-     * one of the {@link ServletRequest#startAsync} methods.
+     * 将给定的{@link AsyncListener}注册到通过调用{@link ServletRequest#startAsync}方法之一启动的最新异步周期中。
+     *
+     * <p>当异步周期成功完成、超时、产生错误，或者通过{@link ServletRequest#startAsync}方法之一启动新的异步周期时，给定的AsyncListener将收到一个{@link AsyncEvent}。
+     *
+     * <p>AsyncListener实例将按照它们被添加的顺序被通知。
      *
      * <p>
-     * The given AsyncListener will receive an {@link AsyncEvent} when the asynchronous cycle completes successfully,
-     * times out, results in an error, or a new asynchronous cycle is being initiated via one of the
-     * {@link ServletRequest#startAsync} methods.
+     * 如果调用了{@link ServletRequest#startAsync(ServletRequest, ServletResponse)}或
+     * {@link ServletRequest#startAsync}方法，当通知{@link AsyncListener}时，可以从{@link AsyncEvent}
+     * 中获取完全相同的请求和响应对象。
      *
-     * <p>
-     * AsyncListener instances will be notified in the order in which they were added.
-     *
-     * <p>
-     * If {@link ServletRequest#startAsync(ServletRequest, ServletResponse)} or {@link ServletRequest#startAsync} is
-     * called, the exact same request and response objects are available from the {@link AsyncEvent} when the
-     * {@link AsyncListener} is notified.
-     *
-     * @param listener the AsyncListener to be registered
-     * 
-     * @throws IllegalStateException if this method is called after the container-initiated dispatch, during which one
-     *                               of the {@link ServletRequest#startAsync} methods was called, has returned to the
-     *                               container
+     * @param listener 要注册的AsyncListener
+     * @throws IllegalStateException 如果在容器发起的分发（在此期间调用了{@link ServletRequest#startAsync}方法之一）
+     *                               已返回到容器后调用此方法
      */
     public void addListener(AsyncListener listener);
 
     /**
-     * Registers the given {@link AsyncListener} with the most recent asynchronous cycle that was started by a call to
-     * one of the {@link ServletRequest#startAsync} methods.
+     * 将给定的{@link AsyncListener}注册到通过调用{@link ServletRequest#startAsync}方法之一启动的最新异步周期中。
+     *
+     * <p>当异步周期成功完成、超时、产生错误，或者通过{@link ServletRequest#startAsync}方法之一启动新的异步周期时，给定的AsyncListener将收到一个{@link AsyncEvent}。
+     *
+     * <p>AsyncListener实例将按照它们被添加的顺序被通知。
      *
      * <p>
-     * The given AsyncListener will receive an {@link AsyncEvent} when the asynchronous cycle completes successfully,
-     * times out, results in an error, or a new asynchronous cycle is being initiated via one of the
-     * {@link ServletRequest#startAsync} methods.
+     * 给定的ServletRequest和ServletResponse对象将分别通过传递给它的{@link AsyncEvent}的
+     * {@link AsyncEvent#getSuppliedRequest getSuppliedRequest}和{@link AsyncEvent#getSuppliedResponse
+     * getSuppliedResponse}方法提供给给定的AsyncListener。在传递AsyncEvent时，不应分别从这些对象
+     * 读取或写入它们，因为自给定AsyncListener注册以来可能发生了额外的包装，但是可以使用它们来
+     * 释放与它们关联的任何资源。
      *
-     * <p>
-     * AsyncListener instances will be notified in the order in which they were added.
-     *
-     * <p>
-     * The given ServletRequest and ServletResponse objects will be made available to the given AsyncListener via the
-     * {@link AsyncEvent#getSuppliedRequest getSuppliedRequest} and {@link AsyncEvent#getSuppliedResponse
-     * getSuppliedResponse} methods, respectively, of the {@link AsyncEvent} delivered to it. These objects should not
-     * be read from or written to, respectively, at the time the AsyncEvent is delivered, because additional wrapping
-     * may have occurred since the given AsyncListener was registered, but may be used in order to release any resources
-     * associated with them.
-     *
-     * @param listener        the AsyncListener to be registered
-     * @param servletRequest  the ServletRequest that will be included in the AsyncEvent
-     * @param servletResponse the ServletResponse that will be included in the AsyncEvent
-     *
-     * @throws IllegalStateException if this method is called after the container-initiated dispatch, during which one
-     *                               of the {@link ServletRequest#startAsync} methods was called, has returned to the
-     *                               container
+     * @param listener        要注册的AsyncListener
+     * @param servletRequest  将包含在AsyncEvent中的ServletRequest
+     * @param servletResponse 将包含在AsyncEvent中的ServletResponse
+     * @throws IllegalStateException 如果在容器发起的分发（在此期间调用了{@link ServletRequest#startAsync}方法之一）
+     *                               已返回到容器后调用此方法
      */
     public void addListener(AsyncListener listener, ServletRequest servletRequest, ServletResponse servletResponse);
 
     /**
-     * Instantiates the given {@link AsyncListener} class.
+     * 实例化给定的{@link AsyncListener}类。
      *
-     * <p>
-     * The returned AsyncListener instance may be further customized before it is registered with this AsyncContext via
-     * a call to one of the <code>addListener</code> methods.
+     * <p>返回的AsyncListener实例在通过调用某个<code>addListener</code>方法注册到此AsyncContext之前可以进行进一步定制。
      *
-     * <p>
-     * The given AsyncListener class must define a zero argument constructor, which is used to instantiate it.
+     * <p>给定的AsyncListener类必须定义一个无参构造函数，该构造函数将用于实例化此类。
      *
-     * <p>
-     * This method supports resource injection if the given <tt>clazz</tt> represents a Managed Bean. See the Jakarta EE
-     * platform and CDI specifications for additional details about Managed Beans and resource injection.
-     * 
-     * <p>
-     * This method supports any annotations applicable to AsyncListener.
+     * <p>如果给定的<tt>clazz</tt>表示托管Bean(Managed Bean)，则此方法支持资源注入。有关托管Bean和资源注入的更多详细信息，请参阅Jakarta EE平台和CDI规范。
      *
-     * @param       <T> the class of the object to instantiate
-     * @param clazz the AsyncListener class to instantiate
+     * <p>此方法支持适用于AsyncListener的任何注解。
      *
-     * @return the new AsyncListener instance
-     *
-     * @throws ServletException if the given <tt>clazz</tt> fails to be instantiated
+     * @param <T> 要实例化的对象的类
+     * @param clazz 要实例化的AsyncListener类
+     * @return 新的AsyncListener实例
+     * @throws ServletException 如果给定的<tt>clazz</tt>实例化失败
      */
     public <T extends AsyncListener> T createListener(Class<T> clazz) throws ServletException;
 
     /**
-     * Sets the timeout (in milliseconds) for this AsyncContext.
+     * 设置此AsyncContext的超时时间（以毫秒为单位）。
      *
-     * <p>
-     * The timeout applies to this AsyncContext once the container-initiated dispatch during which one of the
-     * {@link ServletRequest#startAsync} methods was called has returned to the container.
+     * <p>超时设置将在容器发起的分发（在此期间调用了{@link ServletRequest#startAsync}方法之一）返回到容器后生效。
      *
-     * <p>
-     * The timeout will expire if neither the {@link #complete} method nor any of the dispatch methods are called. A
-     * timeout value of zero or less indicates no timeout.
-     * 
-     * <p>
-     * If {@link #setTimeout} is not called, then the container's default timeout, which is available via a call to
-     * {@link #getTimeout}, will apply.
+     * <p>如果既未调用{@link #complete}方法也未调用任何分发方法，超时时间将到期。超时值为零或负数表示无超时限制。
      *
-     * <p>
-     * The default value is <code>30000</code> ms.
+     * <p>如果未调用{@link #setTimeout}方法，则将应用容器的默认超时时间（可通过调用{@link #getTimeout}获取）。
      *
-     * @param timeout the timeout in milliseconds
+     * <p>默认值为<code>30000</code>毫秒。
      *
-     * @throws IllegalStateException if this method is called after the container-initiated dispatch, during which one
-     *                               of the {@link ServletRequest#startAsync} methods was called, has returned to the
-     *                               container
+     * @param timeout 超时时间（毫秒）
+     * @throws IllegalStateException 如果在容器发起的分发（在此期间调用了{@link ServletRequest#startAsync}方法之一）
+     *                               已返回到容器后调用此方法
      */
     public void setTimeout(long timeout);
 
     /**
-     * Gets the timeout (in milliseconds) for this AsyncContext.
+     * 获取此AsyncContext的超时时间（以毫秒为单位）。
      *
      * <p>
-     * This method returns the container's default timeout for asynchronous operations, or the timeout value passed to
-     * the most recent invocation of {@link #setTimeout}.
+     * 此方法返回容器针对异步操作的默认超时时间，或返回最近一次调用{@link #setTimeout}方法时设置的超时值。
      *
      * <p>
-     * A timeout value of zero or less indicates no timeout.
+     * 超时值为零或负数表示无超时限制。
      *
-     * @return the timeout in milliseconds
+     * @return 超时时间（毫秒）
      */
     public long getTimeout();
 

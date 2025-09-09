@@ -21,36 +21,33 @@ import java.io.IOException;
 import java.util.EventListener;
 
 /**
- * <p>
- * This class represents a call-back mechanism that will notify implementations as HTTP request data becomes available
- * to be read without blocking.
- * </p>
+ * <p>该类代表一种回调机制，当 HTTP 请求数据可非阻塞读取时，会通知实现类。</p>
  *
  * @since Servlet 3.1
  */
 public interface ReadListener extends EventListener {
 
     /**
-     * When an instance of the <code>ReadListener</code> is registered with a {@link ServletInputStream}, this method
-     * will be invoked by the container the first time when it is possible to read data. Subsequently the container will
-     * invoke this method if and only if the {@link javax.servlet.ServletInputStream#isReady()} method has been called
-     * and has returned a value of <code>false</code> <em>and</em> data has subsequently become available to read.
+     * 当 <code>ReadListener</code> 实例注册到 {@link ServletInputStream} 时，
+     * 容器将在首次可以读取数据时调用此方法。随后，容器调用此方法的条件是：
+     * 只有当 {@link javax.servlet.ServletInputStream#isReady()} 方法被调用且返回 <code>false</code> 值，
+     * <em>并且</em>之后又有数据可读时才会触发。
      *
-     * @throws IOException if an I/O related error has occurred during processing
+     * @throws IOException 如果在处理过程中发生与 I/O 相关的错误
      */
     public void onDataAvailable() throws IOException;
 
     /**
-     * Invoked when all data for the current request has been read.
+     * 当当前请求的所有数据都已读取时调用。
      *
-     * @throws IOException if an I/O related error has occurred during processing
+     * @throws IOException 如果在处理过程中发生与I/O相关的错误
      */
     public void onAllDataRead() throws IOException;
 
     /**
-     * Invoked when an error occurs processing the request.
+     * 当处理请求过程中发生错误时调用。
      *
-     * @param t the throwable to indicate why the read operation failed
+     * @param t 表示读取操作失败原因的 throwable 对象
      */
     public void onError(Throwable t);
 
