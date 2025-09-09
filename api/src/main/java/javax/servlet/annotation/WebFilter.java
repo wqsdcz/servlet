@@ -25,11 +25,9 @@ import java.lang.annotation.Target;
 import javax.servlet.DispatcherType;
 
 /**
- * Annotation used to declare a servlet filter.
+ * 用于声明servlet的filter的注解。
  *
- * <p>
- * This annotation is processed by the container at deployment time, and the corresponding filter applied to the
- * specified URL patterns, servlets, and dispatcher types.
+ * <p>在部署时，由容器负责处理这个注解，并且针对指定的 URL 模式、Servlet 和调度器类型所应用的相应的filter。
  * 
  * @see javax.servlet.Filter
  *
@@ -41,79 +39,79 @@ import javax.servlet.DispatcherType;
 public @interface WebFilter {
 
     /**
-     * The description of the filter
-     * 
-     * @return the description of the filter
+     * 这个 filter 的说明描述
+     *
+     * @return 这个 filter 的说明描述
      */
     String description() default "";
 
     /**
-     * The display name of the filter
+     * 这个 filter 的展示名称
      *
-     * @return the display name of the filter
+     * @return 这个 filter 的说明描述
      */
     String displayName() default "";
 
     /**
-     * The init parameters of the filter
+     * 这个 filter 的初始化参数
      *
-     * @return the init parameters of the filter
+     * @return 这个 filter 的说明描述
      */
     WebInitParam[] initParams() default {};
 
     /**
-     * The name of the filter
+     * 这个 filter 的名称
      *
-     * @return the name of the filter
+     * @return 这个 filter 的名称
      */
     String filterName() default "";
 
     /**
-     * The small-icon of the filter
+     * 这个 filter 的 small-icon
      *
-     * @return the small-icon of the filter
+     * @return 这个 filter 的 small-icon
      */
     String smallIcon() default "";
 
     /**
-     * The large-icon of the filter
+     * 这个 filter 的 large-icon
      *
-     * @return the large-icon of the filter
+     * @return 这个 filter 的 large-icon
      */
     String largeIcon() default "";
 
     /**
-     * The names of the servlets to which the filter applies.
+     * 这个 filter 作用到的 servlet 的名称
      *
-     * @return the names of the servlets to which the filter applies
+     * @return 这个 filter 作用的 servlet 的名称
      */
     String[] servletNames() default {};
 
     /**
-     * The URL patterns to which the filter applies The default value is an empty array.
+     * 这个 filter 作用到的 URL 模版。默认值是一个空数组
      *
-     * @return the URL patterns to which the filter applies
+     * @return 这个 filter 作用到的 URL 模版
      */
     String[] value() default {};
 
     /**
-     * The URL patterns to which the filter applies
+     * 这个 filter 作用到的 URL 模版
      *
-     * @return the URL patterns to which the filter applies
+     * @return 这个 filter 作用到的 URL 模版
      */
     String[] urlPatterns() default {};
 
     /**
-     * The dispatcher types to which the filter applies
+     * 这个 filter 作用到的调度器类型
      *
-     * @return the dispatcher types to which the filter applies
+     * @return 这个 filter 作用到的调度器类型
      */
     DispatcherType[] dispatcherTypes() default { DispatcherType.REQUEST };
 
     /**
-     * Declares whether the filter supports asynchronous operation mode.
+     * 声明这个 filter 是否支持异步的工作方式
      *
-     * @return {@code true} if the filter supports asynchronous operation mode
+     * @return {@code true} 如果这个 filter 支持异步的工作方式
      * @see javax.servlet.ServletRequest#startAsync
      * @see javax.servlet.ServletRequest#startAsync( javax.servlet.ServletRequest,javax.servlet.ServletResponse)
      */
