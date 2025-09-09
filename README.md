@@ -1,28 +1,28 @@
 # Jakarta Servlet
 
-This repository contains the code for Jakarta Servlet.
+这个库包含了Jakarta Servlet 的代码。
 
 [Online JavaDoc](https://javadoc.io/doc/jakarta.servlet/jakarta.servlet-api/)
 
-About Jakarta Servlet
+关于 Jakarta Servlet
 ---------------------
-Jakarta Servlet defines a server-side API for handling HTTP requests and responses.
+Jakarta Servlet 定义一个用于处理HTTP请求和响应的服务器端API。
 
-Building
+构建
 --------
-Prerequisites:
+先决条件:
 
 * JDK8+
 * Maven 3.0.3+
 
-Run the build: 
+运行构建指令: 
 
 `mvn install`
 
-The build runs copyright check and generates the jar, sources-jar and javadoc-jar by default.
-The API jar is built in /api/target.
+默认情况下，运行构建过程时，将会检查版权，并生成jar、sources-jar和javadoc-jar。
+API jar 将在/api/target目录中进行构建。
 
-Checking findbugs
+检查 findbugs
 -----------------
 `mvn -DskipTests -Dfindbugs.threshold=Low findbugs:findbugs`
 
