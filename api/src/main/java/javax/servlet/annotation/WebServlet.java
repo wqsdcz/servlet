@@ -24,11 +24,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Documented;
 
 /**
- * Annotation used to declare a servlet.
+ * 用于声明servlet的注解。
  *
- * <p>
- * This annotation is processed by the container at deployment time, and the corresponding servlet made available at the
- * specified URL patterns.
+ * <p>在部署时，由容器负责处理这个注解，并且在指定的 URL 模式下提供了相应的 servlet。
  * 
  * @see javax.servlet.Servlet
  *
@@ -40,74 +38,74 @@ import java.lang.annotation.Documented;
 public @interface WebServlet {
 
     /**
-     * The name of the servlet
+     * 这个 servlet 的名称
      *
-     * @return the name of the servlet
+     * @return 这个 servlet 的名称
      */
     String name() default "";
 
     /**
-     * The URL patterns of the servlet
+     * 这个 servlet 的 URL 模式
      *
-     * @return the URL patterns of the servlet
+     * @return 这个 servlet 的 URL 模式
      */
     String[] value() default {};
 
     /**
-     * The URL patterns of the servlet
+     * 这个 servlet 的 URL 模式
      *
-     * @return the URL patterns of the servlet
+     * @return 这个 servlet 的 URL 模式
      */
     String[] urlPatterns() default {};
 
     /**
-     * The load-on-startup order of the servlet
+     * 这个 servlet 的启动时加载顺序
      *
-     * @return the load-on-startup order of the servlet
+     * @return 这个 servlet 的启动时加载顺序
      */
     int loadOnStartup() default -1;
 
     /**
-     * The init parameters of the servlet
+     * 这个 servlet 的 初始化参数
      *
-     * @return the init parameters of the servlet
+     * @return 这个 servlet 的 初始化参数
      */
     WebInitParam[] initParams() default {};
 
     /**
-     * Declares whether the servlet supports asynchronous operation mode.
+     * 声明这个 servlet 是否支持异步的工作方式
      *
-     * @return {@code true} if the servlet supports asynchronous operation mode
+     * @return {@code true} 如果这个 servlet 支持异步的工作方式
      * @see javax.servlet.ServletRequest#startAsync
      * @see javax.servlet.ServletRequest#startAsync( javax.servlet.ServletRequest,javax.servlet.ServletResponse)
      */
     boolean asyncSupported() default false;
 
     /**
-     * The small-icon of the servlet
+     * 这个 servlet 的 small-icon
      *
-     * @return the small-icon of the servlet
+     * @return 这个 servlet 的 small-icon
      */
     String smallIcon() default "";
 
     /**
-     * The large-icon of the servlet
+     * 这个 servlet 的 large-icon
      *
-     * @return the large-icon of the servlet
+     * @return 这个 servlet 的 large-icon
      */
     String largeIcon() default "";
 
     /**
-     * The description of the servlet
+     * 这个 servlet 的说明描述
      *
-     * @return the description of the servlet
+     * @return 这个 servlet 的 large-icon
      */
     String description() default "";
 
     /**
-     * The display name of the servlet
+     * 这个 servlet 的展示名称
      *
-     * @return the display name of the servlet
+     * @return 这个 servlet 的展示名称
      */
     String displayName() default "";
 
