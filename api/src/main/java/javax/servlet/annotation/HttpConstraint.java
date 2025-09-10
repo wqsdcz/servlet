@@ -24,17 +24,13 @@ import javax.servlet.annotation.ServletSecurity.EmptyRoleSemantic;
 import javax.servlet.annotation.ServletSecurity.TransportGuarantee;
 
 /**
- * This annotation is used within the {@link ServletSecurity} annotation to represent the security constraints to be
- * applied to all HTTP protocol methods for which a corresponding {@link HttpMethodConstraint} element does NOT occur
- * within the {@link ServletSecurity} annotation.
+ * 此注解用于 {@link ServletSecurity} 注解的内部，
+ * 用于表示适用于所有未在 {@link ServletSecurity} 注解中明确配置对应 {@link HttpMethodConstraint} 元素的 HTTP 协议方法的安全约束。
  *
  * <p>
- * For the special case where an <code>@HttpConstraint</code> that returns all default values occurs in combination with
- * at least one {@link HttpMethodConstraint} that returns other than all default values, the
- * <code>@HttpConstraint</code> represents that no security constraint is to be applied to any of the HTTP protocol
- * methods to which a security constraint would otherwise apply. This exception is made to ensure that such potentially
- * non-specific uses of <code>@HttpConstraint</code> do not yield constraints that will explicitly establish unprotected
- * access for such methods; given that they would not otherwise be covered by a constraint.
+ * 特殊情况：当一个返回全部默认值的 <code>@HttpConstraint</code> 与至少一个返回非全部默认值的 {@link HttpMethodConstraint} 组合使用时，
+ * 该 <code>@HttpConstraint</code> 表示不对本应施加安全约束的任何 HTTP 协议方法应用安全约束。设定此例外是为了确保：
+ * 此类可能非明确指定的 <code>@HttpConstraint</code> 用法不会产生显式建立未受保护访问的约束；鉴于这些方法原本不会被任何约束所覆盖。
  *
  * @since Servlet 3.0
  */
@@ -43,37 +39,28 @@ import javax.servlet.annotation.ServletSecurity.TransportGuarantee;
 public @interface HttpConstraint {
 
     /**
-     * The default authorization semantic. This value is insignificant when <code>rolesAllowed</code> returns a
-     * non-empty array, and should not be specified when a non-empty array is specified for <tt>rolesAllowed</tt>.
+     * 默认的授权语义。当<code>rolesAllowed</code>返回非空数组时，此值无效，且当为<tt>rolesAllowed</tt>指定非空数组时不应设置此值。
      *
-     * @return the {@link EmptyRoleSemantic} to be applied when <code>rolesAllowed</code> returns an empty (that is,
-     *         zero-length) array.
+     * @return 当<code>rolesAllowed</code>返回空数组（即长度为零的数组）时所应用的{@link EmptyRoleSemantic}。
      */
     EmptyRoleSemantic value() default EmptyRoleSemantic.PERMIT;
 
     /**
-     * The data protection requirements (i.e., whether or not SSL/TLS is required) that must be satisfied by the
-     * connections on which requests arrive.
-     * 
-     * @return the {@link TransportGuarantee} indicating the data protection that must be provided by the connection.
+     * 这些数据的保护要求（即是否需要使用 SSL/TLS 加密协议）必须在接收请求的连接中得到满足。
+     *
+     * @return 返回 {@link TransportGuarantee} 类型值，用于表明连接必须提供的数据保护级别。
      */
     TransportGuarantee transportGuarantee() default TransportGuarantee.NONE;
 
     /**
-     * The names of the authorized roles.
+     * 授权角色的名称集合。
      *
-     * Duplicate role names appearing in rolesAllowed are insignificant and may be discarded during runtime processing
-     * of the annotation. The String <tt>"*"</tt> has no special meaning as a role name (should it occur in
-     * rolesAllowed).
+     * 在 rolesAllowed 中出现重复角色名的情形将被视为无实际意义，并可能在注解的运行期处理过程中被忽略。字符串 <tt>"*"</tt> 作为角色名称时不具有特殊含义（即使出现在 rolesAllowed 中）。
      *
-     * @return an array of zero or more role names. When the array contains zero elements, its meaning depends on the
-     *         <code>EmptyRoleSemantic</code> returned by the <code>value</code> method. If <code>value</code> returns
-     *         <tt>DENY</tt>, and <code>rolesAllowed</code> returns a zero length array, access is to be denied
-     *         independent of authentication state and identity. Conversely, if <code>value</code> returns
-     *         <code>PERMIT</code>, it indicates that access is to be allowed independent of authentication state and
-     *         identity. When the array contains the names of one or more roles, it indicates that access is contingent
-     *         on membership in at least one of the named roles (independent of the <code>EmptyRoleSemantic</code>
-     *         returned by the <code>value</code> method).
+     * @return 返回一个包含零个或多个角色名称的数组。当数组为空时，其具体语义取决于 <code>emptyRoleSemantic</code> 方法的返回值：
+     *          若 <code>emptyRoleSemantic</code> 返回 <tt>DENY</tt> 且 <code>rolesAllowed</code> 返回空数组时，将无条件拒绝访问（与认证状态和用户身份无关）；
+     *          反之，若 <code>emptyRoleSemantic</code> 返回 <code>PERMIT</code>，则表示无条件允许访问（与认证状态和用户身份无关）；
+     *          当数组包含一个或多个角色名称时，表示访问必须满足用户至少属于其中一个命名角色的条件（此时 <code>emptyRoleSemantic</code> 的返回值将被忽略）。
      */
     String[] rolesAllowed() default {};
 }

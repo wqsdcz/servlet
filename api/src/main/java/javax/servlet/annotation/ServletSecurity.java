@@ -25,10 +25,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * 这个注解被用在 Servlet 的实现类上，用来指定 Servlet 容器施加的安全约束（在HTTP协议的消息上）。Servlet 容器会针对映射到已注解类的 Servlet 的 URL 模式来执行这些约束条件。
- * This annotation is used on a Servlet implementation class to specify security constraints to be enforced by a Servlet
- * container on HTTP protocol messages. The Servlet container will enforce these constraints on the url-patterns mapped
- * to the servlets mapped to the annotated class.
+ * 这个注解被用在 Servlet 的实现类上，用来指定 Servlet 容器施加的安全约束（在HTTP协议的消息上）。
+ * Servlet容器将在映射到该注解类的Servlet所对应的url-patterns上强制执行这些约束。
  *
  * @since Servlet 3.0
  */
@@ -67,21 +65,17 @@ public @interface ServletSecurity {
     }
 
     /**
-     * Get the {@link HttpConstraint} that defines the protection that is to be applied to all HTTP methods that are NOT
-     * represented in the array returned by <tt>httpMethodConstraints</tt>.
+     * 获取定义应用于所有未包含在 <tt>httpMethodConstraints</tt> 方法返回数组中的 HTTP 方法的保护约束的 {@link HttpConstraint}。
      *
-     * @return a <code>HttpConstraint</code> object.
+     * @return 一个 <code>HttpConstraint</code> 对象。
      */
     HttpConstraint value() default @HttpConstraint;
 
     /**
-     * Get the HTTP method specific constraints. Each {@link HttpMethodConstraint} names an HTTP protocol method and
-     * defines the protection to be applied to it.
+     * 获取HTTP方法特定的约束。每个 {@link HttpMethodConstraint} 指定一个HTTP协议方法并定义应用于该方法的保护设置。
      *
-     * @return an array of {@link HttpMethodConstraint} elements each defining the protection to be applied to one HTTP
-     *         protocol method. For any HTTP method name, there must be at most one corresponding element in the
-     *         returned array. If the returned array is of zero length, it indicates that no HTTP method specific
-     *         constraints are defined.
+     * @return 返回一个由 {@link HttpMethodConstraint} 元素组成的数组，其中每个元素定义应用于一个HTTP协议方法的保护设置。
+     *         对于任何HTTP方法名称，返回的数组中最多只能有一个对应元素。如果返回的数组长度为零，则表示未定义任何HTTP方法特定的约束。
      */
     HttpMethodConstraint[] httpMethodConstraints() default {};
 }
