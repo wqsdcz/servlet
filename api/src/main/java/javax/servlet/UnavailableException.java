@@ -19,27 +19,22 @@
 package javax.servlet;
 
 /**
- * Defines an exception that a servlet or filter throws to indicate that it is permanently or temporarily unavailable.
+ * 定义一个 servlet 或 filter 抛出的异常，用于指示该组件永久或暂时不可用。
  *
  * <p>
- * When a servlet or filter is permanently unavailable, something is wrong with it, and it cannot handle requests until
- * some action is taken. For example, a servlet might be configured incorrectly, or a filter's state may be corrupted.
- * The component should log both the error and the corrective action that is needed.
+ * 当 servlet 或过滤器永久不可用时，表示组件本身存在问题，在采取某些措施之前无法处理请求。
+ * 例如，servlet 可能配置错误，或过滤器的状态可能已损坏。组件应记录错误信息以及需要采取的纠正措施。
  *
  * <p>
- * A servlet or filter is temporarily unavailable if it cannot handle requests momentarily due to some system-wide
- * problem. For example, a third-tier server might not be accessible, or there may be insufficient memory or disk
- * storage to handle requests. A system administrator may need to take corrective action.
+ * 如果由于系统级问题导致 servlet 或过滤器暂时无法处理请求，则属于暂时不可用。
+ * 例如，第三层服务器可能无法访问，或者内存或磁盘空间不足无法处理请求。
+ * 系统管理员可能需要采取纠正措施。
  *
  * <p>
- * Servlet containers can safely treat both types of unavailable exceptions in the same way. However, treating temporary
- * unavailability effectively makes the servlet container more robust. Specifically, the servlet container might block
- * requests to the servlet or filter for a period of time suggested by the exception, rather than rejecting them until
- * the servlet container restarts.
+ * Servlet 容器可以安全地以相同方式处理这两种不可用异常。然而，有效处理暂时不可用情况能使 servlet 容器更加健壮。
+ * 具体来说，servlet 容器可能会根据异常建议的时间段内阻塞对该 servlet 或过滤器的请求，而不是直接拒绝请求直到 servlet 容器重启。
  *
- *
- * @author Various
- *
+ * @author 多方作者
  */
 public class UnavailableException extends ServletException {
 
@@ -50,13 +45,10 @@ public class UnavailableException extends ServletException {
     private int seconds; // unavailability estimate
 
     /**
-     * 
-     * @deprecated As of Java Servlet API 2.2, use {@link #UnavailableException(String)} instead.
+     * @deprecated 自 Java Servlet API 2.2 起，改用 {@link #UnavailableException(String)}。
      *
-     * @param servlet the <code>Servlet</code> instance that is unavailable
-     *
-     * @param msg     a <code>String</code> specifying the descriptive message
-     *
+     * @param servlet 不可用的 <code>Servlet</code> 实例
+     * @param msg     指定描述性消息的 <code>String</code>
      */
     @Deprecated
     public UnavailableException(Servlet servlet, String msg) {
@@ -65,17 +57,13 @@ public class UnavailableException extends ServletException {
         permanent = true;
     }
 
+
     /**
-     * @deprecated As of Java Servlet API 2.2, use {@link #UnavailableException(String, int)} instead.
+     * @deprecated 自 Java Servlet API 2.2 起，改用 {@link #UnavailableException(String, int)}。
      *
-     * @param seconds an integer specifying the number of seconds the servlet expects to be unavailable; if zero or
-     *                negative, indicates that the servlet can't make an estimate
-     *
-     * @param servlet the <code>Servlet</code> that is unavailable
-     * 
-     * @param msg     a <code>String</code> specifying the descriptive message, which can be written to a log file or
-     *                displayed for the user.
-     *
+     * @param seconds 指定 servlet 预计不可用秒数的整数；如果为零或负数，表示 servlet 无法预估时间
+     * @param servlet 不可用的 <code>Servlet</code>
+     * @param msg     指定描述性消息的 <code>String</code>，可写入日志文件或向用户显示
      */
     @Deprecated
     public UnavailableException(int seconds, Servlet servlet, String msg) {
@@ -89,11 +77,9 @@ public class UnavailableException extends ServletException {
     }
 
     /**
-     * 
-     * Constructs a new exception with a descriptive message indicating that the servlet is permanently unavailable.
+     * 构造一个新异常，其中包含指示 servlet 永久不可用的描述性消息。
      *
-     * @param msg a <code>String</code> specifying the descriptive message
-     *
+     * @param msg 指定描述性消息的 <code>String</code>
      */
     public UnavailableException(String msg) {
         super(msg);
@@ -102,20 +88,15 @@ public class UnavailableException extends ServletException {
     }
 
     /**
-     * Constructs a new exception with a descriptive message indicating that the servlet is temporarily unavailable and
-     * giving an estimate of how long it will be unavailable.
-     * 
+     * 构造一个新异常，其中包含指示 servlet 暂时不可用的描述性消息，并给出预计不可用时间的估计值。
+     *
      * <p>
-     * In some cases, the servlet cannot make an estimate. For example, the servlet might know that a server it needs is
-     * not running, but not be able to report how long it will take to be restored to functionality. This can be
-     * indicated with a negative or zero value for the <code>seconds</code> argument.
+     *     在某些情况下，servlet 可能无法给出估计值。
+     *     例如，servlet 可能知道其依赖的服务器未运行，但无法报告需要多长时间才能恢复功能。
+     *     这种情况下可以使用零或负值的 <code>seconds</code> 参数来表示。
      *
-     * @param msg     a <code>String</code> specifying the descriptive message, which can be written to a log file or
-     *                displayed for the user.
-     *
-     * @param seconds an integer specifying the number of seconds the servlet expects to be unavailable; if zero or
-     *                negative, indicates that the servlet can't make an estimate
-     *
+     * @param msg     指定描述性消息的 <code>String</code>，可写入日志文件或向用户显示
+     * @param seconds 指定 servlet 预计不可用秒数的整数；如果为零或负数，表示 servlet 无法给出预估时间
      */
     public UnavailableException(String msg, int seconds) {
         super(msg);
@@ -129,25 +110,20 @@ public class UnavailableException extends ServletException {
     }
 
     /**
+     * 返回一个 <code>boolean</code> 值，指示 servlet 是否永久不可用。如果是永久不可用，
+     * 则表示 servlet 存在问题，系统管理员必须采取一些纠正措施。
      *
-     * Returns a <code>boolean</code> indicating whether the servlet is permanently unavailable. If so, something is
-     * wrong with the servlet, and the system administrator must take some corrective action.
-     *
-     * @return <code>true</code> if the servlet is permanently unavailable; <code>false</code> if the servlet is
-     *         available or temporarily unavailable
-     *
+     * @return 如果 servlet 永久不可用则返回 <code>true</code>；如果 servlet 可用或暂时不可用则返回 <code>false</code>
      */
     public boolean isPermanent() {
         return permanent;
     }
 
+
     /**
-     * @deprecated As of Java Servlet API 2.2, with no replacement.
+     * @deprecated 自 Java Servlet API 2.2 起，无替代方法。返回报告其不可用性的 servlet。
      *
-     *             Returns the servlet that is reporting its unavailability.
-     * 
-     * @return the <code>Servlet</code> object that is throwing the <code>UnavailableException</code>
-     *
+     * @return 正在抛出 <code>UnavailableException</code> 的 <code>Servlet</code> 对象
      */
     @Deprecated
     public Servlet getServlet() {
@@ -155,16 +131,13 @@ public class UnavailableException extends ServletException {
     }
 
     /**
-     * Returns the number of seconds the servlet expects to be temporarily unavailable.
+     * 返回 servlet 预计将暂时不可用的秒数。
      *
      * <p>
-     * If this method returns a negative number, the servlet is permanently unavailable or cannot provide an estimate of
-     * how long it will be unavailable. No effort is made to correct for the time elapsed since the exception was first
-     * reported.
+     *     如果此方法返回负数，则表示 servlet 永久不可用或无法提供不可用时间的估计值。
+     *     不会对自异常首次报告以来经过的时间进行校正。
      *
-     * @return an integer specifying the number of seconds the servlet will be temporarily unavailable, or a negative
-     *         number if the servlet is permanently unavailable or cannot make an estimate
-     *
+     * @return 指定 servlet 暂时不可用秒数的整数，如果 servlet 永久不可用或无法给出估计值则返回负数
      */
     public int getUnavailableSeconds() {
         return permanent ? -1 : seconds;

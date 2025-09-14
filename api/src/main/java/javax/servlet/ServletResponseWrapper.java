@@ -23,25 +23,21 @@ import java.io.PrintWriter;
 import java.util.Locale;
 
 /**
- * 
- * Provides a convenient implementation of the ServletResponse interface that can be subclassed by developers wishing to
- * adapt the response from a Servlet. This class implements the Wrapper or Decorator pattern. Methods default to calling
- * through to the wrapped response object.
- * 
- * @author Various
- * @since Servlet 2.3
+ * 为 ServletResponse 接口提供了一个便捷的实现，开发人员若希望适配来自 Servlet 的响应可对此类进行子类化。
+ * 此类实现了包装器（Wrapper）或装饰器（Decorator）模式。其方法默认调用被包装的响应对象。
  *
+ * @author 多方贡献
+ * @since Servlet 2.3
  * @see javax.servlet.ServletResponse
  */
 public class ServletResponseWrapper implements ServletResponse {
     private ServletResponse response;
 
     /**
-     * Creates a ServletResponse adaptor wrapping the given response object.
+     * 创建一个用于包装给定响应对象的 ServletResponse 适配器。
      *
-     * @param response the {@link ServletResponse} to be wrapped
-     *
-     * @throws java.lang.IllegalArgumentException if the response is null.
+     * @param response 要被包装的 {@link ServletResponse}
+     * @throws java.lang.IllegalArgumentException 如果响应为 null
      */
     public ServletResponseWrapper(ServletResponse response) {
         if (response == null) {
@@ -51,20 +47,19 @@ public class ServletResponseWrapper implements ServletResponse {
     }
 
     /**
-     * Return the wrapped ServletResponse object.
+     * 返回被包装的 ServletResponse 对象。
      *
-     * @return the wrapped {@link ServletResponse}
+     * @return 被包装的 {@link ServletResponse}
      */
     public ServletResponse getResponse() {
         return this.response;
     }
 
     /**
-     * Sets the response being wrapped.
+     * 设置要被包装的响应对象。
      *
-     * @param response the {@link ServletResponse} to be installed
-     *
-     * @throws java.lang.IllegalArgumentException if the response is null.
+     * @param response 要安装的 {@link ServletResponse}
+     * @throws java.lang.IllegalArgumentException 如果响应为 null
      */
     public void setResponse(ServletResponse response) {
         if (response == null) {
@@ -74,8 +69,7 @@ public class ServletResponseWrapper implements ServletResponse {
     }
 
     /**
-     * The default behavior of this method is to call setCharacterEncoding(String charset) on the wrapped response
-     * object.
+     * 此方法的默认行为是调用被包装响应对象上的 setCharacterEncoding(String charset) 方法。
      *
      * @since Servlet 2.4
      */
@@ -85,7 +79,7 @@ public class ServletResponseWrapper implements ServletResponse {
     }
 
     /**
-     * The default behavior of this method is to return getCharacterEncoding() on the wrapped response object.
+     * 此方法的默认行为是调用被包装响应对象上的 getCharacterEncoding() 方法。
      */
     @Override
     public String getCharacterEncoding() {
@@ -93,15 +87,15 @@ public class ServletResponseWrapper implements ServletResponse {
     }
 
     /**
-     * The default behavior of this method is to return getOutputStream() on the wrapped response object.
+     * 此方法的默认行为是调用被包装响应对象上的 getOutputStream() 方法。
      */
     @Override
     public ServletOutputStream getOutputStream() throws IOException {
         return this.response.getOutputStream();
     }
 
-    /**
-     * The default behavior of this method is to return getWriter() on the wrapped response object.
+     /**
+     * 此方法的默认行为是调用被包装响应对象上的 getWriter() 方法。
      */
     @Override
     public PrintWriter getWriter() throws IOException {
@@ -109,7 +103,7 @@ public class ServletResponseWrapper implements ServletResponse {
     }
 
     /**
-     * The default behavior of this method is to call setContentLength(int len) on the wrapped response object.
+     * 此方法的默认行为是调用被包装响应对象上的 setContentLength(int len) 方法。
      */
     @Override
     public void setContentLength(int len) {
@@ -117,7 +111,7 @@ public class ServletResponseWrapper implements ServletResponse {
     }
 
     /**
-     * The default behavior of this method is to call setContentLengthLong(long len) on the wrapped response object.
+     * 此方法的默认行为是调用被包装响应对象上的 setContentLengthLong(long len) 方法。
      */
     @Override
     public void setContentLengthLong(long len) {
@@ -125,7 +119,7 @@ public class ServletResponseWrapper implements ServletResponse {
     }
 
     /**
-     * The default behavior of this method is to call setContentType(String type) on the wrapped response object.
+     * 此方法的默认行为是调用被包装响应对象上的 setContentType(String type) 方法。
      */
     @Override
     public void setContentType(String type) {
@@ -133,7 +127,7 @@ public class ServletResponseWrapper implements ServletResponse {
     }
 
     /**
-     * The default behavior of this method is to return getContentType() on the wrapped response object.
+     * 此方法的默认行为是调用被包装响应对象上的 getContentType() 方法。
      *
      * @since Servlet 2.4
      */
@@ -143,7 +137,7 @@ public class ServletResponseWrapper implements ServletResponse {
     }
 
     /**
-     * The default behavior of this method is to call setBufferSize(int size) on the wrapped response object.
+     * 此方法的默认行为是调用被包装响应对象上的 setBufferSize(int size) 方法。
      */
     @Override
     public void setBufferSize(int size) {
@@ -151,7 +145,7 @@ public class ServletResponseWrapper implements ServletResponse {
     }
 
     /**
-     * The default behavior of this method is to return getBufferSize() on the wrapped response object.
+     * 此方法的默认行为是调用被包装响应对象上的 getBufferSize() 方法。
      */
     @Override
     public int getBufferSize() {
@@ -159,7 +153,7 @@ public class ServletResponseWrapper implements ServletResponse {
     }
 
     /**
-     * The default behavior of this method is to call flushBuffer() on the wrapped response object.
+     * 此方法的默认行为是调用被包装响应对象上的 flushBuffer() 方法。
      */
     @Override
     public void flushBuffer() throws IOException {
@@ -167,7 +161,7 @@ public class ServletResponseWrapper implements ServletResponse {
     }
 
     /**
-     * The default behavior of this method is to return isCommitted() on the wrapped response object.
+     * 此方法的默认行为是调用被包装响应对象上的 isCommitted() 方法。
      */
     @Override
     public boolean isCommitted() {
@@ -175,7 +169,7 @@ public class ServletResponseWrapper implements ServletResponse {
     }
 
     /**
-     * The default behavior of this method is to call reset() on the wrapped response object.
+     * 此方法的默认行为是调用被包装响应对象上的 reset() 方法。
      */
     @Override
     public void reset() {
@@ -183,7 +177,7 @@ public class ServletResponseWrapper implements ServletResponse {
     }
 
     /**
-     * The default behavior of this method is to call resetBuffer() on the wrapped response object.
+     * 此方法的默认行为是调用被包装响应对象上的 resetBuffer() 方法。
      */
     @Override
     public void resetBuffer() {
@@ -191,7 +185,7 @@ public class ServletResponseWrapper implements ServletResponse {
     }
 
     /**
-     * The default behavior of this method is to call setLocale(Locale loc) on the wrapped response object.
+     * 此方法的默认行为是调用被包装响应对象上的 setLocale(Locale loc) 方法。
      */
     @Override
     public void setLocale(Locale loc) {
@@ -199,7 +193,7 @@ public class ServletResponseWrapper implements ServletResponse {
     }
 
     /**
-     * The default behavior of this method is to return getLocale() on the wrapped response object.
+     * 此方法的默认行为是调用被包装响应对象上的 getLocale() 方法。
      */
     @Override
     public Locale getLocale() {
@@ -207,12 +201,10 @@ public class ServletResponseWrapper implements ServletResponse {
     }
 
     /**
-     * Checks (recursively) if this ServletResponseWrapper wraps the given {@link ServletResponse} instance.
+     * （递归地）检查此 ServletResponseWrapper 是否包装了指定的 {@link ServletResponse} 实例。
      *
-     * @param wrapped the ServletResponse instance to search for
-     *
-     * @return true if this ServletResponseWrapper wraps the given ServletResponse instance, false otherwise
-     *
+     * @param wrapped 要搜索的 ServletResponse 实例
+     * @return 如果此 ServletResponseWrapper 包装了给定的 ServletResponse 实例则返回 true，否则返回 false
      * @since Servlet 3.0
      */
     public boolean isWrapperFor(ServletResponse wrapped) {
@@ -225,15 +217,13 @@ public class ServletResponseWrapper implements ServletResponse {
         }
     }
 
+
     /**
-     * Checks (recursively) if this ServletResponseWrapper wraps a {@link ServletResponse} of the given class type.
+     * （递归地）检查此 ServletResponseWrapper 是否包装了指定类类型的 {@link ServletResponse}。
      *
-     * @param wrappedType the ServletResponse class type to search for
-     *
-     * @return true if this ServletResponseWrapper wraps a ServletResponse of the given class type, false otherwise
-     *
-     * @throws IllegalArgumentException if the given class does not implement {@link ServletResponse}
-     *
+     * @param wrappedType 要搜索的 ServletResponse 类类型
+     * @return 如果此 ServletResponseWrapper 包装了给定类类型的 ServletResponse 则返回 true，否则返回 false
+     * @throws IllegalArgumentException 如果给定类未实现 {@link ServletResponse}
      * @since Servlet 3.0
      */
     public boolean isWrapperFor(Class<?> wrappedType) {

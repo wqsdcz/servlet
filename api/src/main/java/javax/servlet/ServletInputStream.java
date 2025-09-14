@@ -22,54 +22,37 @@ import java.io.InputStream;
 import java.io.IOException;
 
 /**
- * 
- * Provides an input stream for reading binary data from a client request, including an efficient <code>readLine</code>
- * method for reading data one line at a time. With some protocols, such as HTTP POST and PUT, a
- * <code>ServletInputStream</code> object can be used to read data sent from the client.
+ * 提供一个用于从客户端请求读取二进制数据的输入流，包含一个高效的<code>readLine</code>方法用于逐行读取数据。
+ * 对于某些协议（如HTTP POST和PUT），可以使用<code>ServletInputStream</code>对象读取客户端发送的数据。
  *
  * <p>
- * A <code>ServletInputStream</code> object is normally retrieved via the {@link ServletRequest#getInputStream} method.
- *
+ *     通常通过{@link ServletRequest#getInputStream}方法获取<code>ServletInputStream</code>对象。
  *
  * <p>
- * This is an abstract class that a servlet container implements. Subclasses of this class must implement the
- * <code>java.io.InputStream.read()</code> method.
- *
+ *     这是一个由servlet容器实现的抽象类。此类的子类必须实现<code>java.io.InputStream.read()</code>方法。
  *
  * @author Various
- *
  * @see ServletRequest
  *
  */
 public abstract class ServletInputStream extends InputStream {
 
     /**
-     * Does nothing, because this is an abstract class.
-     *
+     * 什么都不做，因为这是一个抽象类。
      */
     protected ServletInputStream() {
     }
 
     /**
-     *
-     * Reads the input stream, one line at a time. Starting at an offset, reads bytes into an array, until it reads a
-     * certain number of bytes or reaches a newline character, which it reads into the array as well.
+     * 逐行读取输入流。从指定偏移量开始，将字节读入数组，直到读取指定数量的字节或遇到换行符（换行符也会被读入数组）。
      *
      * <p>
-     * This method returns -1 if it reaches the end of the input stream before reading the maximum number of bytes.
-     *
-     *
-     *
-     * @param b   an array of bytes into which data is read
-     *
-     * @param off an integer specifying the character at which this method begins reading
-     *
-     * @param len an integer specifying the maximum number of bytes to read
-     *
-     * @return an integer specifying the actual number of bytes read, or -1 if the end of the stream is reached
-     *
-     * @exception IOException if an input or output exception has occurred
-     *
+     *     如果在读取最大字节数之前到达输入流末尾，该方法将返回 -1。
+     * @param b   要读入数据的字节数组
+     * @param off 指定开始读取位置的整数偏移量
+     * @param len 指定要读取的最大字节数的整数
+     * @return 表示实际读取字节数的整数，如果到达流末尾则返回 -1
+     * @exception IOException 如果发生输入或输出异常
      */
     public int readLine(byte[] b, int off, int len) throws IOException {
 
@@ -89,41 +72,33 @@ public abstract class ServletInputStream extends InputStream {
     }
 
     /**
-     * Returns true when all the data from the stream has been read else it returns false.
+     * 当从流中读取所有数据后返回 true，否则返回 false。
      *
-     * @return <code>true</code> when all data for this particular request has been read, otherwise returns
-     *         <code>false</code>.
-     *
+     * @return 当此特定请求的所有数据都已读取时返回 <code>true</code>，否则返回 <code>false</code>。
      * @since Servlet 3.1
      */
     public abstract boolean isFinished();
 
     /**
-     * Returns true if data can be read without blocking else returns false.
+     * 如果可以在不阻塞的情况下读取数据则返回 true，否则返回 false。
      *
-     * @return <code>true</code> if data can be obtained without blocking, otherwise returns <code>false</code>.
-     *
+     * @return 如果可以无阻塞地获取数据则返回 <code>true</code>，否则返回 <code>false</code>。
      * @since Servlet 3.1
      */
     public abstract boolean isReady();
 
     /**
-     * Instructs the <code>ServletInputStream</code> to invoke the provided {@link ReadListener} when it is possible to
-     * read
+     * 指示<code>ServletInputStream</code>在可读取时调用提供的{@link ReadListener}
      *
-     * @param readListener the {@link ReadListener} that should be notified when it's possible to read.
-     *
-     * @exception IllegalStateException if one of the following conditions is true
+     * @param readListener 当可读取时应被通知的{@link ReadListener}
+     * @exception IllegalStateException 如果满足以下任一条件：
      *                                  <ul>
-     *                                  <li>the associated request is neither upgraded nor the async started
-     *                                  <li>setReadListener is called more than once within the scope of the same
-     *                                  request.
+     *                                      <li>关联的请求既不是升级请求也不是异步启动的请求
+     *                                      <li>在同一请求范围内多次调用setReadListener方法
      *                                  </ul>
-     *
-     * @throws NullPointerException if readListener is null
-     *
+
+     * @throws NullPointerException 如果readListener为null
      * @since Servlet 3.1
-     * 
      */
     public abstract void setReadListener(ReadListener readListener);
 }

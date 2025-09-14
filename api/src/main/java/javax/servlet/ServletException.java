@@ -18,10 +18,11 @@
 
 package javax.servlet;
 
+
 /**
- * Defines a general exception a servlet can throw when it encounters difficulty.
+ * 定义 servlet 在遇到困难时，可以抛出的通用异常。
  *
- * @author Various
+ * @author 多方作者
  */
 public class ServletException extends Exception {
 
@@ -30,34 +31,26 @@ public class ServletException extends Exception {
     private Throwable rootCause;
 
     /**
-     * Constructs a new servlet exception.
-     *
+     * 构造一个新的 servlet 异常。
      */
     public ServletException() {
         super();
     }
 
     /**
-     * Constructs a new servlet exception with the specified message. The message can be written to the server log
-     * and/or displayed for the user.
+     * 使用指定消息构造一个新的 servlet 异常。该消息可被写入服务器日志和/或向用户显示。
      *
-     * @param message a <code>String</code> specifying the text of the exception message
-     *
+     * @param message 指定异常消息文本的 <code>String</code>
      */
     public ServletException(String message) {
         super(message);
     }
 
     /**
-     * Constructs a new servlet exception when the servlet needs to throw an exception and include a message about the
-     * "root cause" exception that interfered with its normal operation, including a description message.
+     * 当 servlet 需要抛出异常并包含有关导致其正常操作中断的"根本原因"异常信息时（包括描述消息），构造一个新的 servlet 异常。
      *
-     *
-     * @param message   a <code>String</code> containing the text of the exception message
-     *
-     * @param rootCause the <code>Throwable</code> exception that interfered with the servlet's normal operation, making
-     *                  this servlet exception necessary
-     *
+     * @param message   包含异常消息文本的 <code>String</code>
+     * @param rootCause 导致 servlet 正常操作中断的 <code>Throwable</code> 异常，使得此 servlet 异常成为必要
      */
     public ServletException(String message, Throwable rootCause) {
         super(message, rootCause);
@@ -65,18 +58,14 @@ public class ServletException extends Exception {
     }
 
     /**
-     * Constructs a new servlet exception when the servlet needs to throw an exception and include a message about the
-     * "root cause" exception that interfered with its normal operation. The exception's message is based on the
-     * localized message of the underlying exception.
+     * 当 servlet 需要抛出异常并包含有关导致其正常操作中断的"根本原因"异常信息时，构造一个新的 servlet 异常。
+     * 异常消息基于底层异常的本地化消息。
      *
      * <p>
-     * This method calls the <code>getLocalizedMessage</code> method on the <code>Throwable</code> exception to get a
-     * localized exception message. When subclassing <code>ServletException</code>, this method can be overridden to
-     * create an exception message designed for a specific locale.
+     *     此方法调用 <code>Throwable</code> 异常上的 <code>getLocalizedMessage</code> 方法来获取本地化的异常消息。
+     *     当子类化 <code>ServletException</code> 时，可以重写此方法以创建针对特定区域设计设计的异常消息。
      *
-     * @param rootCause the <code>Throwable</code> exception that interfered with the servlet's normal operation, making
-     *                  the servlet exception necessary
-     *
+     * @param rootCause 导致 servlet 正常操作中断的 <code>Throwable</code> 异常，使得 servlet 异常成为必要
      */
     public ServletException(Throwable rootCause) {
         super(rootCause);
@@ -84,11 +73,9 @@ public class ServletException extends Exception {
     }
 
     /**
-     * Returns the exception that caused this servlet exception.
+     * 返回导致此 servlet 异常的原因异常。
      *
-     *
-     * @return the <code>Throwable</code> that caused this servlet exception
-     *
+     * @return 导致此 servlet 异常的 <code>Throwable</code>
      */
     public Throwable getRootCause() {
         return rootCause;

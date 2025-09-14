@@ -18,9 +18,9 @@
 package javax.servlet;
 
 /**
- * Event that gets fired when the asynchronous operation initiated on a ServletRequest (via a call to
- * {@link ServletRequest#startAsync} or {@link ServletRequest#startAsync(ServletRequest, ServletResponse)}) has
- * completed, timed out, or produced an error.
+ * 当在 ServletRequest 上启动的异步操作（通过调用 {@link ServletRequest#startAsync()}
+ * 或 {@link ServletRequest#startAsync(ServletRequest, ServletResponse)}）
+ * 已完成、超时或产生错误时触发的事件。
  *
  * @since Servlet 3.0
  */
@@ -32,42 +32,42 @@ public class AsyncEvent {
     private Throwable throwable;
 
     /**
-     * Constructs an AsyncEvent from the given AsyncContext.
+     * 从给定的 AsyncContext 构造一个 AsyncEvent。
      *
-     * @param context the AsyncContex to be delivered with this AsyncEvent
+     * @param context 要随此 AsyncEvent 传递的 AsyncContext
      */
     public AsyncEvent(AsyncContext context) {
         this(context, context.getRequest(), context.getResponse(), null);
     }
 
     /**
-     * Constructs an AsyncEvent from the given AsyncContext, ServletRequest, and ServletResponse.
+     * 从给定的 AsyncContext、ServletRequest 和 ServletResponse 构造一个 AsyncEvent。
      *
-     * @param context  the AsyncContex to be delivered with this AsyncEvent
-     * @param request  the ServletRequest to be delivered with this AsyncEvent
-     * @param response the ServletResponse to be delivered with this AsyncEvent
+     * @param context  要随此 AsyncEvent 传递的 AsyncContext
+     * @param request  要随此 AsyncEvent 传递的 ServletRequest
+     * @param response 要随此 AsyncEvent 传递的 ServletResponse
      */
     public AsyncEvent(AsyncContext context, ServletRequest request, ServletResponse response) {
         this(context, request, response, null);
     }
 
     /**
-     * Constructs an AsyncEvent from the given AsyncContext and Throwable.
+     * 从给定的 AsyncContext 和 Throwable 构造一个 AsyncEvent。
      *
-     * @param context   the AsyncContex to be delivered with this AsyncEvent
-     * @param throwable the Throwable to be delivered with this AsyncEvent
+     * @param context   要随此 AsyncEvent 传递的 AsyncContext
+     * @param throwable 要随此 AsyncEvent 传递的 Throwable
      */
     public AsyncEvent(AsyncContext context, Throwable throwable) {
         this(context, context.getRequest(), context.getResponse(), throwable);
     }
 
     /**
-     * Constructs an AsyncEvent from the given AsyncContext, ServletRequest, ServletResponse, and Throwable.
+     * 从给定的 AsyncContext、ServletRequest、ServletResponse 和 Throwable 构造一个 AsyncEvent。
      *
-     * @param context   the AsyncContex to be delivered with this AsyncEvent
-     * @param request   the ServletRequest to be delivered with this AsyncEvent
-     * @param response  the ServletResponse to be delivered with this AsyncEvent
-     * @param throwable the Throwable to be delivered with this AsyncEvent
+     * @param context   要随此 AsyncEvent 传递的 AsyncContext
+     * @param request   要随此 AsyncEvent 传递的 ServletRequest
+     * @param response  要随此 AsyncEvent 传递的 ServletResponse
+     * @param throwable 要随此 AsyncEvent 传递的 Throwable
      */
     public AsyncEvent(AsyncContext context, ServletRequest request, ServletResponse response, Throwable throwable) {
         this.context = context;
@@ -77,51 +77,48 @@ public class AsyncEvent {
     }
 
     /**
-     * Gets the AsyncContext from this AsyncEvent.
+     * 从此 AsyncEvent 获取 AsyncContext。
      *
-     * @return the AsyncContext that was used to initialize this AsyncEvent
+     * @return 用于初始化此 AsyncEvent 的 AsyncContext
      */
     public AsyncContext getAsyncContext() {
         return context;
     }
 
     /**
-     * Gets the ServletRequest from this AsyncEvent.
+     * 从此 AsyncEvent 获取 ServletRequest。
      *
      * <p>
-     * If the AsyncListener to which this AsyncEvent is being delivered was added using
-     * {@link AsyncContext#addListener(AsyncListener, ServletRequest, ServletResponse)}, the returned ServletRequest
-     * will be the same as the one supplied to the above method. If the AsyncListener was added via
-     * {@link AsyncContext#addListener(AsyncListener)}, this method must return null.
+     * 如果此 AsyncEvent 正在传递到的 AsyncListener 是通过
+     * {@link AsyncContext#addListener(AsyncListener, ServletRequest, ServletResponse)} 添加的，
+     * 则返回的 ServletRequest 将与提供给上述方法的 ServletRequest 相同。
+     * 如果 AsyncListener 是通过 {@link AsyncContext#addListener(AsyncListener)} 添加的，则此方法必须返回 null。
      *
-     * @return the ServletRequest that was used to initialize this AsyncEvent, or null if this AsyncEvent was
-     *         initialized without any ServletRequest
+     * @return 用于初始化此 AsyncEvent 的 ServletRequest；如果此 AsyncEvent 初始化时未提供 ServletRequest，则返回 null
      */
     public ServletRequest getSuppliedRequest() {
         return request;
     }
 
     /**
-     * Gets the ServletResponse from this AsyncEvent.
+     * 从此 AsyncEvent 获取 ServletResponse。
      *
      * <p>
-     * If the AsyncListener to which this AsyncEvent is being delivered was added using
-     * {@link AsyncContext#addListener(AsyncListener, ServletRequest, ServletResponse)}, the returned ServletResponse
-     * will be the same as the one supplied to the above method. If the AsyncListener was added via
-     * {@link AsyncContext#addListener(AsyncListener)}, this method must return null.
+     * 如果此 AsyncEvent 正在传递到的 AsyncListener 是通过
+     * {@link AsyncContext#addListener(AsyncListener, ServletRequest, ServletResponse)} 添加的，
+     * 则返回的 ServletResponse 将与提供给上述方法的 ServletResponse 相同。
+     * 如果 AsyncListener 是通过 {@link AsyncContext#addListener(AsyncListener)} 添加的，则此方法必须返回 null。
      *
-     * @return the ServletResponse that was used to initialize this AsyncEvent, or null if this AsyncEvent was
-     *         initialized without any ServletResponse
+     * @return 用于初始化此 AsyncEvent 的 ServletResponse；如果此 AsyncEvent 初始化时未提供 ServletResponse，则返回 null
      */
     public ServletResponse getSuppliedResponse() {
         return response;
     }
 
     /**
-     * Gets the Throwable from this AsyncEvent.
+     * 从此 AsyncEvent 获取 Throwable。
      *
-     * @return the Throwable that was used to initialize this AsyncEvent, or null if this AsyncEvent was initialized
-     *         without any Throwable
+     * @return 用于初始化此 AsyncEvent 的 Throwable；如果此 AsyncEvent 初始化时未提供 Throwable，则返回 null
      */
     public Throwable getThrowable() {
         return throwable;

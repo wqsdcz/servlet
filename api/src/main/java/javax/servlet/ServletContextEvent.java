@@ -19,10 +19,9 @@
 package javax.servlet;
 
 /**
- * This is the event class for notifications about changes to the servlet context of a web application.
- * 
- * @see ServletContextListener
+ * 用于通知有关 Web 应用程序的 ServletContext 发生变更情况的事件类。
  *
+ * @see ServletContextListener
  * @since Servlet 2.3
  */
 public class ServletContextEvent extends java.util.EventObject {
@@ -30,18 +29,18 @@ public class ServletContextEvent extends java.util.EventObject {
     private static final long serialVersionUID = -7501701636134222423L;
 
     /**
-     * Construct a ServletContextEvent from the given context.
+     * 根据给定的上下文构建 ServletContextEvent。
      *
-     * @param source - the ServletContext that is sending the event.
+     * @param source - 发送事件的 ServletContext
      */
     public ServletContextEvent(ServletContext source) {
         super(source);
     }
 
     /**
-     * Return the ServletContext that changed.
+     * 返回发生变化的 ServletContext。
      *
-     * @return the ServletContext that sent the event.
+     * @return 发送事件的 ServletContext。
      */
     public ServletContext getServletContext() {
         return (ServletContext) super.getSource();

@@ -26,9 +26,8 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Provides a convenient implementation of the ServletRequest interface that can be subclassed by developers wishing to
- * adapt the request to a Servlet. This class implements the Wrapper or Decorator pattern. Methods default to calling
- * through to the wrapped request object.
+ * 为 ServletRequest 接口提供了一个便捷的实现，开发人员若希望使请求适应 Servlet 可对此类进行子类化。
+ * 此类实现了包装器（Wrapper）或装饰器（Decorator）模式。其方法默认调用被包装的请求对象。
  *
  * @see javax.servlet.ServletRequest
  *
@@ -39,11 +38,10 @@ public class ServletRequestWrapper implements ServletRequest {
     private ServletRequest request;
 
     /**
-     * Creates a ServletRequest adaptor wrapping the given request object.
+     * 创建一个用于包装给定请求对象的 ServletRequest 适配器。
      *
-     * @param request the {@link ServletRequest} to be wrapped
-     *
-     * @throws java.lang.IllegalArgumentException if the request is null
+     * @param request 要被包装的 {@link ServletRequest}
+     * @throws java.lang.IllegalArgumentException 如果请求为 null
      */
     public ServletRequestWrapper(ServletRequest request) {
         if (request == null) {
@@ -53,21 +51,19 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * Return the wrapped request object.
+     * 返回被包装的请求对象。
      *
-     * @return the wrapped {@link ServletRequest}
+     * @return 被包装的 {@link ServletRequest}
      */
     public ServletRequest getRequest() {
         return this.request;
     }
 
     /**
-     * Sets the request object being wrapped.
+     * 设置要被包装的请求对象。
      *
-     * @param request the {@link ServletRequest} to be installed
-     *
-     * @throws java.lang.IllegalArgumentException if the request is null.
-     * 
+     * @param request 要安装的 {@link ServletRequest}
+     * @throws java.lang.IllegalArgumentException 如果请求为 null
      */
     public void setRequest(ServletRequest request) {
         if (request == null) {
@@ -77,7 +73,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to call getAttribute(String name) on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 getAttribute(String name) 方法。
      */
     @Override
     public Object getAttribute(String name) {
@@ -85,7 +81,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getAttributeNames() on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 getAttributeNames() 方法。
      */
     @Override
     public Enumeration<String> getAttributeNames() {
@@ -93,7 +89,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getCharacterEncoding() on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 getCharacterEncoding() 方法。
      */
     @Override
     public String getCharacterEncoding() {
@@ -101,7 +97,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to set the character encoding on the wrapped request object.
+     * 此方法的默认行为是在被包装请求对象上设置字符编码。
      */
     @Override
     public void setCharacterEncoding(String enc) throws UnsupportedEncodingException {
@@ -109,7 +105,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getContentLength() on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 getContentLength() 方法。
      */
     @Override
     public int getContentLength() {
@@ -117,7 +113,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getContentLengthLong() on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 getContentLengthLong() 方法。
      *
      * @since Servlet 3.1
      */
@@ -127,7 +123,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getContentType() on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 getContentType() 方法。
      */
     @Override
     public String getContentType() {
@@ -135,7 +131,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getInputStream() on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 getInputStream() 方法。
      */
     @Override
     public ServletInputStream getInputStream() throws IOException {
@@ -143,7 +139,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getParameter(String name) on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 getParameter(String name) 方法。
      */
     @Override
     public String getParameter(String name) {
@@ -151,7 +147,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getParameterMap() on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 getParameterMap() 方法。
      */
     @Override
     public Map<String, String[]> getParameterMap() {
@@ -159,7 +155,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getParameterNames() on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 getParameterNames() 方法。
      */
     @Override
     public Enumeration<String> getParameterNames() {
@@ -167,7 +163,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getParameterValues(String name) on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 getParameterValues(String name) 方法。
      */
     @Override
     public String[] getParameterValues(String name) {
@@ -175,7 +171,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getProtocol() on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 getProtocol() 方法。
      */
     @Override
     public String getProtocol() {
@@ -183,7 +179,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getScheme() on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 getScheme() 方法。
      */
     @Override
     public String getScheme() {
@@ -191,7 +187,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getServerName() on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 getServerName() 方法。
      */
     @Override
     public String getServerName() {
@@ -199,7 +195,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getServerPort() on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 getServerPort() 方法。
      */
     @Override
     public int getServerPort() {
@@ -207,7 +203,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getReader() on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 getReader() 方法。
      */
     @Override
     public BufferedReader getReader() throws IOException {
@@ -215,7 +211,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getRemoteAddr() on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 getRemoteAddr() 方法。
      */
     @Override
     public String getRemoteAddr() {
@@ -223,7 +219,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getRemoteHost() on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 getRemoteHost() 方法。
      */
     @Override
     public String getRemoteHost() {
@@ -231,8 +227,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return setAttribute(String name, Object o) on the wrapped request
-     * object.
+     * 此方法的默认行为是调用被包装请求对象上的 setAttribute(String name, Object o) 方法。
      */
     @Override
     public void setAttribute(String name, Object o) {
@@ -240,7 +235,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to call removeAttribute(String name) on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 removeAttribute(String name) 方法。
      */
     @Override
     public void removeAttribute(String name) {
@@ -248,7 +243,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getLocale() on the wrapped request object.
+     * 此方法的默认行为是返回被包装请求对象上的 getLocale() 方法值。
      */
     @Override
     public Locale getLocale() {
@@ -256,7 +251,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getLocales() on the wrapped request object.
+     * 此方法的默认行为是返回被包装请求对象上的 getLocales() 方法值。
      */
     @Override
     public Enumeration<Locale> getLocales() {
@@ -264,7 +259,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return isSecure() on the wrapped request object.
+     * 此方法的默认行为是返回被包装请求对象上的 isSecure() 方法值。
      */
     @Override
     public boolean isSecure() {
@@ -272,7 +267,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getRequestDispatcher(String path) on the wrapped request object.
+     * 此方法的默认行为是返回被包装请求对象上的 getRequestDispatcher(String path) 方法值。
      */
     @Override
     public RequestDispatcher getRequestDispatcher(String path) {
@@ -280,9 +275,9 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getRealPath(String path) on the wrapped request object.
+     * 此方法的默认行为是返回被包装请求对象上的 getRealPath(String path) 方法值。
      *
-     * @deprecated As of Version 2.1 of the Java Servlet API, use {@link ServletContext#getRealPath} instead
+     * @deprecated 自 Java Servlet API 2.1 版本起，改用 {@link ServletContext#getRealPath}
      */
     @Override
     @Deprecated
@@ -291,7 +286,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getRemotePort() on the wrapped request object.
+     * 此方法的默认行为是返回被包装请求对象上的 getRemotePort() 方法值。
      *
      * @since Servlet 2.4
      */
@@ -301,7 +296,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getLocalName() on the wrapped request object.
+     * 此方法的默认行为是返回被包装请求对象上的 getLocalName() 方法值。
      *
      * @since Servlet 2.4
      */
@@ -311,7 +306,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getLocalAddr() on the wrapped request object.
+     * 此方法的默认行为是返回被包装请求对象上的 getLocalAddr() 方法值。
      *
      * @since Servlet 2.4
      */
@@ -321,7 +316,7 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to return getLocalPort() on the wrapped request object.
+     * 此方法的默认行为是返回被包装请求对象上的 getLocalPort() 方法值。
      *
      * @since Servlet 2.4
      */
@@ -331,10 +326,9 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * Gets the servlet context to which the wrapped servlet request was last dispatched.
+     * 获取被包装的 Servlet 请求最后一次被分发到的 Servlet 上下文。
      *
-     * @return the servlet context to which the wrapped servlet request was last dispatched
-     *
+     * @return 被包装的 Servlet 请求最后一次被分发到的 Servlet 上下文
      * @since Servlet 3.0
      */
     @Override
@@ -343,19 +337,14 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to invoke {@link ServletRequest#startAsync} on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 {@link ServletRequest#startAsync} 方法。
      *
-     * @return the (re)initialized AsyncContext
-     * 
-     * @throws IllegalStateException if the request is within the scope of a filter or servlet that does not support
-     *                               asynchronous operations (that is, {@link #isAsyncSupported} returns false), or if
-     *                               this method is called again without any asynchronous dispatch (resulting from one
-     *                               of the {@link AsyncContext#dispatch} methods), is called outside the scope of any
-     *                               such dispatch, or is called again within the scope of the same dispatch, or if the
-     *                               response has already been closed
+     * @return （重新）初始化的 AsyncContext
+     * @throws IllegalStateException 如果请求位于不支持异步操作的过滤器或 Servlet 范围内（即 {@link #isAsyncSupported} 返回 false），
+     *                               或在没有任何异步分发（由某个 {@link AsyncContext#dispatch} 方法引发）的情况下
+     *                               再次调用此方法，在任何此类分发的范围之外调用，或在同一分发范围内再次调用，或响应已关闭
      *
      * @see ServletRequest#startAsync
-     *
      * @since Servlet 3.0
      */
     @Override
@@ -364,23 +353,15 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * The default behavior of this method is to invoke
-     * {@link ServletRequest#startAsync(ServletRequest, ServletResponse)} on the wrapped request object.
+     * 此方法的默认行为是调用被包装请求对象上的 {@link ServletRequest#startAsync(ServletRequest, ServletResponse)} 方法。
      *
-     * @param servletRequest  the ServletRequest used to initialize the AsyncContext
-     * @param servletResponse the ServletResponse used to initialize the AsyncContext
-     *
-     * @return the (re)initialized AsyncContext
-     *
-     * @throws IllegalStateException if the request is within the scope of a filter or servlet that does not support
-     *                               asynchronous operations (that is, {@link #isAsyncSupported} returns false), or if
-     *                               this method is called again without any asynchronous dispatch (resulting from one
-     *                               of the {@link AsyncContext#dispatch} methods), is called outside the scope of any
-     *                               such dispatch, or is called again within the scope of the same dispatch, or if the
-     *                               response has already been closed
-     *
+     * @param servletRequest  用于初始化 AsyncContext 的 ServletRequest
+     * @param servletResponse 用于初始化 AsyncContext 的 ServletResponse
+     * @return （重新）初始化的 AsyncContext
+     * @throws IllegalStateException 如果请求位于不支持异步操作的过滤器或 Servlet 范围内（即 {@link #isAsyncSupported} 返回 false），
+     *                               或在没有任何异步分发（由某个 {@link AsyncContext#dispatch} 方法引发）的情况下
+     *                               再次调用此方法，在任何此类分发的范围之外调用，或在同一分发范围内再次调用，或响应已关闭
      * @see ServletRequest#startAsync(ServletRequest, ServletResponse)
-     *
      * @since Servlet 3.0
      */
     @Override
@@ -390,12 +371,10 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * Checks if the wrapped request has been put into asynchronous mode.
+     * 检查被包装的请求是否已处于异步模式。
      *
-     * @return true if this request has been put into asynchronous mode, false otherwise
-     *
+     * @return 如果此请求已处于异步模式则返回 true，否则返回 false
      * @see ServletRequest#isAsyncStarted
-     *
      * @since Servlet 3.0
      */
     @Override
@@ -404,12 +383,10 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * Checks if the wrapped request supports asynchronous operation.
+     * 检查被包装的请求是否支持异步操作。
      *
-     * @return true if this request supports asynchronous operation, false otherwise
-     *
+     * @return 如果此请求支持异步操作则返回 true，否则返回 false
      * @see ServletRequest#isAsyncSupported
-     *
      * @since Servlet 3.0
      */
     @Override
@@ -418,18 +395,14 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * Gets the AsyncContext that was created or reinitialized by the most recent invocation of {@link #startAsync} or
-     * {@link #startAsync(ServletRequest,ServletResponse)} on the wrapped request.
+     * 获取通过最近调用被包装请求上的 {@link #startAsync()} 或 {@link #startAsync(ServletRequest,ServletResponse)} 方法
+     * 创建或重新初始化的 AsyncContext。
      *
-     * @return the AsyncContext that was created or reinitialized by the most recent invocation of {@link #startAsync}
-     *         or {@link #startAsync(ServletRequest,ServletResponse)} on the wrapped request
-     *
-     * @throws IllegalStateException if this request has not been put into asynchronous mode, i.e., if neither
-     *                               {@link #startAsync} nor {@link #startAsync(ServletRequest,ServletResponse)} has
-     *                               been called
-     *
+     * @return 通过最近调用被包装请求上的 {@link #startAsync()} 或 {@link #startAsync(ServletRequest,ServletResponse)} 方法
+     *         创建或重新初始化的 AsyncContext
+     * @throws IllegalStateException 如果此请求未处于异步模式，即既未调用{@link #startAsync}
+     *                               也未调用 {@link #startAsync(ServletRequest,ServletResponse)}
      * @see ServletRequest#getAsyncContext
-     *
      * @since Servlet 3.0
      */
     @Override
@@ -438,12 +411,10 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * Checks (recursively) if this ServletRequestWrapper wraps the given {@link ServletRequest} instance.
+     * （递归地）检查此 ServletRequestWrapper 是否包装了指定的 {@link ServletRequest} 实例。
      *
-     * @param wrapped the ServletRequest instance to search for
-     *
-     * @return true if this ServletRequestWrapper wraps the given ServletRequest instance, false otherwise
-     *
+     * @param wrapped 要搜索的 ServletRequest 实例
+     * @return 如果此 ServletRequestWrapper 包装了给定的 ServletRequest 实例则返回 true，否则返回 false
      * @since Servlet 3.0
      */
     public boolean isWrapperFor(ServletRequest wrapped) {
@@ -457,14 +428,11 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * Checks (recursively) if this ServletRequestWrapper wraps a {@link ServletRequest} of the given class type.
+     * （递归地）检查此ServletRequestWrapper是否包装了指定类类型的{@link ServletRequest}。
      *
-     * @param wrappedType the ServletRequest class type to search for
-     *
-     * @return true if this ServletRequestWrapper wraps a ServletRequest of the given class type, false otherwise
-     *
-     * @throws IllegalArgumentException if the given class does not implement {@link ServletRequest}
-     *
+     * @param wrappedType 要搜索的ServletRequest类类型
+     * @return 如果此ServletRequestWrapper包装了给定类类型的ServletRequest则返回true，否则返回false
+     * @throws IllegalArgumentException 如果给定类未实现{@link ServletRequest}
      * @since Servlet 3.0
      */
     public boolean isWrapperFor(Class<?> wrappedType) {
@@ -482,12 +450,10 @@ public class ServletRequestWrapper implements ServletRequest {
     }
 
     /**
-     * Gets the dispatcher type of the wrapped request.
+     * 获取被包装请求的调度器类型。
      *
-     * @return the dispatcher type of the wrapped request
-     * 
+     * @return 被包装请求的调度器类型
      * @see ServletRequest#getDispatcherType
-     *
      * @since Servlet 3.0
      */
     @Override

@@ -19,8 +19,8 @@
 package javax.servlet;
 
 /**
- * Events of this kind indicate lifecycle events for a ServletRequest. The source of the event is the ServletContext of
- * this web application.
+ * 此类事件表示 ServletRequest 的生命周期事件。
+ * 事件源为此 Web 应用程序的 ServletContext。
  *
  * @see ServletRequestListener
  * @since Servlet 2.4
@@ -32,10 +32,10 @@ public class ServletRequestEvent extends java.util.EventObject {
     private final transient ServletRequest request;
 
     /**
-     * Construct a ServletRequestEvent for the given ServletContext and ServletRequest.
+     * 为给定的 ServletContext 和 ServletRequest 构造一个 ServletRequestEvent。
      *
-     * @param sc      the ServletContext of the web application.
-     * @param request the ServletRequest that is sending the event.
+     * @param sc      当前 Web 应用程序的 ServletContext
+     * @param request 发送事件的 ServletRequest
      */
     public ServletRequestEvent(ServletContext sc, ServletRequest request) {
         super(sc);
@@ -43,18 +43,18 @@ public class ServletRequestEvent extends java.util.EventObject {
     }
 
     /**
-     * Returns the ServletRequest that is changing.
-     * 
-     * @return the {@link ServletRequest} corresponding to this event.
+     * 返回正在发生变化的 ServletRequest。
+     *
+     * @return 与此事件对应的 {@link ServletRequest}
      */
     public ServletRequest getServletRequest() {
         return this.request;
     }
 
     /**
-     * Returns the ServletContext of this web application.
+     * 返回当前 Web 应用程序的 ServletContext。
      *
-     * @return the {@link ServletContext} for this web application.
+     * @return 当前 Web 应用程序的 {@link ServletContext}
      */
     public ServletContext getServletContext() {
         return (ServletContext) super.getSource();

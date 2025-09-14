@@ -19,10 +19,9 @@
 package javax.servlet;
 
 /**
- * Event class for notifications about changes to the attributes of the ServletContext of a web application.
+ * 用于通知有关 Web 应用程序的 ServletContext 属性变更情况的事件类。
  *
  * @see ServletContextAttributeListener
- *
  * @since Servlet 2.3
  */
 public class ServletContextAttributeEvent extends ServletContextEvent {
@@ -33,11 +32,11 @@ public class ServletContextAttributeEvent extends ServletContextEvent {
     private Object value;
 
     /**
-     * Constructs a ServletContextAttributeEvent from the given ServletContext, attribute name, and attribute value.
+     * 根据给定的 ServletContext、属性名称和属性值构造一个 ServletContextAttributeEvent。
      *
-     * @param source the ServletContext whose attribute changed
-     * @param name   the name of the ServletContext attribute that changed
-     * @param value  the value of the ServletContext attribute that changed
+     * @param source 属性发生变化的 ServletContext
+     * @param name   发生变化的 ServletContext 属性名称
+     * @param value  发生变化的 ServletContext 属性值
      */
     public ServletContextAttributeEvent(ServletContext source, String name, Object value) {
         super(source);
@@ -46,22 +45,23 @@ public class ServletContextAttributeEvent extends ServletContextEvent {
     }
 
     /**
-     * Gets the name of the ServletContext attribute that changed.
+     * 获取发生变化的 ServletContext 属性名称。
      *
-     * @return the name of the ServletContext attribute that changed
+     * @return 发生变化的 ServletContext 属性名称
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * Gets the value of the ServletContext attribute that changed.
+     * 获取发生变化的 ServletContext 的属性值。
      *
      * <p>
-     * If the attribute was added, this is the value of the attribute. If the attribute was removed, this is the value
-     * of the removed attribute. If the attribute was replaced, this is the old value of the attribute.
+     *     如果是添加属性，此为属性的值。
+     *     如果是移除属性，此为被移除属性的值。
+     *     如果是替换属性，此为属性的旧值。
      *
-     * @return the value of the ServletContext attribute that changed
+     * @return 发生变化的 ServletContext 属性值
      */
     public Object getValue() {
         return this.value;

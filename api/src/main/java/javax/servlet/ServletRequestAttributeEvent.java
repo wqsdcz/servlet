@@ -19,8 +19,8 @@
 package javax.servlet;
 
 /**
- * This is the event class for notifications of changes to the attributes of the servlet request in an application.
- * 
+ * 这是用于通知应用程序中 servlet 请求属性发生更改的事件类。
+ *
  * @see ServletRequestAttributeListener
  * @since Servlet 2.4
  */
@@ -32,13 +32,13 @@ public class ServletRequestAttributeEvent extends ServletRequestEvent {
     private Object value;
 
     /**
-     * Construct a ServletRequestAttributeEvent giving the servlet context of this web application, the ServletRequest
-     * whose attributes are changing and the name and value of the attribute.
+     * 通过给定此Web应用程序的servlet上下文、属性正在发生变化的ServletRequest，
+     * 以及属性的名称和值，构建一个ServletRequestAttributeEvent。
      *
-     * @param sc      the ServletContext that is sending the event.
-     * @param request the ServletRequest that is sending the event.
-     * @param name    the name of the request attribute.
-     * @param value   the value of the request attribute.
+     * @param sc      发送事件的ServletContext
+     * @param request 发送事件的ServletRequest
+     * @param name    请求属性的名称
+     * @param value   请求属性的值
      */
     public ServletRequestAttributeEvent(ServletContext sc, ServletRequest request, String name, Object value) {
         super(sc, request);
@@ -47,20 +47,23 @@ public class ServletRequestAttributeEvent extends ServletRequestEvent {
     }
 
     /**
-     * Return the name of the attribute that changed on the ServletRequest.
+     * 返回ServletRequest上发生变化的属性名称。
      *
-     * @return the name of the changed request attribute
+     * @return 发生变化的请求属性名称
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * Returns the value of the attribute that has been added, removed or replaced. If the attribute was added, this is
-     * the value of the attribute. If the attribute was removed, this is the value of the removed attribute. If the
-     * attribute was replaced, this is the old value of the attribute.
+     * 返回已添加、移除或替换的属性值。
      *
-     * @return the value of the changed request attribute
+     * <p>
+     *     如果是添加属性，则此为属性值；
+     *     如果是移除属性，则此为被移除属性的值；
+     *     如果是替换属性，则此为属性的旧值。
+     *
+     * @return 发生变化的请求属性值
      */
     public Object getValue() {
         return this.value;
