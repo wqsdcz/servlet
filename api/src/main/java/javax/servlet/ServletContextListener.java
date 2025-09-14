@@ -21,16 +21,15 @@ package javax.servlet;
 import java.util.EventListener;
 
 /**
- * Interface for receiving notification events about ServletContext lifecycle changes.
+ * 用于接收关于ServletContext生命周期更改通知事件的接口。
  *
  * <p>
- * In order to receive these notification events, the implementation class must be either declared in the deployment
- * descriptor of the web application, annotated with {@link javax.servlet.annotation.WebListener}, or registered via one
- * of the addListener methods defined on {@link ServletContext}.
+ *     为接收这些通知事件，实现类必须在Web应用程序的部署描述符中声明，
+ *     使用{@link javax.servlet.annotation.WebListener}注解标注，
+ *     或通过{@link ServletContext}上定义的addListener方法之一进行注册。
  *
  * <p>
- * Implementations of this interface are invoked at their {@link #contextInitialized} method in the order in which they
- * have been declared, and at their {@link #contextDestroyed} method in reverse order.
+ *     此接口的实现按照声明顺序调用其{@link #contextInitialized}方法，并按照逆序调用其{@link #contextDestroyed}方法。
  *
  * @see ServletContextEvent
  *
@@ -39,29 +38,23 @@ import java.util.EventListener;
 public interface ServletContextListener extends EventListener {
 
     /**
-     * Receives notification that the web application initialization process is starting.
+     * 接收Web应用程序初始化过程开始的通知。
      *
-     * <p>
-     * All ServletContextListeners are notified of context initialization before any filters or servlets in the web
-     * application are initialized.
+     * <p>在初始化Web应用程序中的任何过滤器或Servlet之前，会通知所有ServletContextListener上下文初始化事件。
      *
-     * @param sce the ServletContextEvent containing the ServletContext that is being initialized
-     *
-     * @implSpec The default implementation takes no action.
+     * @param sce 包含正在初始化的ServletContext的ServletContextEvent事件对象
+     * @implSpec 默认实现不执行任何操作。
      */
     default public void contextInitialized(ServletContextEvent sce) {
     }
 
     /**
-     * Receives notification that the ServletContext is about to be shut down.
+     * 接收ServletContext即将被关闭的通知。
      *
-     * <p>
-     * All servlets and filters will have been destroyed before any ServletContextListeners are notified of context
-     * destruction.
+     * <p>在所有ServletContextListener接收到上下文销毁通知之前，所有的servlet和过滤器都已被销毁。
      *
-     * @param sce the ServletContextEvent containing the ServletContext that is being destroyed
-     *
-     * @implSpec The default implementation takes no action.
+     * @param sce 包含正在被销毁的ServletContext的ServletContextEvent事件对象
+     * @implSpec 默认实现不执行任何操作。
      */
     default public void contextDestroyed(ServletContextEvent sce) {
     }

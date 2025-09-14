@@ -20,6 +20,7 @@ package javax.servlet;
 import java.util.*;
 
 /**
+ * 组成：名称、类型名、初始化参数、异步支持、映射的servlet名称、映射的URL
  * 通过该接口可对 {@link Filter} 进行进一步配置。
  *
  * @since Servlet 3.0

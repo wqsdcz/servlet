@@ -23,137 +23,60 @@ import java.io.PrintWriter;
 import java.util.Locale;
 
 /**
- * Defines an object to assist a servlet in sending a response to the client. The servlet container creates a
- * <code>ServletResponse</code> object and passes it as an argument to the servlet's <code>service</code> method.
+ * 定义了一个用于协助Servlet向客户端发送响应的对象。
+ * Servlet容器会创建一个<code>ServletResponse</code>对象，
+ * 并将其作为参数传递给servlet的<code>service</code>方法。
  *
  * <p>
- * To send binary data in a MIME body response, use the {@link ServletOutputStream} returned by
- * {@link #getOutputStream}. To send character data, use the <code>PrintWriter</code> object returned by
- * {@link #getWriter}. To mix binary and text data, for example, to create a multipart response, use a
- * <code>ServletOutputStream</code> and manage the character sections manually.
+ *     在MIME正文响应中,
+ *     要发送二进制数据，请使用通过{@link #getOutputStream}返回的{@link ServletOutputStream}对象，
+ *     要发送字符数据，请使用通过{@link #getWriter}返回的{@link PrintWriter}对象。
+ *     要混合发送二进制和文本数据（例如：创建多部分响应），请使用{@link ServletOutputStream}对象，并手动管理字符部分。
  *
  * <p>
- * The charset for the MIME body response can be specified explicitly using any of the following techniques: per
- * request, per web-app (using {@link ServletContext#setRequestCharacterEncoding}, deployment descriptor), and per
- * container (for all web applications deployed in that container, using vendor specific configuration). If multiple of
- * the preceding techniques have been employed, the priority is the order listed. For per request, the charset for the
- * response can be specified explicitly using the {@link #setCharacterEncoding} and {@link #setContentType} methods, or
- * implicitly using the {@link #setLocale} method. Explicit specifications take precedence over implicit specifications.
- * If no charset is explicitly specified, ISO-8859-1 will be used. The <code>setCharacterEncoding</code>,
- * <code>setContentType</code>, or <code>setLocale</code> method must be called before <code>getWriter</code> and before
- * committing the response for the character encoding to be used.
- * 
+ *     MIME正文响应的字符集可以通过以下任一技术显式指定：
+ *     <ul>
+ *         <li>按请求指定</li>
+ *         <li>按Web应用指定（使用{@link ServletContext#setRequestCharacterEncoding}或部署描述符配置）</li>
+ *         <li>按容器指定（对于部署在该容器中的所有Web应用，使用供应商特定配置）</li>
+ *     </ul>
+ *     如果采用了多种前述技术，则优先级按列出顺序递减。
+ *     对于每个请求，可以使用{@link #setCharacterEncoding}和{@link #setContentType}方法显式指定响应的字符集，或使用{@link #setLocale}方法隐式指定。
+ *     显式规范优先于隐式规范。
+ *     如果未显式指定字符集，则将使用ISO-8859-1。
+ *
  * <p>
- * See the Internet RFCs such as <a href="http://www.ietf.org/rfc/rfc2045.txt"> RFC 2045</a> for more information on
- * MIME. Protocols such as SMTP and HTTP define profiles of MIME, and those standards are still evolving.
+ *     要确保使用正确的字符编码，必须在调用<code>getWriter</code> 以及提交响应之前，调用如下方法：
+ *     <ul>
+ *         <li><code>setCharacterEncoding</code></li>
+ *         <li><code>setContentType</code></li>
+ *         <li><code>setLocale</code></li>
+ *     </ul>
+ * <p>
+ *     有关MIME的更多信息，请参阅Internet RFC（例如<a href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045</a>）。
+ *     SMTP和HTTP等协议定义了MIME的配置文件，且这些标准仍在不断发展中。
  *
  * @author Various
- *
  * @see ServletOutputStream
  */
 public interface ServletResponse {
 
     /**
-     * Returns the name of the character encoding (MIME charset) used for the body sent in this response. The following
-     * methods for specifying the response character encoding are consulted, in decreasing order of priority: per
-     * request, perweb-app (using {@link ServletContext#setResponseCharacterEncoding}, deployment descriptor), and per
-     * container (for all web applications deployed in that container, using vendor specific configuration). The first
-     * one of these methods that yields a result is returned. Per-request, the charset for the response can be specified
-     * explicitly using the {@link #setCharacterEncoding} and {@link #setContentType} methods, or implicitly using the
-     * setLocale(java.util.Locale) method. Explicit specifications take precedence over implicit specifications. Calls
-     * made to these methods after <code>getWriter</code> has been called or after the response has been committed have
-     * no effect on the character encoding. If no character encoding has been specified, <code>ISO-8859-1</code> is
-     * returned.
+     * 设置发送给客户端的响应的字符编码（MIME字符集），例如设置为UTF-8。
+     * 如果响应字符编码已通过{@link ServletContext#setResponseCharacterEncoding}、
+     * 部署描述符或使用setContentType()、setLocale()方法设置，则此方法设置的值将覆盖之前的所有值。
+     * 使用字符串<code>text/html</code>调用{@link #setContentType}并结合使用字符串<code>UTF-8</code>
+     * 调用此方法，等同于使用字符串<code>text/html; charset=UTF-8</code>调用<code>setContentType</code>。
      * <p>
-     * See RFC 2047 (http://www.ietf.org/rfc/rfc2047.txt) for more information about character encoding and MIME.
-     *
-     * @return a <code>String</code> specifying the name of the character encoding, for example, <code>UTF-8</code>
-     */
-    public String getCharacterEncoding();
-
-    /**
-     * Returns the content type used for the MIME body sent in this response. The content type proper must have been
-     * specified using {@link #setContentType} before the response is committed. If no content type has been specified,
-     * this method returns null. If a content type has been specified, and a character encoding has been explicitly or
-     * implicitly specified as described in {@link #getCharacterEncoding} or {@link #getWriter} has been called, the
-     * charset parameter is included in the string returned. If no character encoding has been specified, the charset
-     * parameter is omitted.
-     *
-     * @return a <code>String</code> specifying the content type, for example, <code>text/html; charset=UTF-8</code>, or
-     *         null
-     *
-     * @since Servlet 2.4
-     */
-    public String getContentType();
-
-    /**
-     * Returns a {@link ServletOutputStream} suitable for writing binary data in the response. The servlet container
-     * does not encode the binary data.
+     *     此方法可重复调用以更改字符编码。
+     *     如果在调用<code>getWriter</code>之后或响应已提交后调用，则该方法无效。
      *
      * <p>
-     * Calling flush() on the ServletOutputStream commits the response.
+     * 如果协议支持，容器必须将用于Servlet响应写入器的字符编码告知客户端。
+     * 对于HTTP协议，字符编码会作为文本媒体类型的<code>Content-Type</code>头部的一部分进行传递。
+     * 请注意，如果Servlet未指定内容类型，则无法通过HTTP头部传递字符编码；但该编码仍会用于编码通过Servlet响应写入器写入的文本。
      *
-     * Either this method or {@link #getWriter} may be called to write the body, not both, except when {@link #reset}
-     * has been called.
-     *
-     * @return a {@link ServletOutputStream} for writing binary data
-     *
-     * @exception IllegalStateException if the <code>getWriter</code> method has been called on this response
-     *
-     * @exception IOException           if an input or output exception occurred
-     *
-     * @see #getWriter
-     * @see #reset
-     */
-    public ServletOutputStream getOutputStream() throws IOException;
-
-    /**
-     * Returns a <code>PrintWriter</code> object that can send character text to the client. The
-     * <code>PrintWriter</code> uses the character encoding returned by {@link #getCharacterEncoding}. If the response's
-     * character encoding has not been specified as described in <code>getCharacterEncoding</code> (i.e., the method
-     * just returns the default value <code>ISO-8859-1</code>), <code>getWriter</code> updates it to
-     * <code>ISO-8859-1</code>.
-     * <p>
-     * Calling flush() on the <code>PrintWriter</code> commits the response.
-     * <p>
-     * Either this method or {@link #getOutputStream} may be called to write the body, not both, except when
-     * {@link #reset} has been called.
-     * 
-     * @return a <code>PrintWriter</code> object that can return character data to the client
-     *
-     * @exception                       java.io.UnsupportedEncodingException if the character encoding returned by
-     *                                  <code>getCharacterEncoding</code> cannot be used
-     *
-     * @exception IllegalStateException if the <code>getOutputStream</code> method has already been called for this
-     *                                  response object
-     *
-     * @exception IOException           if an input or output exception occurred
-     *
-     * @see #getOutputStream
-     * @see #setCharacterEncoding
-     * @see #reset
-     */
-    public PrintWriter getWriter() throws IOException;
-
-    /**
-     * Sets the character encoding (MIME charset) of the response being sent to the client, for example, to UTF-8. If
-     * the response character encoding has already been set by the {@link ServletContext#setResponseCharacterEncoding},
-     * deployment descriptor, or using the setContentType() or setLocale() methods, the value set in this method
-     * overrides any of those values. Calling {@link #setContentType} with the <code>String</code> of
-     * <code>text/html</code> and calling this method with the <code>String</code> of <code>UTF-8</code> is equivalent
-     * with calling <code>setContentType</code> with the <code>String</code> of <code>text/html; charset=UTF-8</code>.
-     * <p>
-     * This method can be called repeatedly to change the character encoding. This method has no effect if it is called
-     * after <code>getWriter</code> has been called or after the response has been committed.
-     * <p>
-     * Containers must communicate the character encoding used for the servlet response's writer to the client if the
-     * protocol provides a way for doing so. In the case of HTTP, the character encoding is communicated as part of the
-     * <code>Content-Type</code> header for text media types. Note that the character encoding cannot be communicated
-     * via HTTP headers if the servlet does not specify a content type; however, it is still used to encode text written
-     * via the servlet response's writer.
-     *
-     * @param charset a String specifying only the character set defined by IANA Character Sets
-     *                (http://www.iana.org/assignments/character-sets)
+     * @param charset 指定仅包含IANA字符集（http://www.iana.org/assignments/character-sets）定义的字符集的字符串
      *
      * @see #setContentType
      * @see #setLocale
@@ -163,41 +86,41 @@ public interface ServletResponse {
     public void setCharacterEncoding(String charset);
 
     /**
-     * Sets the length of the content body in the response In HTTP servlets, this method sets the HTTP Content-Length
-     * header.
+     * 返回此响应体中发送内容所使用的字符编码名称（MIME字符集）。
+     * <p>
+     *     确定响应字符编码时按以下方法优先级递减顺序采用：
+     *     <ul>
+     *         <li>按请求指定</li>
+     *         <li>按Web应用指定（使用{@link ServletContext#setResponseCharacterEncoding}或部署描述符配置）</li>
+     *         <li>按容器指定（对于部署在该容器中的所有Web应用，使用供应商特定配置）</li>
+     *     </ul>
+     *     将返回这些方法中首个产生结果的值。
+     *     对于每个请求，可以使用{@link #setCharacterEncoding}和{@link #setContentType}方法显式指定响应字符集，
+     *     或使用setLocale(java.util.Locale)方法隐式指定。显式规范优先于隐式规范。
+     *     在调用<code>getWriter</code>或提交响应后调用这些方法不会影响字符编码。
+     *     如果未指定字符编码，则返回<code>ISO-8859-1</code>。
+     * <p>
+     *     有关字符编码和MIME的更多信息，请参阅RFC 2047 (http://www.ietf.org/rfc/rfc2047.txt)。
      *
-     * @param len an integer specifying the length of the content being returned to the client; sets the Content-Length
-     *            header
+     * @return 指定字符编码名称的<code>String</code>，例如<code>UTF-8</code>
      */
-    public void setContentLength(int len);
+    public String getCharacterEncoding();
 
     /**
-     * Sets the length of the content body in the response In HTTP servlets, this method sets the HTTP Content-Length
-     * header.
+     * 设置要发送给客户端的响应的内容类型（前提是响应尚未提交）。
+     * 给定的内容类型可以包含字符编码规范，例如: <code>text/html;charset=UTF-8</code>。
+     * 只有在调用<code>getWriter</code>之前调用此方法时，才会根据给定的内容类型设置响应的字符编码。
      *
-     * @param len a long specifying the length of the content being returned to the client; sets the Content-Length
-     *            header
-     *
-     * @since Servlet 3.1
-     */
-    public void setContentLengthLong(long len);
-
-    /**
-     * Sets the content type of the response being sent to the client, if the response has not been committed yet. The
-     * given content type may include a character encoding specification, for example,
-     * <code>text/html;charset=UTF-8</code>. The response's character encoding is only set from the given content type
-     * if this method is called before <code>getWriter</code> is called.
      * <p>
-     * This method may be called repeatedly to change content type and character encoding. This method has no effect if
-     * called after the response has been committed. It does not set the response's character encoding if it is called
-     * after <code>getWriter</code> has been called or after the response has been committed.
+     *     该方法可重复调用以更改内容类型和字符编码。
+     *     若在响应提交后调用，则不会产生任何效果。
+     *     如果在调用<code>getWriter</code>之后或响应已提交后调用，则不会设置响应的字符编码。
+     *
      * <p>
-     * Containers must communicate the content type and the character encoding used for the servlet response's writer to
-     * the client if the protocol provides a way for doing so. In the case of HTTP, the <code>Content-Type</code> header
-     * is used.
+     *     如果协议支持，容器必须将用于Servlet响应写入器的内容类型和字符编码告知客户端。
+     *     对于HTTP协议，是通过<code>Content-Type</code>头部来实现的。
      *
-     * @param type a <code>String</code> specifying the MIME type of the content
-     *
+     * @param type 指定内容MIME类型的<code>String</code>
      * @see #setLocale
      * @see #setCharacterEncoding
      * @see #getOutputStream
@@ -207,22 +130,87 @@ public interface ServletResponse {
     public void setContentType(String type);
 
     /**
-     * Sets the preferred buffer size for the body of the response. The servlet container will use a buffer at least as
-     * large as the size requested. The actual buffer size used can be found using <code>getBufferSize</code>.
+     * 返回此响应中发送的MIME正文所使用的内容类型。
+     * 必须在响应提交前使用{@link #setContentType}指定具体的内容类型。
+     * 如果未指定内容类型，此方法返回null。
+     * 如果已指定内容类型，并且已通过{@link #getCharacterEncoding}中描述的方式显式或隐式指定了字符编码，或已调用了{@link #getWriter}，
+     * 则返回的字符串中将包含charset参数。
+     * 如果未指定字符编码，则省略charset参数。
+     *
+     * @return 指定内容类型的<code>String</code>，例如<code>text/html; charset=UTF-8</code>，或null
+     * @since Servlet 2.4
+     */
+    public String getContentType();
+
+    /**
+     * 返回适用于在响应中写入二进制数据的{@link ServletOutputStream}。
+     * Servlet容器不会对二进制数据进行编码。
      *
      * <p>
-     * A larger buffer allows more content to be written before anything is actually sent, thus providing the servlet
-     * with more time to set appropriate status codes and headers. A smaller buffer decreases server memory load and
-     * allows the client to start receiving data more quickly.
+     *     在ServletOutputStream上调用flush()方法将提交响应。
+     *     可以调用此方法或{@link #getWriter}之一来写入响应体，但不能同时调用两者，除非已调用{@link #reset}方法。
+     *
+     * @return 用于写入二进制数据的{@link ServletOutputStream}
+     * @exception IllegalStateException 如果已在此响应上调用<code>getWriter</code>方法
+     * @exception IOException           如果发生输入或输出异常
+     * @see #getWriter
+     * @see #reset
+     */
+    public ServletOutputStream getOutputStream() throws IOException;
+
+    /**
+     * 返回一个可向客户端发送字符文本的<code>PrintWriter</code>对象。
+     * 该<code>PrintWriter</code>使用{@link #getCharacterEncoding}返回的字符编码。
+     * 如果响应的字符编码未按<code>getCharacterEncoding</code>中所述的方式指定
+     * （即该方法仅返回默认值<code>ISO-8859-1</code>），则<code>getWriter</code>会将其更新为<code>ISO-8859-1</code>。
      *
      * <p>
-     * This method must be called before any response body content is written; if content has been written or the
-     * response object has been committed, this method throws an <code>IllegalStateException</code>.
+     *     在<code>PrintWriter</code>上调用flush()方法将提交响应。
+     *     可以调用此方法或{@link #getOutputStream}之一来写入响应体，但不能同时调用两者，除非已调用{@link #reset}方法。
      *
-     * @param size the preferred buffer size
+     * @return 可向客户端返回字符数据的<code>PrintWriter</code>对象
+     * @exception java.io.UnsupportedEncodingException 如果<code>getCharacterEncoding</code>返回的字符编码无法使用
+     * @exception IllegalStateException 如果已在此响应对象上调用<code>getOutputStream</code>方法
+     * @exception IOException           如果发生输入或输出异常
      *
-     * @exception IllegalStateException if this method is called after content has been written
+     * @see #getOutputStream
+     * @see #setCharacterEncoding
+     * @see #reset
+     */
+    public PrintWriter getWriter() throws IOException;
+
+    /**
+     * 设置响应中内容主体的长度。
+     * 在HTTP servlet中，此方法用于设置HTTP Content-Length头。
      *
+     * @param len 指定返回给客户端的内容长度的整数；用于设置Content-Length头
+     */
+    public void setContentLength(int len);
+
+    /**
+     * 设置响应中内容主体的长度。
+     * 在HTTP servlet中，此方法用于设置HTTP Content-Length头。
+     *
+     * @param len 指定返回给客户端的内容长度的长整型值；用于设置Content-Length头
+     * @since Servlet 3.1
+     */
+    public void setContentLengthLong(long len);
+
+    /**
+     * 设置响应体的首选缓冲区大小。
+     * Servlet容器将使用至少等于请求大小的缓冲区。
+     * 实际使用的缓冲区大小可通过<code>getBufferSize</code>方法获取。
+     *
+     * <p>
+     *     较大的缓冲区允许在实际发送任何内容之前写入更多内容，从而为servlet提供更多时间来设置适当的状态码和头部。
+     *     较小的缓冲区可减少服务器内存负载，并允许客户端更快开始接收数据。
+     *
+     * <p>
+     *     此方法必须在写入任何响应体内容之前调用；
+     *     如果已写入内容或响应对象已提交，该方法将抛出<code>IllegalStateException</code>异常。
+     *
+     * @param size 首选缓冲区大小
+     * @exception IllegalStateException 如果在写入内容后调用此方法
      * @see #getBufferSize
      * @see #flushBuffer
      * @see #isCommitted
@@ -231,10 +219,9 @@ public interface ServletResponse {
     public void setBufferSize(int size);
 
     /**
-     * Returns the actual buffer size used for the response. If no buffering is used, this method returns 0.
+     * 返回响应实际使用的缓冲区大小。如果未使用缓冲，该方法返回0。
      *
-     * @return the actual buffer size used
-     *
+     * @return 实际使用的缓冲区大小
      * @see #setBufferSize
      * @see #flushBuffer
      * @see #isCommitted
@@ -243,56 +230,50 @@ public interface ServletResponse {
     public int getBufferSize();
 
     /**
-     * Forces any content in the buffer to be written to the client. A call to this method automatically commits the
-     * response, meaning the status code and headers will be written.
+     * 强制将缓冲区中的任何内容写入客户端。
+     * 调用此方法会自动提交响应，这意味着状态码和头部信息将被写入。
      *
      * @see #setBufferSize
      * @see #getBufferSize
      * @see #isCommitted
      * @see #reset
-     * 
-     * @throws IOException if the act of flushing the buffer cannot be completed.
-     *
+     * @throws IOException 如果无法完成缓冲区的刷新操作
      */
     public void flushBuffer() throws IOException;
 
     /**
-     * Clears the content of the underlying buffer in the response without clearing headers or status code. If the
-     * response has been committed, this method throws an <code>IllegalStateException</code>.
+     * 清除响应底层缓冲区的内容，而不清除头部或状态码。
+     * 如果响应已被提交，此方法将抛出<code>IllegalStateException</code>异常。
      *
      * @see #setBufferSize
      * @see #getBufferSize
      * @see #isCommitted
      * @see #reset
-     *
      * @since Servlet 2.3
      */
     public void resetBuffer();
 
     /**
-     * Returns a boolean indicating if the response has been committed. A committed response has already had its status
-     * code and headers written.
+     * 返回一个布尔值，指示响应是否已被提交。
+     * 已提交的响应表示其状态码和头部信息已被写入。
      *
-     * @return a boolean indicating if the response has been committed
-     *
+     * @return 指示响应是否已被提交的布尔值
      * @see #setBufferSize
      * @see #getBufferSize
      * @see #flushBuffer
      * @see #reset
-     *
      */
     public boolean isCommitted();
 
     /**
-     * Clears any data that exists in the buffer as well as the status code, headers. The state of calling
-     * {@link #getWriter} or {@link #getOutputStream} is also cleared. It is legal, for instance, to call
-     * {@link #getWriter}, {@link #reset} and then {@link #getOutputStream}. If {@link #getWriter} or
-     * {@link #getOutputStream} have been called before this method, then the corrresponding returned Writer or
-     * OutputStream will be staled and the behavior of using the stale object is undefined. If the response has been
-     * committed, this method throws an <code>IllegalStateException</code>.
+     * 清除缓冲区中存在的任何数据以及状态码和头部信息。
+     * 调用{@link #getWriter}或{@link #getOutputStream}的状态也会被清除。
+     * 例如，先调用{@link #getWriter}、再调用{@link #reset}，然后调用{@link #getOutputStream}是合法的操作。
+     * 如果在调用此方法之前已经调用了{@link #getWriter}或{@link #getOutputStream}，
+     * 则相应的返回Writer或OutputStream将变为已过时状态，使用已过时对象的行为是未定义的。
+     * 如果响应已被提交，此方法将抛出<code>IllegalStateException</code>异常。
      *
-     * @exception IllegalStateException if the response has already been committed
-     *
+     * @exception IllegalStateException 如果响应已被提交
      * @see #setBufferSize
      * @see #getBufferSize
      * @see #flushBuffer
@@ -301,25 +282,24 @@ public interface ServletResponse {
     public void reset();
 
     /**
-     * Sets the locale of the response, if the response has not been committed yet. It also sets the response's
-     * character encoding appropriately for the locale, if the character encoding has not been explicitly set using
-     * {@link #setContentType} or {@link #setCharacterEncoding}, <code>getWriter</code> hasn't been called yet, and the
-     * response hasn't been committed yet. If the deployment descriptor contains a
-     * <code>locale-encoding-mapping-list</code> element, and that element provides a mapping for the given locale, that
-     * mapping is used. Otherwise, the mapping from locale to character encoding is container dependent.
+     * 设置响应的区域设置（如果响应尚未提交）。
+     * 如果尚未使用{@link #setContentType}或{@link #setCharacterEncoding}显式设置字符编码，
+     * 且尚未调用<code>getWriter</code>方法，同时响应尚未提交，该方法还会根据区域设置相应地设置响应的字符编码。
+     * 如果部署描述符包含<code>locale-encoding-mapping-list</code>元素，且该元素提供了给定区域设置的映射，则使用该映射。
+     * 否则，从区域设置到字符编码的映射取决于容器实现。
      * <p>
-     * This method may be called repeatedly to change locale and character encoding. The method has no effect if called
-     * after the response has been committed. It does not set the response's character encoding if it is called after
-     * {@link #setContentType} has been called with a charset specification, after {@link #setCharacterEncoding} has
-     * been called, after <code>getWriter</code> has been called, or after the response has been committed.
+     *     该方法可重复调用以更改区域设置和字符编码。
+     *     如果在响应提交后调用，则该方法不产生任何效果。
+     *     如果在已使用字符集规范调用{@link #setContentType}后、调用{@link #setCharacterEncoding}后、
+     *     调用<code>getWriter</code>后或响应提交后调用，则不会设置响应的字符编码。
      * <p>
-     * Containers must communicate the locale and the character encoding used for the servlet response's writer to the
-     * client if the protocol provides a way for doing so. In the case of HTTP, the locale is communicated via the
-     * <code>Content-Language</code> header, the character encoding as part of the <code>Content-Type</code> header for
-     * text media types. Note that the character encoding cannot be communicated via HTTP headers if the servlet does
-     * not specify a content type; however, it is still used to encode text written via the servlet response's writer.
-     * 
-     * @param loc the locale of the response
+     *     如果协议支持，容器必须将用于Servlet响应写入器的区域设置和字符编码告知客户端。
+     *     对于HTTP协议，区域设置通过<code>Content-Language</code>头传递，
+     *     字符编码则作为文本媒体类型<code>Content-Type</code>头的一部分进行传递。
+     *     请注意，如果Servlet未指定内容类型，则无法通过HTTP头传递字符编码；
+     *     但仍会使用该编码来编码通过Servlet响应写入器写入的文本。
+     *
+     * @param loc 响应的区域设置
      *
      * @see #getLocale
      * @see #setContentType
@@ -328,12 +308,11 @@ public interface ServletResponse {
     public void setLocale(Locale loc);
 
     /**
-     * Returns the locale specified for this response using the {@link #setLocale} method. Calls made to
-     * <code>setLocale</code> after the response is committed have no effect. If no locale has been specified, the
-     * container's default locale is returned.
+     * 返回通过{@link #setLocale}方法为此响应指定的区域设置。
+     * 在响应提交后调用<code>setLocale</code>方法不会产生任何效果。
+     * 如果未指定任何区域设置，则返回容器的默认区域设置。
      *
-     * @return the Locale for this response.
-     * 
+     * @return 此响应的Locale区域设置对象
      * @see #setLocale
      */
     public Locale getLocale();

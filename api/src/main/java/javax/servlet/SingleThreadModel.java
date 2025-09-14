@@ -19,25 +19,20 @@
 package javax.servlet;
 
 /**
- * Ensures that servlets handle only one request at a time. This interface has no methods.
+ * 确保Servlet每次只能处理一个请求。此接口没有定义任何方法。
  *
  * <p>
- * If a servlet implements this interface, you are <i>guaranteed</i> that no two threads will execute concurrently in
- * the servlet's <code>service</code> method. The servlet container can make this guarantee by synchronizing access to a
- * single instance of the servlet, or by maintaining a pool of servlet instances and dispatching each new request to a
- * free servlet.
+ *     如果Servlet实现了此接口，将<i>保证</i>不会有多个线程同时执行该Servlet的<code>service</code>方法。
+ *     Servlet容器可以通过同步访问Servlet单实例，或者通过维护一个Servlet实例池并将每个新请求分发给空闲的Servlet来实现此保证。
  *
  * <p>
- * Note that SingleThreadModel does not solve all thread safety issues. For example, session attributes and static
- * variables can still be accessed by multiple requests on multiple threads at the same time, even when
- * SingleThreadModel servlets are used. It is recommended that a developer take other means to resolve those issues
- * instead of implementing this interface, such as avoiding the usage of an instance variable or synchronizing the block
- * of the code accessing those resources. This interface is deprecated in Servlet API version 2.4.
- *
+ *     请注意SingleThreadModel并不能解决所有线程安全问题。
+ *     例如，即使使用SingleThreadModel servlet，会话属性和静态变量仍然可能被多个线程的多个请求同时访问。
+ *     建议开发者采取其他方式来解决这些问题，而不是实现此接口，例如避免使用实例变量或同步访问这些资源的代码块。
+ *     此接口在Servlet API 2.4版本中已被弃用。
  *
  * @author Various
- *
- * @deprecated As of Java Servlet API 2.4, with no direct replacement.
+ * @deprecated 自Java Servlet API 2.4起弃用，没有直接替代方案。
  */
 @Deprecated
 public interface SingleThreadModel {

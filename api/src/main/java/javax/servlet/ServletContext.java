@@ -28,24 +28,21 @@ import java.util.Set;
 import javax.servlet.descriptor.JspConfigDescriptor;
 
 /**
- * Defines a set of methods that a servlet uses to communicate with its servlet container, for example, to get the MIME
- * type of a file, dispatch requests, or write to a log file.
+ * 定义了一组方法，这些方法由 Servlet 用于与其 Servlet 容器进行通信，例如：获取文件的 MIME 类型、处理请求 或 写入日志文件。
  *
  * <p>
- * There is one context per "web application" per Java Virtual Machine. (A "web application" is a collection of servlets
- * and content installed under a specific subset of the server's URL namespace such as <code>/catalog</code> and
- * possibly installed via a <code>.war</code> file.)
+ *     每个 Java 虚拟机中的每个"Web 应用程序"都拥有一个独立的上下文。（"Web 应用程序"是指安装在服务器 URL 命名空间特定子集
+ *     （如 <code>/catalog</code>）下的一组 Servlet 和内容，可能通过 <code>.war</code> 文件安装。）
  *
  * <p>
- * In the case of a web application marked "distributed" in its deployment descriptor, there will be one context
- * instance for each virtual machine. In this situation, the context cannot be used as a location to share global
- * information (because the information won't be truly global). Use an external resource like a database instead.
+ *     对于在其部署描述符中标记为"分布式"的 Web 应用程序，每个虚拟机都将有一个上下文实例。
+ *     在这种情况下，上下文不能用作共享全局信息的位置（因为信息不会真正全局）。请改用数据库等外部资源。
  *
  * <p>
- * The <code>ServletContext</code> object is contained within the {@link ServletConfig} object, which the Web server
- * provides the servlet when the servlet is initialized.
+ *     <code>ServletContext</code> 对象被包含在 {@link ServletConfig} 对象中，
+ *     Web 服务器在初始化 Servlet 时会向 Servlet 提供该对象。
  *
- * @author Various
+ * @author 众多作者
  *
  * @see Servlet#getServletConfig
  * @see ServletConfig#getServletContext
@@ -53,151 +50,129 @@ import javax.servlet.descriptor.JspConfigDescriptor;
 public interface ServletContext {
 
     /**
-     * The name of the <tt>ServletContext</tt> attribute which stores the private temporary directory (of type
-     * <tt>java.io.File</tt>) provided by the servlet container for the <tt>ServletContext</tt>
+     * <tt>ServletContext</tt> 属性的名称，该属性用于存储由 Servlet 容器为 <tt>ServletContext</tt> 提供的私有临时目录（类型为 <tt>java.io.File</tt> ）
      */
     public static final String TEMPDIR = "javax.servlet.context.tempdir";
 
     /**
-     * The name of the <code>ServletContext</code> attribute whose value (of type
-     * <code>java.util.List&lt;java.lang.String&gt;</code>) contains the list of names of JAR files in
-     * <code>WEB-INF/lib</code> ordered by their web fragment names (with possible exclusions if
-     * <code>&lt;absolute-ordering&gt;</code> without any <code>&lt;others/&gt;</code> is being used), or null if no
-     * absolute or relative ordering has been specified
+     * 该 <code>ServletContext</code> 属性的名称，其值（类型为 <code>java.util.List&lt;java.lang.String&gt;</code>）
+     * 包含 <code>WEB-INF/lib</code> 目录中 JAR 文件名称的列表，这些名称按其 Web 片段名称排序
+     * （如果使用了没有任何 <code>&lt;others/&gt;</code> 的 <code>&lt;absolute-ordering&gt;</code>，则可能排除某些项目），
+     * 如果未指定绝对或相对排序，则值为 null
      */
     public static final String ORDERED_LIBS = "javax.servlet.context.orderedLibs";
 
     /**
-     * Returns the context path of the web application.
+     * 返回 Web 应用程序的上下文路径。
      *
      * <p>
-     * The context path is the portion of the request URI that is used to select the context of the request. The context
-     * path always comes first in a request URI. If this context is the "root" context rooted at the base of the Web
-     * server's URL name space, this path will be an empty string. Otherwise, if the context is not rooted at the root
-     * of the server's name space, the path starts with a / character but does not end with a / character.
+     *     上下文路径是请求 URI 中用于选择请求上下文的部分。上下文路径始终位于请求 URI 的首位。
+     *     如果此上下文是基于 Web 服务器 URL 命名空间根目录的"根"上下文，则此路径将为空字符串。
+     *     否则，如果上下文不是基于服务器命名空间的根目录，则路径以 / 字符开头但不以 / 字符结尾。
      *
      * <p>
-     * It is possible that a servlet container may match a context by more than one context path. In such cases the
-     * {@link javax.servlet.http.HttpServletRequest#getContextPath()} will return the actual context path used by the
-     * request and it may differ from the path returned by this method. The context path returned by this method should
-     * be considered as the prime or preferred context path of the application.
+     *     Servlet 容器可能会通过多个上下文路径匹配一个上下文。
+     *     在这种情况下，{@link javax.servlet.http.HttpServletRequest#getContextPath()} 将返回请求实际使用的上下文路径，
+     *     该路径可能与此方法返回的路径不同。此方法返回的上下文路径应视为应用程序的主上下文路径或首选上下文路径。
      *
-     * @return The context path of the web application, or "" for the root context
-     *
+     * @return Web 应用程序的上下文路径，对于根上下文返回 ""
      * @see javax.servlet.http.HttpServletRequest#getContextPath()
-     *
      * @since Servlet 2.5
      */
     public String getContextPath();
 
     /**
-     * Returns a <code>ServletContext</code> object that corresponds to a specified URL on the server.
+     * 返回与服务器上指定 URL 对应的 <code>ServletContext</code> 对象。
      *
      * <p>
-     * This method allows servlets to gain access to the context for various parts of the server, and as needed obtain
-     * {@link RequestDispatcher} objects from the context. The given path must be begin with <tt>/</tt>, is interpreted
-     * relative to the server's document root and is matched against the context roots of other web applications hosted
-     * on this container.
+     *     此方法允许 servlet 访问服务器不同部分的上下文，并根据需要从该上下文获取 {@link RequestDispatcher} 对象。
+     *     给定路径必须以 <tt>/</tt> 开头，相对于服务器的文档根目录进行解析，并与在此容器上托管的其他 Web 应用程序的上下文根进行匹配。
      *
      * <p>
-     * In a security conscious environment, the servlet container may return <code>null</code> for a given URL.
+     *     在安全敏感的环境中，servlet 容器可能会针对给定 URL 返回 <code>null</code>。
      *
-     * @param uripath a <code>String</code> specifying the context path of another web application in the container.
-     * @return the <code>ServletContext</code> object that corresponds to the named URL, or null if either none exists
-     *         or the container wishes to restrict this access.
-     *
+     * @param uripath 指定容器中其他 Web 应用程序的上下文路径的 <code>String</code>
+     * @return 与指定 URL 对应的 <code>ServletContext</code> 对象，如果不存在对应上下文或容器希望限制此访问，则返回 null
      * @see RequestDispatcher
      */
     public ServletContext getContext(String uripath);
 
     /**
-     * Returns the major version of Jakarta Servlet that this container supports. All implementations that
-     * comply with Version 4.0 must have this method return the integer 4.
+     * 返回此容器支持的 Jakarta Servlet 主版本号。
+     * 所有符合版本 4.0 的实现必须使此方法返回整数 4。
      *
      * @return 4
      */
     public int getMajorVersion();
 
     /**
-     * Returns the minor version of Jakarta Servlet that this container supports. All implementations that
-     * comply with Version 4.0 must have this method return the integer 0.
+     * 返回此容器支持的 Jakarta Servlet 次版本号。
+     * 所有符合版本 4.0 的实现必须使此方法返回整数 0。
      *
      * @return 0
      */
     public int getMinorVersion();
 
     /**
-     * Gets the major version of the Servlet specification that the application represented by this ServletContext is
-     * based on.
+     * 获取此 ServletContext 所代表的应用程序所基于的 Servlet 规范的主版本号。
      *
      * <p>
-     * The value returned may be different from {@link #getMajorVersion}, which returns the major version of the Servlet
-     * specification supported by the Servlet container.
+     *     返回的值可能与 {@link #getMajorVersion} 不同，后者返回的是 Servlet 容器所支持的 Servlet 规范的主版本号。
      *
-     * @return the major version of the Servlet specification that the application represented by this ServletContext is
-     *         based on
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
+     * @return 此 ServletContext 所代表的应用程序所基于的 Servlet 规范的主版本号
+     * @throws UnsupportedOperationException 如果此 ServletContext 被传递给了既未在 <code>web.xml</code> 或
+     *                                       <code>web-fragment.xml</code> 中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener} 注解的
+     *                                       {@link ServletContextListener} 的
+     *                                       {@link ServletContextListener#contextInitialized} 方法
      *
      * @since Servlet 3.0
      */
     public int getEffectiveMajorVersion();
 
     /**
-     * Gets the minor version of the Servlet specification that the application represented by this ServletContext is
-     * based on.
+     * 获取此 ServletContext 所代表的应用程序所基于的 Servlet 规范的次版本号。
      *
      * <p>
-     * The value returned may be different from {@link #getMinorVersion}, which returns the minor version of the Servlet
-     * specification supported by the Servlet container.
+     *     返回的值可能与 {@link #getMinorVersion} 不同，后者返回的是 Servlet 容器所支持的 Servlet 规范的次版本号。
      *
-     * @return the minor version of the Servlet specification that the application represented by this ServletContext is
-     *         based on
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
+     * @return 此 ServletContext 所代表的应用程序所基于的 Servlet 规范的次版本号
+     * @throws UnsupportedOperationException 如果此 ServletContext 被传递给了既未在 <code>web.xml</code> 或
+     *                                       <code>web-fragment.xml</code> 中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener} 注解的
+     *                                       {@link ServletContextListener} 的
+     *                                       {@link ServletContextListener#contextInitialized} 方法
      *
      * @since Servlet 3.0
      */
     public int getEffectiveMinorVersion();
 
     /**
-     * Returns the MIME type of the specified file, or <code>null</code> if the MIME type is not known. The MIME type is
-     * determined by the configuration of the servlet container, and may be specified in a web application deployment
-     * descriptor. Common MIME types include <code>text/html</code> and <code>image/gif</code>.
+     * 返回指定文件的 MIME 类型，如果 MIME 类型未知则返回 <code>null</code>。
+     * MIME 类型由 servlet 容器的配置决定，并且可以在 Web 应用程序部署描述符中指定。
+     * 常见的 MIME 类型包括 <code>text/html</code> 和 <code>image/gif</code>。
      *
-     * @param file a <code>String</code> specifying the name of a file
-     *
-     * @return a <code>String</code> specifying the file's MIME type
+     * @param file 指定文件名称的 <code>String</code>
+     * @return 指定文件 MIME 类型的 <code>String</code>
      */
     public String getMimeType(String file);
 
     /**
-     * Returns a directory-like listing of all the paths to resources within the web application whose longest sub-path
-     * matches the supplied path argument.
+     * 返回 Web 应用程序内所有资源路径的目录式列表，这些资源路径的最长子路径与提供的路径参数匹配。
      *
      * <p>
-     * Paths indicating subdirectory paths end with a <tt>/</tt>.
+     *     表示子目录的路径以 <tt>/</tt> 结尾。
      *
      * <p>
-     * The returned paths are all relative to the root of the web application, or relative to the
-     * <tt>/META-INF/resources</tt> directory of a JAR file inside the web application's <tt>/WEB-INF/lib</tt>
-     * directory, and have a leading <tt>/</tt>.
+     *     返回的路径全部相对于 Web 应用程序的根目录，或者相对于 Web 应用程序 <tt>/WEB-INF/lib</tt> 目录中
+     *     JAR 文件内的 <tt>/META-INF/resources</tt> 目录，并且以 <tt>/</tt> 开头。
      *
      * <p>
-     * The returned set is not backed by the {@code ServletContext} object, so changes in the returned set are not
-     * reflected in the {@code ServletContext} object, and vice-versa.
+     *     返回的集合不受 {@code ServletContext} 对象支持，因此返回集合中的更改不会反映在 {@code ServletContext} 对象中，反之亦然。
      * </p>
      *
      * <p>
-     * For example, for a web application containing:
+     *     例如，对于包含以下内容的 Web 应用程序：
      *
      * <pre>
      * {@code
@@ -213,115 +188,99 @@ public interface ServletContext {
      * }
      * </pre>
      *
-     * <tt>getResourcePaths("/")</tt> would return <tt>{"/welcome.html", "/catalog/", "/customer/", "/WEB-INF/"}</tt>,
-     * and <tt>getResourcePaths("/catalog/")</tt> would return <tt>{"/catalog/index.html", "/catalog/products.html",
-     * "/catalog/offers/", "/catalog/moreOffers/"}</tt>.
+     * <tt>getResourcePaths("/")</tt> 将返回 <tt>{"/welcome.html", "/catalog/", "/customer/", "/WEB-INF/"}</tt>，
+     * 而 <tt>getResourcePaths("/catalog/")</tt> 将返回 <tt>{"/catalog/index.html", "/catalog/products.html",
+     * "/catalog/offers/", "/catalog/moreOffers/"}</tt>。
      *
-     * @param path the partial path used to match the resources, which must start with a <tt>/</tt>
-     * @return a Set containing the directory listing, or null if there are no resources in the web application whose
-     *         path begins with the supplied path.
-     *
+     * @param path 用于匹配资源的局部路径，必须以 <tt>/</tt> 开头
+     * @return 包含目录列表的 Set，如果 Web 应用程序中没有路径以提供路径开头的资源，则返回 null
      * @since Servlet 2.3
      */
     public Set<String> getResourcePaths(String path);
 
     /**
-     * Returns a URL to the resource that is mapped to the given path.
+     * 返回映射到指定路径的资源的 URL。
      *
      * <p>
-     * The path must begin with a <tt>/</tt> and is interpreted as relative to the current context root, or relative to
-     * the <tt>/META-INF/resources</tt> directory of a JAR file inside the web application's <tt>/WEB-INF/lib</tt>
-     * directory. This method will first search the document root of the web application for the requested resource,
-     * before searching any of the JAR files inside <tt>/WEB-INF/lib</tt>. The order in which the JAR files inside
-     * <tt>/WEB-INF/lib</tt> are searched is undefined.
+     *     路径必须以 <tt>/</tt> 开头，并被解释为相对于当前上下文根目录，
+     *     或者相对于 Web 应用程序<tt>/WEB-INF/lib</tt> 目录中 JAR 文件内的 <tt>/META-INF/resources</tt> 目录。
+     *     此方法将首先在 Web 应用程序的文档根目录中搜索请求的资源，然后再搜索 <tt>/WEB-INF/lib</tt> 中的任何 JAR 文件。
+     *     搜索 <tt>/WEB-INF/lib</tt> 中 JAR 文件的顺序未定义。
      *
      * <p>
-     * This method allows the servlet container to make a resource available to servlets from any source. Resources can
-     * be located on a local or remote file system, in a database, or in a <code>.war</code> file.
+     *     此方法允许 servlet 容器从任何来源向 servlet 提供资源。
+     *     资源可以位于本地或远程文件系统、数据库或 <code>.war</code> 文件中。
      *
      * <p>
-     * The servlet container must implement the URL handlers and <code>URLConnection</code> objects that are necessary
-     * to access the resource.
+     *     Servlet 容器必须实现访问资源所需的 URL 处理程序和 <code>URLConnection</code> 对象。
      *
      * <p>
-     * This method returns <code>null</code> if no resource is mapped to the pathname.
+     *     如果没有资源映射到该路径，则此方法返回 <code>null</code>。
      *
      * <p>
-     * Some containers may allow writing to the URL returned by this method using the methods of the URL class.
+     *     某些容器可能允许使用 URL 类的方法写入此方法返回的 URL。
      *
      * <p>
-     * The resource content is returned directly, so be aware that requesting a <code>.jsp</code> page returns the JSP
-     * source code. Use a <code>RequestDispatcher</code> instead to include results of an execution.
+     *     资源内容直接返回，因此请注意请求 <code>.jsp</code> 页面将返回 JSP 源代码。
+     *     请改用 <code>RequestDispatcher</code> 来包含执行结果。
      *
      * <p>
-     * This method has a different purpose than <code>java.lang.Class.getResource</code>, which looks up resources based
-     * on a class loader. This method does not use class loaders.
+     *     此方法的用途不同于 <code>java.lang.Class.getResource</code>，后者基于类加载器查找资源。
+     *     此方法不使用类加载器。
      *
      * <p>
-     * This method bypasses both implicit (no direct access to WEB-INF or META-INF) and explicit (defined by the web
-     * application) security constraints. Care should be taken both when constructing the path (e.g. avoid unsanitized
-     * user provided data) and when using the result not to create a security vulnerability in the application.
+     *     此方法绕过隐式（不能直接访问 WEB-INF 或 META-INF）和显式（由 Web 应用程序定义）的安全约束。
+     *     在构建路径时（例如，避免使用未净化的用户提供数据）和使用结果时都应小心，以免在应用程序中造成安全漏洞。
      *
-     * @param path a <code>String</code> specifying the path to the resource
-     *
-     * @return the resource located at the named path, or <code>null</code> if there is no resource at that path
-     *
-     * @exception MalformedURLException if the pathname is not given in the correct form
+     * @param path 指定资源路径的 <code>String</code>
+     * @return 位于指定路径的资源，如果该路径没有资源则返回 <code>null</code>
+     * @exception MalformedURLException 如果路径名的格式不正确
      */
     public URL getResource(String path) throws MalformedURLException;
 
     /**
-     * Returns the resource located at the named path as an <code>InputStream</code> object.
+     * 将指定路径的资源作为 <code>InputStream</code> 对象返回。
      *
      * <p>
-     * The data in the <code>InputStream</code> can be of any type or length. The path must be specified according to
-     * the rules given in <code>getResource</code>. This method returns <code>null</code> if no resource exists at the
-     * specified path.
+     *     <code>InputStream</code> 中的数据可以是任何类型或长度。
+     *     路径必须按照 <code>getResource</code> 方法给定的规则指定。
+     *     如果指定路径不存在资源，则此方法返回 <code>null</code>。
      *
      * <p>
-     * Meta-information such as content length and content type that is available via <code>getResource</code> method is
-     * lost when using this method.
+     *     通过 <code>getResource</code> 方法可用的元信息（如内容长度和内容类型）在使用此方法时会丢失。
      *
      * <p>
-     * The servlet container must implement the URL handlers and <code>URLConnection</code> objects necessary to access
-     * the resource.
+     *     Servlet 容器必须实现访问资源所需的 URL 处理程序和 <code>URLConnection</code> 对象。
      *
      * <p>
-     * This method is different from <code>java.lang.Class.getResourceAsStream</code>, which uses a class loader. This
-     * method allows servlet containers to make a resource available to a servlet from any location, without using a
-     * class loader.
+     *     此方法与 <code>java.lang.Class.getResourceAsStream</code> 不同，后者使用类加载器。
+     *     此方法允许 servlet 容器从任何位置向 servlet 提供资源，而无需使用类加载器。
      *
      * <p>
-     * This method bypasses both implicit (no direct access to WEB-INF or META-INF) and explicit (defined by the web
-     * application) security constraints. Care should be taken both when constructing the path (e.g. avoid unsanitized
-     * user provided data) and when using the result not to create a security vulnerability in the application.
+     *     此方法绕过隐式（不能直接访问 WEB-INF 或 META-INF）和显式（由 Web 应用程序定义）的安全约束。
+     *     在构建路径时（例如，避免使用未净化的用户提供数据）和使用结果时都应小心，以免在应用程序中造成安全漏洞。
      *
+     * @param path 指定资源路径的 <code>String</code>
      *
-     * @param path a <code>String</code> specifying the path to the resource
-     *
-     * @return the <code>InputStream</code> returned to the servlet, or <code>null</code> if no resource exists at the
-     *         specified path
+     * @return 返回给 servlet 的 <code>InputStream</code>，如果指定路径不存在资源则返回 <code>null</code>
      */
     public InputStream getResourceAsStream(String path);
 
     /**
-     *
-     * Returns a {@link RequestDispatcher} object that acts as a wrapper for the resource located at the given path. A
-     * <code>RequestDispatcher</code> object can be used to forward a request to the resource or to include the resource
-     * in a response. The resource can be dynamic or static.
-     *
-     * <p>
-     * The pathname must begin with a <tt>/</tt> and is interpreted as relative to the current context root. Use
-     * <code>getContext</code> to obtain a <code>RequestDispatcher</code> for resources in foreign contexts.
+     * 返回一个 {@link RequestDispatcher} 对象，该对象充当指定 Servlet 的包装器。
+     * <code>RequestDispatcher</code> 对象可用于将请求转发到资源或将资源包含在响应中。
+     * 资源可以是动态的或静态的。
      *
      * <p>
-     * This method returns <code>null</code> if the <code>ServletContext</code> cannot return a
-     * <code>RequestDispatcher</code>.
+     *     路径名必须以 <tt>/</tt> 开头，并被解释为相对于当前上下文根目录。
+     *     使用 <code>getContext</code> 方法可获取外部上下文中资源的 <code>RequestDispatcher</code>。
      *
-     * @param path a <code>String</code> specifying the pathname to the resource
+     * <p>
+     *     如果 <code>ServletContext</code> 无法返回 <code>RequestDispatcher</code>，则此方法返回 <code>null</code>。
      *
-     * @return a <code>RequestDispatcher</code> object that acts as a wrapper for the resource at the specified path, or
-     *         <code>null</code> if the <code>ServletContext</code> cannot return a <code>RequestDispatcher</code>
+     * @param path 指定资源路径名的 <code>String</code>
+     * @return 作为指定路径资源包装器的 <code>RequestDispatcher</code> 对象，
+     *         如果 <code>ServletContext</code> 无法返回 <code>RequestDispatcher</code>，则返回 <code>null</code>
      *
      * @see RequestDispatcher
      * @see ServletContext#getContext
@@ -329,21 +288,18 @@ public interface ServletContext {
     public RequestDispatcher getRequestDispatcher(String path);
 
     /**
-     * Returns a {@link RequestDispatcher} object that acts as a wrapper for the named servlet.
+     * 返回一个 {@link RequestDispatcher} 对象，该对象充当指定 Servlet 的包装器。
      *
      * <p>
-     * Servlets (and JSP pages also) may be given names via server administration or via a web application deployment
-     * descriptor. A servlet instance can determine its name using {@link ServletConfig#getServletName}.
+     *     Servlet（以及 JSP 页面）可以通过服务器管理或 Web 应用程序部署描述符来命名。
+     *     Servlet 实例可以使用 {@link ServletConfig#getServletName} 方法确定其名称。
      *
      * <p>
-     * This method returns <code>null</code> if the <code>ServletContext</code> cannot return a
-     * <code>RequestDispatcher</code> for any reason.
+     *     如果 <code>ServletContext</code> 因任何原因无法返回 <code>RequestDispatcher</code>，则此方法返回 <code>null</code>。
      *
-     * @param name a <code>String</code> specifying the name of a servlet to wrap
-     *
-     * @return a <code>RequestDispatcher</code> object that acts as a wrapper for the named servlet, or
-     *         <code>null</code> if the <code>ServletContext</code> cannot return a <code>RequestDispatcher</code>
-     *
+     * @param name 指定要包装的 Servlet 名称的 <code>String</code>
+     * @return 作为指定名称 Servlet 包装器的 <code>RequestDispatcher</code> 对象，
+     *         如果 <code>ServletContext</code> 无法返回 <code>RequestDispatcher</code>，则返回 <code>null</code>
      * @see RequestDispatcher
      * @see ServletContext#getContext
      * @see ServletConfig#getServletName
@@ -351,1137 +307,946 @@ public interface ServletContext {
     public RequestDispatcher getNamedDispatcher(String name);
 
     /**
-     * @deprecated As of Java Servlet API 2.1, with no direct replacement.
+     * @deprecated 自 Java Servlet API 2.1 起弃用，无直接替代方案。
      *
      *             <p>
-     *             This method was originally defined to retrieve a servlet from a <code>ServletContext</code>. In this
-     *             version, this method always returns <code>null</code> and remains only to preserve binary
-     *             compatibility. This method will be permanently removed in a future version of Jakarta Servlets.
+     *                 此方法最初设计用于从 <code>ServletContext</code> 中获取 servlet。
+     *                 在此版本中，此方法始终返回 <code>null</code>，仅为保持二进制兼容性而保留。
+     *                 此方法将在 Jakarta Servlets 的未来版本中永久移除。
      *
      *             <p>
-     *             In lieu of this method, servlets can share information using the <code>ServletContext</code> class
-     *             and can perform shared business logic by invoking methods on common non-servlet classes.
+     *                 替代此方法的是，servlet 可以使用 <code>ServletContext</code> 类共享信息，
+     *                 并通过调用普通非 servlet 类的方法来执行业务逻辑。
      *
-     * @param name the servlet name
-     * @return the {@code javax.servlet.Servlet Servlet} with the given name
-     * @throws ServletException if an exception has occurred that interfaces with servlet's normal operation
+     * @param name servlet 名称
+     * @return 具有给定名称的 {@code javax.servlet.Servlet Servlet}
+     * @throws ServletException 如果发生了影响 servlet 正常操作的异常
      */
     @Deprecated
     public Servlet getServlet(String name) throws ServletException;
 
     /**
-     * @deprecated As of Java Servlet API 2.0, with no replacement.
+     * @deprecated 自 Java Servlet API 2.0 起弃用，无替代方案。
      *
      *             <p>
-     *             This method was originally defined to return an <code>Enumeration</code> of all the servlets known to
-     *             this servlet context. In this version, this method always returns an empty enumeration and remains
-     *             only to preserve binary compatibility. This method will be permanently removed in a future version of
-     *             Jakarta Servlets.
+     *                 此方法最初设计用于返回此 servlet 上下文已知的所有 servlet 的 <code>Enumeration</code>。
+     *                 在此版本中，此方法始终返回空枚举，仅为保持二进制兼容性而保留。
+     *                 此方法将在 Jakarta Servlets 的未来版本中永久移除。
      *
-     * @return an <code>Enumeration</code> of {@code javax.servlet.Servlet Servlet}
+     * @return {@code javax.servlet.Servlet Servlet} 的 <code>Enumeration</code>
      */
     @Deprecated
     public Enumeration<Servlet> getServlets();
 
     /**
-     * @deprecated As of Java Servlet API 2.1, with no replacement.
+     * @deprecated 自 Java Servlet API 2.1 起弃用，无替代方案。
      *
      *             <p>
-     *             This method was originally defined to return an <code>Enumeration</code> of all the servlet names
-     *             known to this context. In this version, this method always returns an empty <code>Enumeration</code>
-     *             and remains only to preserve binary compatibility. This method will be permanently removed in a
-     *             future version of Jakarta Servlets.
+     *                 此方法最初设计用于返回此上下文已知的所有 servlet 名称的 <code>Enumeration</code>。
+     *                 在此版本中，此方法始终返回空的 <code>Enumeration</code>，仅为保持二进制兼容性而保留。
+     *                 此方法将在 Jakarta Servlets 的未来版本中永久移除。
      *
-     * @return an <code>Enumeration</code> of {@code javax.servlet.Servlet Servlet} names
+     * @return {@code javax.servlet.Servlet Servlet} 名称的 <code>Enumeration</code>
      */
     @Deprecated
     public Enumeration<String> getServletNames();
 
     /**
+     * 将指定消息写入 servlet 日志文件（通常是事件日志）。servlet 日志文件的名称和类型特定于 servlet 容器。
      *
-     * Writes the specified message to a servlet log file, usually an event log. The name and type of the servlet log
-     * file is specific to the servlet container.
-     *
-     * @param msg a <code>String</code> specifying the message to be written to the log file
+     * @param msg 要写入日志文件的消息字符串
      */
     public void log(String msg);
 
     /**
-     * @deprecated As of Java Servlet API 2.1, use {@link #log(String message, Throwable throwable)} instead.
+     * @deprecated 自 Java Servlet API 2.1 起弃用，请使用 {@link #log(String message, Throwable throwable)} 替代。
      *
      *             <p>
-     *             This method was originally defined to write an exception's stack trace and an explanatory error
-     *             message to the servlet log file.
+     *                 此方法最初设计用于将异常堆栈跟踪和说明性错误消息写入 servlet 日志文件。
      *
-     * @param exception the <code>Exception</code> error
-     * @param msg       a <code>String</code> that describes the exception
+     * @param exception 异常错误对象
+     * @param msg       描述异常的字符串
      */
     @Deprecated
     public void log(Exception exception, String msg);
 
     /**
-     * Writes an explanatory message and a stack trace for a given <code>Throwable</code> exception to the servlet log
-     * file. The name and type of the servlet log file is specific to the servlet container, usually an event log.
+     * 将说明性消息和给定 <code>Throwable</code> 异常的堆栈跟踪写入 servlet 日志文件。
+     * servlet 日志文件的名称和类型特定于 servlet 容器，通常为事件日志。
      *
-     * @param message   a <code>String</code> that describes the error or exception
-     *
-     * @param throwable the <code>Throwable</code> error or exception
+     * @param message   描述错误或异常的字符串
+     * @param throwable 要记录的 <code>Throwable</code> 错误或异常
      */
     public void log(String message, Throwable throwable);
 
     /**
-     * Gets the <i>real</i> path corresponding to the given <i>virtual</i> path.
+     * 获取与给定<i>虚拟</i>路径对应的<i>实际</i>路径。
      *
      * <p>
-     * For example, if <tt>path</tt> is equal to <tt>/index.html</tt>, this method will return the absolute file path on
-     * the server's filesystem to which a request of the form
-     * <tt>http://&lt;host&gt;:&lt;port&gt;/&lt;contextPath&gt;/index.html</tt> would be mapped, where
-     * <tt>&lt;contextPath&gt;</tt> corresponds to the context path of this ServletContext.
+     *     例如，如果 <tt>path</tt> 等于 <tt>/index.html</tt>，则此方法将返回服务器文件系统上的绝对文件路径，
+     *     该路径将映射到形式为 <tt>http://&lt;host&gt;:&lt;port&gt;/&lt;contextPath&gt;/index.html</tt> 的请求，
+     *     其中 <tt>&lt;contextPath&gt;</tt> 对应此 ServletContext 的上下文路径。
      *
      * <p>
-     * The real path returned will be in a form appropriate to the computer and operating system on which the servlet
-     * container is running, including the proper path separators.
+     *     返回的实际路径将采用适合于运行 servlet 容器的计算机和操作系统的形式，包括正确的路径分隔符。
      *
      * <p>
-     * Resources inside the <tt>/META-INF/resources</tt> directories of JAR files bundled in the application's
-     * <tt>/WEB-INF/lib</tt> directory must be considered only if the container has unpacked them from their containing
-     * JAR file, in which case the path to the unpacked location must be returned.
+     *     只有当容器已从包含的 JAR 文件中解包时，才必须考虑应用程序 <tt>/WEB-INF/lib</tt> 目录中 JAR 文件
+     *     <tt>/META-INF/resources</tt> 目录内的资源，这种情况下必须返回解包位置的路径。
      *
      * <p>
-     * This method returns <code>null</code> if the servlet container is unable to translate the given <i>virtual</i>
-     * path to a <i>real</i> path.
+     *     如果 servlet 容器无法将给定的<i>虚拟</i>路径转换为<i>实际</i>路径，则此方法返回 <code>null</code>。
      *
-     * @param path the <i>virtual</i> path to be translated to a <i>real</i> path
-     *
-     * @return the <i>real</i> path, or <tt>null</tt> if the translation cannot be performed
+     * @param path 要转换为<i>实际</i>路径的<i>虚拟</i>路径
+     * @return <i>实际</i>路径，如果无法执行转换则返回 <tt>null</tt>
      */
     public String getRealPath(String path);
 
     /**
-     * Returns the name and version of the servlet container on which the servlet is running.
+     * 返回运行该 servlet 的 servlet 容器的名称和版本。
      *
      * <p>
-     * The form of the returned string is <i>servername</i>/<i>versionnumber</i>. For example, the JavaServer Web
-     * Development Kit may return the string <code>JavaServer Web Dev Kit/1.0</code>.
+     *     返回字符串的格式为 <i>服务器名称</i>/<i>版本号</i>。
+     *     例如，JavaServer Web 开发工具包可能返回字符串 <code>JavaServer Web Dev Kit/1.0</code>。
      *
      * <p>
-     * The servlet container may return other optional information after the primary string in parentheses, for example,
-     * <code>JavaServer Web Dev Kit/1.0 (JDK 1.1.6; Windows NT 4.0 x86)</code>.
+     *     servlet 容器可以在主字符串后的括号内返回其他可选信息，例如：
+     *     <code>JavaServer Web Dev Kit/1.0 (JDK 1.1.6; Windows NT 4.0 x86)</code>。
      *
-     *
-     * @return a <code>String</code> containing at least the servlet container name and version number
+     * @return 包含至少 servlet 容器名称和版本号的 <code>String</code>
      */
     public String getServerInfo();
 
     /**
-     * Returns a <code>String</code> containing the value of the named context-wide initialization parameter, or
-     * <code>null</code> if the parameter does not exist.
+     * 返回包含指定上下文范围初始化参数值的 <code>String</code>，如果该参数不存在，则返回 <code>null</code>。
      *
      * <p>
-     * This method can make available configuration information useful to an entire web application. For example, it can
-     * provide a webmaster's email address or the name of a system that holds critical data.
+     *     此方法可以提供对整个 Web 应用程序有用的配置信息。
+     *     例如，它可以提供网站管理员的电子邮件地址或保存关键数据的系统名称。
      *
-     * @param name a <code>String</code> containing the name of the parameter whose value is requested
-     *
-     * @return a <code>String</code> containing the value of the context's initialization parameter, or
-     *         <code>null</code> if the context's initialization parameter does not exist.
-     *
-     * @throws NullPointerException if the argument {@code name} is {@code null}
-     *
+     * @param name 包含要获取值的参数名称的 <code>String</code>
+     * @return 包含上下文初始化参数值的 <code>String</code>，如果该初始化参数不存在，则返回 <code>null</code>
+     * @throws NullPointerException 如果参数 {@code name} 为 {@code null}
      * @see ServletConfig#getInitParameter
      */
     public String getInitParameter(String name);
 
     /**
-     * Returns the names of the context's initialization parameters as an <code>Enumeration</code> of
-     * <code>String</code> objects, or an empty <code>Enumeration</code> if the context has no initialization
-     * parameters.
+     * 返回该 context 的初始化参数的名称，其形式为一个由 <code>String</code> 对象组成的 <code>Enumeration</code> 对象；
+     * 如果 context 没有初始化参数，则返回空的<code>Enumeration</code>。
      *
-     * @return an <code>Enumeration</code> of <code>String</code> objects containing the names of the context's
-     *         initialization parameters
-     *
+     * @return 包含上下文初始化参数名称的<code>String</code>对象的<code>Enumeration</code>
      * @see ServletConfig#getInitParameter
      */
     public Enumeration<String> getInitParameterNames();
 
     /**
-     * Sets the context initialization parameter with the given name and value on this ServletContext.
+     * 在此 ServletContext 上设置具有指定名称和值的上下文初始化参数。
      *
-     * @param name  the name of the context initialization parameter to set
-     * @param value the value of the context initialization parameter to set
-     *
-     * @return true if the context initialization parameter with the given name and value was set successfully on this
-     *         ServletContext, and false if it was not set because this ServletContext already contains a context
-     *         initialization parameter with a matching name
-     *
-     * @throws IllegalStateException         if this ServletContext has already been initialized
-     *
-     * @throws NullPointerException          if the name parameter is {@code null}
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @param name  要设置的上下文初始化参数名称
+     * @param value 要设置的上下文初始化参数值
+     * @return 如果在此 ServletContext 上成功设置了具有指定名称和值的上下文初始化参数，则返回 true；
+     *         如果未设置，则是因为此 ServletContext 已包含具有匹配名称的上下文初始化参数，此时返回 false
+     * @throws IllegalStateException         如果此 ServletContext 已被初始化
+     * @throws NullPointerException          如果 name 参数为 {@code null}
+     * @throws UnsupportedOperationException 如果此 ServletContext 被传递给了既未在 <code>web.xml</code> 或
+     *                                       <code>web-fragment.xml</code> 中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener} 注解的
+     *                                       {@link ServletContextListener} 的
+     *                                       {@link ServletContextListener#contextInitialized} 方法
      * @since Servlet 3.0
      */
     public boolean setInitParameter(String name, String value);
 
     /**
-     * Returns the servlet container attribute with the given name, or <code>null</code> if there is no attribute by
-     * that name.
+     * 返回具有指定名称的 servlet 容器属性，如果不存在该名称的属性，则返回 <code>null</code>。
      *
      * <p>
-     * An attribute allows a servlet container to give the servlet additional information not already provided by this
-     * interface. See your server documentation for information about its attributes. A list of supported attributes can
-     * be retrieved using <code>getAttributeNames</code>.
+     *     属性允许 servlet 容器向 servlet 提供此接口未提供的附加信息。
+     *     有关其属性的信息，请参阅服务器文档。
+     *     可以使用 <code>getAttributeNames</code> 方法检索支持的属性列表。
      *
      * <p>
-     * The attribute is returned as a <code>java.lang.Object</code> or some subclass.
+     *     属性以 <code>java.lang.Object</code> 或其某个子类的形式返回。
      *
      * <p>
-     * Attribute names should follow the same convention as package names. The Jakarta Servlet specification reserves
-     * names matching <code>java.*</code>, <code>javax.*</code>, and <code>sun.*</code>.
+     *     属性名称应遵循与包名称相同的约定。
+     *     Jakarta Servlet 规范保留与 <code>java.*</code>、<code>javax.*</code> 和 <code>sun.*</code> 匹配的名称。
      *
-     * @param name a <code>String</code> specifying the name of the attribute
-     *
-     * @return an <code>Object</code> containing the value of the attribute, or <code>null</code> if no attribute exists
-     *         matching the given name.
-     *
+     * @param name 指定属性名称的 <code>String</code>
+     * @return 包含属性值的 <code>Object</code>，如果没有与给定名称匹配的属性，则返回 <code>null</code>
      * @see ServletContext#getAttributeNames
-     *
-     * @throws NullPointerException if the argument {@code name} is {@code null}
+     * @throws NullPointerException 如果参数 {@code name} 为 {@code null}
      *
      */
     public Object getAttribute(String name);
 
     /**
-     * Returns an <code>Enumeration</code> containing the attribute names available within this ServletContext.
+     * 返回包含此 ServletContext 中可用属性名称的 <code>Enumeration</code>。
      *
      * <p>
-     * Use the {@link #getAttribute} method with an attribute name to get the value of an attribute.
+     *     使用带有属性名称的 {@link #getAttribute} 方法可获取属性值。
      *
-     * @return an <code>Enumeration</code> of attribute names
-     *
+     * @return 属性名称的 <code>Enumeration</code>
      * @see #getAttribute
      */
     public Enumeration<String> getAttributeNames();
 
     /**
-     * Binds an object to a given attribute name in this ServletContext. If the name specified is already used for an
-     * attribute, this method will replace the attribute with the new to the new attribute.
+     * 将对象绑定到此 ServletContext 中的指定属性名称。
+     * 如果指定名称已用于某个属性，此方法将使用新属性替换原有属性。
      * <p>
-     * If listeners are configured on the <code>ServletContext</code> the container notifies them accordingly.
+     *     如果在 <code>ServletContext</code> 上配置了监听器，容器会相应地通知它们。
      * <p>
-     * If a null value is passed, the effect is the same as calling <code>removeAttribute()</code>.
+     *     如果传入 null 值，效果等同于调用 <code>removeAttribute()</code>。
      *
      * <p>
-     * Attribute names should follow the same convention as package names. The Jakarta Servlet specification reserves
-     * names matching <code>java.*</code>, <code>javax.*</code>, and <code>sun.*</code>.
+     *     属性名称应遵循与包名称相同的约定。
+     *     Jakarta Servlet 规范保留与 <code>java.*</code>、<code>javax.*</code> 和 <code>sun.*</code> 匹配的名称。
      *
-     * @param name   a <code>String</code> specifying the name of the attribute
+     * @param name   指定属性名称的 <code>String</code>
+     * @param object 表示要绑定的属性的 <code>Object</code>
      *
-     * @param object an <code>Object</code> representing the attribute to be bound
-     *
-     * @throws NullPointerException if the name parameter is {@code null}
-     *
+     * @throws NullPointerException 如果 name 参数为 {@code null}
      */
     public void setAttribute(String name, Object object);
 
     /**
-     * Removes the attribute with the given name from this ServletContext. After removal, subsequent calls to
-     * {@link #getAttribute} to retrieve the attribute's value will return <code>null</code>.
+     * 从此 ServletContext 中移除指定名称的属性。
+     * 移除后，后续调用 {@link #getAttribute} 获取该属性值将返回 <code>null</code>。
      *
      * <p>
-     * If listeners are configured on the <code>ServletContext</code> the container notifies them accordingly.
+     *     如果在 <code>ServletContext</code> 上配置了监听器，容器会相应地通知它们。
      *
-     * @param name a <code>String</code> specifying the name of the attribute to be removed
+     * @param name 指定要移除的属性名称的 <code>String</code>
      */
     public void removeAttribute(String name);
 
     /**
-     * Returns the name of this web application corresponding to this ServletContext as specified in the deployment
-     * descriptor for this web application by the display-name element.
+     * 返回与此 ServletContext 对应的 Web 应用程序名称，该名称在部署描述符中通过 display-name 元素指定。
      *
-     * @return The name of the web application or null if no name has been declared in the deployment descriptor.
-     *
+     * @return Web 应用程序的名称，如果部署描述符中未声明名称，则返回 null
      * @since Servlet 2.3
      */
     public String getServletContextName();
 
     /**
-     * Adds the servlet with the given name and class name to this servlet context.
+     * 将具有指定名称和类名的 servlet 添加到此 servlet 上下文中。
      *
      * <p>
-     * The registered servlet may be further configured via the returned {@link ServletRegistration} object.
+     *     可以通过返回的 {@link ServletRegistration} 对象对注册的 servlet 进行进一步配置。
      *
      * <p>
-     * The specified <tt>className</tt> will be loaded using the classloader associated with the application represented
-     * by this ServletContext.
+     *     将使用与此 ServletContext 所代表的应用程序关联的类加载器加载指定的 <tt>className</tt>。
      *
      * <p>
-     * If this ServletContext already contains a preliminary ServletRegistration for a servlet with the given
-     * <tt>servletName</tt>, it will be completed (by assigning the given <tt>className</tt> to it) and returned.
+     *     如果此 ServletContext 已包含具有给定 <tt>servletName</tt> 的 servlet 的初步 ServletRegistration，
+     *     则将通过为其分配给定的 <tt>className</tt> 来完成该注册并返回。
      *
      * <p>
-     * This method introspects the class with the given <tt>className</tt> for the
-     * {@link javax.servlet.annotation.ServletSecurity}, {@link javax.servlet.annotation.MultipartConfig},
-     * <tt>javax.annotation.security.RunAs</tt>, and <tt>javax.annotation.security.DeclareRoles</tt> annotations. In
-     * addition, this method supports resource injection if the class with the given <tt>className</tt> represents a
-     * Managed Bean. See the Jakarta EE platform and CDI specifications for additional details about Managed Beans and
-     * resource injection.
+     *     此方法会对具有给定 <tt>className</tt> 的类进行内省，检查{@link javax.servlet.annotation.ServletSecurity}、
+     *     {@link javax.servlet.annotation.MultipartConfig}、<tt>javax.annotation.security.RunAs</tt>
+     *     和 <tt>javax.annotation.security.DeclareRoles</tt> 注解。
+     *     此外，如果具有给定 <tt>className</tt> 的类表示托管 Bean，则此方法支持资源注入。
+     *     有关托管 Bean 和资源注入的其他详细信息，请参阅 Jakarta EE 平台和 CDI 规范。
      *
-     * @param servletName the name of the servlet
-     * @param className   the fully qualified class name of the servlet
-     *
-     * @return a ServletRegistration object that may be used to further configure the registered servlet, or
-     *         <tt>null</tt> if this ServletContext already contains a complete ServletRegistration for a servlet with
-     *         the given <tt>servletName</tt>
-     *
-     * @throws IllegalStateException         if this ServletContext has already been initialized
-     *
-     * @throws IllegalArgumentException      if <code>servletName</code> is null or an empty String
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
+     * @param servletName servlet 的名称
+     * @param className   servlet 的完全限定类名
+     * @return 可用于进一步配置已注册 servlet 的 ServletRegistration 对象，如果此 ServletContext
+     *         已包含具有给定 <tt>servletName</tt> 的完整 ServletRegistration，则返回 <tt>null</tt>
+     * @throws IllegalStateException         如果此 ServletContext 已被初始化
+     * @throws IllegalArgumentException      如果 <code>servletName</code> 为 null 或空字符串
+     * @throws UnsupportedOperationException 如果此 ServletContext 被传递给了既未在 <code>web.xml</code> 或
+     *                                       <code>web-fragment.xml</code> 中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener} 注解的
+     *                                       {@link ServletContextListener} 的
+     *                                       {@link ServletContextListener#contextInitialized} 方法
      *
      * @since Servlet 3.0
      */
     public ServletRegistration.Dynamic addServlet(String servletName, String className);
 
     /**
-     * Registers the given servlet instance with this ServletContext under the given <tt>servletName</tt>.
+     * 使用给定的 <tt>servletName</tt> 将指定的 servlet 实例注册到此 ServletContext。
      *
      * <p>
-     * The registered servlet may be further configured via the returned {@link ServletRegistration} object.
+     *     可以通过返回的 {@link ServletRegistration} 对象对注册的 servlet 进行进一步配置。
      *
      * <p>
-     * If this ServletContext already contains a preliminary ServletRegistration for a servlet with the given
-     * <tt>servletName</tt>, it will be completed (by assigning the class name of the given servlet instance to it) and
-     * returned.
+     *     如果此 ServletContext 已包含具有给定 <tt>servletName</tt> 的 servlet 的初步 ServletRegistration，
+     *     则将通过为其分配给定 servlet 实例的类名来完成该注册并返回。
      *
-     * @param servletName the name of the servlet
-     * @param servlet     the servlet instance to register
+     * @param servletName servlet 的名称
+     * @param servlet     要注册的 servlet 实例
      *
-     * @return a ServletRegistration object that may be used to further configure the given servlet, or <tt>null</tt> if
-     *         this ServletContext already contains a complete ServletRegistration for a servlet with the given
-     *         <tt>servletName</tt> or if the same servlet instance has already been registered with this or another
-     *         ServletContext in the same container
+     * @return 可用于进一步配置给定 servlet 的 ServletRegistration 对象，如果此 ServletContext
+     *         已包含具有给定 <tt>servletName</tt> 的完整 ServletRegistration，或者如果相同的 servlet 实例
+     *         已在此容器中的此 ServletContext 或其他 ServletContext 中注册，则返回 <tt>null</tt>
      *
-     * @throws IllegalStateException         if this ServletContext has already been initialized
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
-     * @throws IllegalArgumentException      if the given servlet instance implements {@link SingleThreadModel}, or
-     *                                       <code>servletName</code> is null or an empty String
+     * @throws IllegalStateException         如果此 ServletContext 已被初始化
+     * @throws UnsupportedOperationException 如果此 ServletContext 被传递给了既未在 <code>web.xml</code> 或
+     *                                       <code>web-fragment.xml</code> 中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener} 注解的
+     *                                       {@link ServletContextListener} 的
+     *                                       {@link ServletContextListener#contextInitialized} 方法
+     * @throws IllegalArgumentException      如果给定的 servlet 实例实现了 {@link SingleThreadModel}，
+     *                                       或者 <code>servletName</code> 为 null 或空字符串
      *
      * @since Servlet 3.0
      */
     public ServletRegistration.Dynamic addServlet(String servletName, Servlet servlet);
 
     /**
-     * Adds the servlet with the given name and class type to this servlet context.
+     * 将具有指定名称和类类型的 servlet 添加到此 servlet 上下文中。
      *
      * <p>
-     * The registered servlet may be further configured via the returned {@link ServletRegistration} object.
+     *     可以通过返回的 {@link ServletRegistration} 对象对注册的 servlet 进行进一步配置。
      *
      * <p>
-     * If this ServletContext already contains a preliminary ServletRegistration for a servlet with the given
-     * <tt>servletName</tt>, it will be completed (by assigning the name of the given <tt>servletClass</tt> to it) and
-     * returned.
+     *     如果此 ServletContext 已包含具有给定 <tt>servletName</tt> 的 servlet 的初步 ServletRegistration，
+     *     则将通过为其分配给定 <tt>servletClass</tt> 的名称来完成该注册并返回。
      *
      * <p>
-     * This method introspects the given <tt>servletClass</tt> for the {@link javax.servlet.annotation.ServletSecurity},
-     * {@link javax.servlet.annotation.MultipartConfig}, <tt>javax.annotation.security.RunAs</tt>, and
-     * <tt>javax.annotation.security.DeclareRoles</tt> annotations. In addition, this method supports resource injection
-     * if the given <tt>servletClass</tt> represents a Managed Bean. See the Jakarta EE platform and CDI specifications
-     * for additional details about Managed Beans and resource injection.
+     *     此方法会对给定的 <tt>servletClass</tt> 进行内省，检查 {@link javax.servlet.annotation.ServletSecurity}、
+     *     {@link javax.servlet.annotation.MultipartConfig}、<tt>javax.annotation.security.RunAs</tt>
+     *     和 <tt>javax.annotation.security.DeclareRoles</tt> 注解。
+     *     此外，如果给定的 <tt>servletClass</tt> 表示托管 Bean，则此方法支持资源注入。
+     *     有关托管 Bean 和资源注入的其他详细信息，请参阅 Jakarta EE 平台和 CDI 规范。
      *
-     * @param servletName  the name of the servlet
-     * @param servletClass the class object from which the servlet will be instantiated
+     * @param servletName  servlet 的名称
+     * @param servletClass 将从中实例化 servlet 的类对象
      *
-     * @return a ServletRegistration object that may be used to further configure the registered servlet, or
-     *         <tt>null</tt> if this ServletContext already contains a complete ServletRegistration for the given
-     *         <tt>servletName</tt>
+     * @return 可用于进一步配置已注册 servlet 的 ServletRegistration 对象，如果此 ServletContext
+     *         已包含具有给定 <tt>servletName</tt> 的完整 ServletRegistration，则返回 <tt>null</tt>
      *
-     * @throws IllegalStateException         if this ServletContext has already been initialized
-     *
-     * @throws IllegalArgumentException      if <code>servletName</code> is null or an empty String
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
+     * @throws IllegalStateException         如果此 ServletContext 已被初始化
+     * @throws IllegalArgumentException      如果 <code>servletName</code> 为 null 或空字符串
+     * @throws UnsupportedOperationException 如果此 ServletContext 被传递给了既未在 <code>web.xml</code> 或
+     *                                       <code>web-fragment.xml</code> 中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener} 注解的
+     *                                       {@link ServletContextListener} 的
+     *                                       {@link ServletContextListener#contextInitialized} 方法
      *
      * @since Servlet 3.0
      */
     public ServletRegistration.Dynamic addServlet(String servletName, Class<? extends Servlet> servletClass);
 
     /**
-     * Adds the servlet with the given jsp file to this servlet context.
+     * 将具有指定 JSP 文件的 servlet 添加到此 servlet 上下文中。
      *
      * <p>
-     * The registered servlet may be further configured via the returned {@link ServletRegistration} object.
+     *     可以通过返回的 {@link ServletRegistration} 对象对注册的 servlet 进行进一步配置。
      *
      * <p>
-     * If this ServletContext already contains a preliminary ServletRegistration for a servlet with the given
-     * <tt>servletName</tt>, it will be completed (by assigning the given <tt>jspFile</tt> to it) and returned.
+     *     如果此 ServletContext 已包含具有给定 <tt>servletName</tt> 的 servlet 的初步 ServletRegistration，
+     *     则将通过为其分配给定的 <tt>jspFile</tt> 来完成该注册并返回。
      *
-     * @param servletName the name of the servlet
-     * @param jspFile     the full path to a JSP file within the web application beginning with a `/'.
+     * @param servletName servlet 的名称
+     * @param jspFile     Web 应用程序中以 `/` 开头的 JSP 文件的完整路径
      *
-     * @return a ServletRegistration object that may be used to further configure the registered servlet, or
-     *         <tt>null</tt> if this ServletContext already contains a complete ServletRegistration for a servlet with
-     *         the given <tt>servletName</tt>
+     * @return 可用于进一步配置已注册 servlet 的 ServletRegistration 对象，如果此 ServletContext
+     *         已包含具有给定 <tt>servletName</tt> 的完整 ServletRegistration，则返回 <tt>null</tt>
      *
-     * @throws IllegalStateException         if this ServletContext has already been initialized
-     *
-     * @throws IllegalArgumentException      if <code>servletName</code> is null or an empty String
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
+     * @throws IllegalStateException         如果此 ServletContext 已被初始化
+     * @throws IllegalArgumentException      如果 <code>servletName</code> 为 null 或空字符串
+     * @throws UnsupportedOperationException 如果此 ServletContext 被传递给了既未在 <code>web.xml</code> 或
+     *                                       <code>web-fragment.xml</code> 中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener} 注解的
+     *                                       {@link ServletContextListener} 的
+     *                                       {@link ServletContextListener#contextInitialized} 方法
      *
      * @since Servlet 4.0
      */
     public ServletRegistration.Dynamic addJspFile(String servletName, String jspFile);
 
     /**
-     * Instantiates the given Servlet class.
+     * 实例化指定的Servlet类。
      *
      * <p>
-     * The returned Servlet instance may be further customized before it is registered with this ServletContext via a
-     * call to {@link #addServlet(String,Servlet)}.
+     *     返回的Servlet实例在通过调用{@link #addServlet(String,Servlet)}注册到ServletContext之前可进一步定制。
      *
      * <p>
-     * The given Servlet class must define a zero argument constructor, which is used to instantiate it.
+     *     给定的Servlet类必须定义一个无参数构造函数，用于实例化该类。
      *
      * <p>
-     * This method introspects the given <tt>clazz</tt> for the following annotations:
-     * {@link javax.servlet.annotation.ServletSecurity}, {@link javax.servlet.annotation.MultipartConfig},
-     * <tt>javax.annotation.security.RunAs</tt>, and <tt>javax.annotation.security.DeclareRoles</tt>. In addition, this
-     * method supports resource injection if the given <tt>clazz</tt> represents a Managed Bean. See the Jakarta EE
-     * platform and CDI specifications for additional details about Managed Beans and resource injection.
+     *     此方法会内省给定的<tt>clazz</tt>类以检查以下注解：
+     *     <ul>
+     *         <li>{@link javax.servlet.annotation.ServletSecurity}</li>
+     *         <li>{@link javax.servlet.annotation.MultipartConfig}</li>
+     *         <li><tt>javax.annotation.security.RunAs</tt></li>
+     *         <li><tt>javax.annotation.security.DeclareRoles</tt></li>
+     *     </ul>
+     *     此外，如果给定的<tt>clazz</tt>表示一个托管Bean(Managed Bean)，则此方法支持资源注入。
+     *     有关托管Bean和资源注入的更多详细信息，请参阅Jakarta EE平台和CDI规范。
      *
-     * @param       <T> the class of the Servlet to create
-     * @param clazz the Servlet class to instantiate
-     *
-     * @return the new Servlet instance
-     *
-     * @throws ServletException              if the given <tt>clazz</tt> fails to be instantiated
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @param       <T> 要创建的Servlet的类
+     * @param clazz 要实例化的Servlet类
+     * @return 新的Servlet实例
+     * @throws ServletException              如果给定的<tt>clazz</tt>实例化失败
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给{@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在<code>web.xml</code>或
+     *                                       <code>web-fragment.xml</code>中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 3.0
-     */
-    public <T extends Servlet> T createServlet(Class<T> clazz) throws ServletException;
+     */    public <T extends Servlet> T createServlet(Class<T> clazz) throws ServletException;
 
     /**
-     * Gets the ServletRegistration corresponding to the servlet with the given <tt>servletName</tt>.
+     * 获取与给定<tt>servletName</tt>对应的servlet注册信息。
      *
-     * @param servletName the name of a servlet
-     *
-     * @return the (complete or preliminary) ServletRegistration for the servlet with the given <tt>servletName</tt>, or
-     *         null if no ServletRegistration exists under that name
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @param servletName servlet名称
+     * @return 具有给定<tt>servletName</tt>的servlet的（完整或初步）ServletRegistration，
+     *         如果该名称下不存在ServletRegistration则返回null
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给
+     *                                       {@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在
+     *                                       <code>web.xml</code>或<code>web-fragment.xml</code>中声明，
+     *                                       也未使用{@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 3.0
      */
     public ServletRegistration getServletRegistration(String servletName);
 
     /**
-     * Gets a (possibly empty) Map of the ServletRegistration objects (keyed by servlet name) corresponding to all
-     * servlets registered with this ServletContext.
+     * 获取与此ServletContext注册的所有servlet对应的（可能为空的）ServletRegistration对象Map（以servlet名称为键）。
      *
      * <p>
-     * The returned Map includes the ServletRegistration objects corresponding to all declared and annotated servlets,
-     * as well as the ServletRegistration objects corresponding to all servlets that have been added via one of the
-     * <tt>addServlet</tt> and <tt>addJspFile</tt> methods.
+     *     返回的Map包括对应于所有声明和注解servlet的ServletRegistration对象，
+     *     以及通过任一<tt>addServlet</tt>和<tt>addJspFile</tt>方法添加的所有servlet对应的ServletRegistration对象。
      *
      * <p>
-     * If permitted, any changes to the returned Map must not affect this ServletContext.
+     *     如果允许，对返回Map的任何更改不得影响此ServletContext。
      *
-     * @return Map of the (complete and preliminary) ServletRegistration objects corresponding to all servlets currently
-     *         registered with this ServletContext
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @return 对应于当前在此ServletContext注册的所有servlet的（完整和初步）ServletRegistration对象的Map
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给
+     *                                       {@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在
+     *                                       <code>web.xml</code>或<code>web-fragment.xml</code>中声明，
+     *                                       也未使用{@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 3.0
      */
     public Map<String, ? extends ServletRegistration> getServletRegistrations();
 
     /**
-     * Adds the filter with the given name and class name to this servlet context.
+     * 向此servlet上下文添加具有给定名称和类名的过滤器。
      *
      * <p>
-     * The registered filter may be further configured via the returned {@link FilterRegistration} object.
+     *     已注册的过滤器可以通过返回的{@link FilterRegistration}对象进行进一步配置。
      *
      * <p>
-     * The specified <tt>className</tt> will be loaded using the classloader associated with the application represented
-     * by this ServletContext.
+     *     指定的<tt>className</tt>将使用与此ServletContext所代表的应用程序关联的类加载器进行加载。
      *
      * <p>
-     * If this ServletContext already contains a preliminary FilterRegistration for a filter with the given
-     * <tt>filterName</tt>, it will be completed (by assigning the given <tt>className</tt> to it) and returned.
+     *     如果此ServletContext已包含具有给定<tt>filterName</tt>的过滤器的初步FilterRegistration，
+     *     则将通过将给定的<tt>className</tt>分配给它来完成注册并返回。
      *
      * <p>
-     * This method supports resource injection if the class with the given <tt>className</tt> represents a Managed Bean.
-     * See the Jakarta EE platform and CDI specifications for additional details about Managed Beans and resource
-     * injection.
+     *     如果具有给定<tt>className</tt>的类代表一个托管Bean，则此方法支持资源注入。
+     *     有关托管Bean和资源注入的更多详细信息，请参阅Jakarta EE平台和CDI规范。
      *
-     * @param filterName the name of the filter
-     * @param className  the fully qualified class name of the filter
-     *
-     * @return a FilterRegistration object that may be used to further configure the registered filter, or <tt>null</tt>
-     *         if this ServletContext already contains a complete FilterRegistration for a filter with the given
-     *         <tt>filterName</tt>
-     *
-     * @throws IllegalStateException         if this ServletContext has already been initialized
-     *
-     * @throws IllegalArgumentException      if <code>filterName</code> is null or an empty String
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @param filterName 过滤器的名称
+     * @param className  过滤器的完全限定类名
+     * @return 可用于进一步配置已注册过滤器的FilterRegistration对象，如果此ServletContext
+     *         已包含具有给定<tt>filterName</tt>的过滤器的完整FilterRegistration，则返回<tt>null</tt>
+     * @throws IllegalStateException         如果此ServletContext已被初始化
+     * @throws IllegalArgumentException      如果<code>filterName</code>为null或空字符串
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给
+     *                                       {@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在
+     *                                       <code>web.xml</code>或<code>web-fragment.xml</code>中声明，
+     *                                       也未使用{@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 3.0
      */
     public FilterRegistration.Dynamic addFilter(String filterName, String className);
 
     /**
-     * Registers the given filter instance with this ServletContext under the given <tt>filterName</tt>.
+     * 使用给定的<tt>filterName</tt>将指定的过滤器实例注册到此ServletContext。
      *
      * <p>
-     * The registered filter may be further configured via the returned {@link FilterRegistration} object.
+     *     注册的过滤器可以通过返回的{@link FilterRegistration}对象进行进一步配置。
      *
      * <p>
-     * If this ServletContext already contains a preliminary FilterRegistration for a filter with the given
-     * <tt>filterName</tt>, it will be completed (by assigning the class name of the given filter instance to it) and
-     * returned.
+     *     如果此ServletContext已包含具有给定<tt>filterName</tt>的过滤器的初步FilterRegistration，
+     *     则它将完成（通过将给定过滤器实例的类名分配给它）并返回。
      *
-     * @param filterName the name of the filter
-     * @param filter     the filter instance to register
-     *
-     * @return a FilterRegistration object that may be used to further configure the given filter, or <tt>null</tt> if
-     *         this ServletContext already contains a complete FilterRegistration for a filter with the given
-     *         <tt>filterName</tt> or if the same filter instance has already been registered with this or another
-     *         ServletContext in the same container
-     *
-     * @throws IllegalStateException         if this ServletContext has already been initialized
-     *
-     * @throws IllegalArgumentException      if <code>filterName</code> is null or an empty String
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @param filterName 过滤器的名称
+     * @param filter     要注册的过滤器实例
+     * @return 可用于进一步配置给定过滤器的FilterRegistration对象，如果此ServletContext
+     *         已包含具有给定<tt>filterName</tt>的过滤器的完整FilterRegistration，或者
+     *         如果相同的过滤器实例已经注册到此容器中的此ServletContext或其他ServletContext，则返回<tt>null</tt>
+     * @throws IllegalStateException         如果此ServletContext已被初始化
+     * @throws IllegalArgumentException      如果<code>filterName</code>为null或空字符串
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给
+     *                                       {@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在
+     *                                       <code>web.xml</code>或<code>web-fragment.xml</code>中声明，
+     *                                       也未使用{@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 3.0
      */
     public FilterRegistration.Dynamic addFilter(String filterName, Filter filter);
 
     /**
-     * Adds the filter with the given name and class type to this servlet context.
+     * 向此servlet上下文添加具有给定名称和类类型的过滤器。
      *
      * <p>
-     * The registered filter may be further configured via the returned {@link FilterRegistration} object.
+     *     注册的过滤器可以通过返回的{@link FilterRegistration}对象进行进一步配置。
      *
      * <p>
-     * If this ServletContext already contains a preliminary FilterRegistration for a filter with the given
-     * <tt>filterName</tt>, it will be completed (by assigning the name of the given <tt>filterClass</tt> to it) and
-     * returned.
+     *     如果此ServletContext已包含具有给定<tt>filterName</tt>的过滤器的初步FilterRegistration，
+     *     则它将完成（通过将给定的<tt>filterClass</tt>名称分配给它）并返回。
      *
      * <p>
-     * This method supports resource injection if the given <tt>filterClass</tt> represents a Managed Bean. See the Java
-     * EE platform and CDI specifications for additional details about Managed Beans and resource injection.
+     *     如果给定的<tt>filterClass</tt>表示一个托管Bean，则此方法支持资源注入。
+     *     有关托管Bean和资源注入的更多详细信息，请参阅Java EE平台和CDI规范。
      *
-     * @param filterName  the name of the filter
-     * @param filterClass the class object from which the filter will be instantiated
-     *
-     * @return a FilterRegistration object that may be used to further configure the registered filter, or <tt>null</tt>
-     *         if this ServletContext already contains a complete FilterRegistration for a filter with the given
-     *         <tt>filterName</tt>
-     *
-     * @throws IllegalStateException         if this ServletContext has already been initialized
-     *
-     * @throws IllegalArgumentException      if <code>filterName</code> is null or an empty String
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @param filterName  过滤器的名称
+     * @param filterClass 将从中实例化过滤器的类对象
+     * @return 可用于进一步配置已注册过滤器的FilterRegistration对象，如果此ServletContext
+     *         已包含具有给定<tt>filterName</tt>的过滤器的完整FilterRegistration，则返回<tt>null</tt>
+     * @throws IllegalStateException         如果此ServletContext已被初始化
+     * @throws IllegalArgumentException      如果<code>filterName</code>为null或空字符串
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给
+     *                                       {@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在
+     *                                       <code>web.xml</code>或<code>web-fragment.xml</code>中声明，
+     *                                       也未使用{@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 3.0
      */
     public FilterRegistration.Dynamic addFilter(String filterName, Class<? extends Filter> filterClass);
 
     /**
-     * Instantiates the given Filter class.
+     * 实例化指定的Filter类。
      *
      * <p>
-     * The returned Filter instance may be further customized before it is registered with this ServletContext via a
-     * call to {@link #addFilter(String,Filter)}.
+     *     返回的Filter实例在通过调用{@link #addFilter(String,Filter)}注册到ServletContext之前可进一步定制。
      *
      * <p>
-     * The given Filter class must define a zero argument constructor, which is used to instantiate it.
+     *     给定的Filter类必须定义一个无参数构造函数，用于实例化该类。
      *
      * <p>
-     * This method supports resource injection if the given <tt>clazz</tt> represents a Managed Bean. See the Jakarta EE
-     * platform and CDI specifications for additional details about Managed Beans and resource injection.
+     *     如果给定的<tt>clazz</tt>表示一个托管Bean(Managed Bean)，则此方法支持资源注入。
+     *     有关托管Bean和资源注入的更多详细信息，请参阅Jakarta EE平台和CDI规范。
      *
-     * @param       <T> the class of the Filter to create
-     * @param clazz the Filter class to instantiate
-     *
-     * @return the new Filter instance
-     *
-     * @throws ServletException              if the given <tt>clazz</tt> fails to be instantiated
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @param       <T> 要创建的Filter的类
+     * @param clazz 要实例化的Filter类
+     * @return 新的Filter实例
+     * @throws ServletException              如果给定的<tt>clazz</tt>实例化失败
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给{@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在<code>web.xml</code>或
+     *                                       <code>web-fragment.xml</code>中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 3.0
      */
     public <T extends Filter> T createFilter(Class<T> clazz) throws ServletException;
 
     /**
-     * Gets the FilterRegistration corresponding to the filter with the given <tt>filterName</tt>.
+     * 获取与给定<tt>filterName</tt>对应的过滤器注册信息。
      *
-     * @param filterName the name of a filter
-     * @return the (complete or preliminary) FilterRegistration for the filter with the given <tt>filterName</tt>, or
-     *         null if no FilterRegistration exists under that name
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @param filterName 过滤器名称
+     * @return 具有给定<tt>filterName</tt>的过滤器的（完整或初步）FilterRegistration，
+     *         如果该名称下不存在FilterRegistration则返回null
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给
+     *                                       {@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在
+     *                                       <code>web.xml</code>或<code>web-fragment.xml</code>中声明，
+     *                                       也未使用{@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 3.0
      */
     public FilterRegistration getFilterRegistration(String filterName);
 
     /**
-     * Gets a (possibly empty) Map of the FilterRegistration objects (keyed by filter name) corresponding to all filters
-     * registered with this ServletContext.
+     * 获取与此ServletContext注册的所有过滤器对应的（可能为空的）FilterRegistration对象Map（以过滤器名称为键）。
      *
      * <p>
-     * The returned Map includes the FilterRegistration objects corresponding to all declared and annotated filters, as
-     * well as the FilterRegistration objects corresponding to all filters that have been added via one of the
-     * <tt>addFilter</tt> methods.
+     *     返回的Map包括对应于所有声明和注解过滤器的FilterRegistration对象，
+     *     以及通过任一<tt>addFilter</tt>方法添加的所有过滤器对应的FilterRegistration对象。
      *
      * <p>
-     * Any changes to the returned Map must not affect this ServletContext.
+     *     对返回Map的任何更改不得影响此ServletContext。
      *
-     * @return Map of the (complete and preliminary) FilterRegistration objects corresponding to all filters currently
-     *         registered with this ServletContext
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @return 对应于当前在此ServletContext注册的所有过滤器的（完整和初步）FilterRegistration对象的Map
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给
+     *                                       {@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在
+     *                                       <code>web.xml</code>或<code>web-fragment.xml</code>中声明，
+     *                                       也未使用{@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 3.0
      */
     public Map<String, ? extends FilterRegistration> getFilterRegistrations();
 
     /**
-     * Gets the {@link SessionCookieConfig} object through which various properties of the session tracking cookies
-     * created on behalf of this <tt>ServletContext</tt> may be configured.
+     * 获取 {@link SessionCookieConfig} 对象，通过该对象可以配置代表此 <tt>ServletContext</tt> 创建的
+     * 会话跟踪 Cookie 的各种属性。
      *
      * <p>
-     * Repeated invocations of this method will return the same <tt>SessionCookieConfig</tt> instance.
+     *     重复调用此方法将返回相同的 <tt>SessionCookieConfig</tt> 实例。
      *
-     * @return the <tt>SessionCookieConfig</tt> object through which various properties of the session tracking cookies
-     *         created on behalf of this <tt>ServletContext</tt> may be configured
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @return 用于配置代表此 <tt>ServletContext</tt> 创建的会话跟踪 Cookie 各种属性的<tt>SessionCookieConfig</tt> 对象
+     * @throws UnsupportedOperationException 如果此 ServletContext 被传递给
+     *                                       {@link ServletContextListener#contextInitialized} 方法，
+     *                                       而该 {@link ServletContextListener} 既未在
+     *                                       <code>web.xml</code> 或 <code>web-fragment.xml</code> 中声明，
+     *                                       也未使用 {@link javax.servlet.annotation.WebListener} 注解标注
      * @since Servlet 3.0
      */
     public SessionCookieConfig getSessionCookieConfig();
 
     /**
-     * Sets the session tracking modes that are to become effective for this <tt>ServletContext</tt>.
+     * 设置将对此<tt>ServletContext</tt>生效的会话跟踪模式。
      *
      * <p>
-     * The given <tt>sessionTrackingModes</tt> replaces any session tracking modes set by a previous invocation of this
-     * method on this <tt>ServletContext</tt>.
+     *     给定的<tt>sessionTrackingModes</tt>将替换之前通过此方法在此<tt>ServletContext</tt>上设置的任何会话跟踪模式。
      *
-     * @param sessionTrackingModes the set of session tracking modes to become effective for this
-     *                             <tt>ServletContext</tt>
-     *
-     * @throws IllegalStateException         if this ServletContext has already been initialized
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
-     * @throws IllegalArgumentException      if <tt>sessionTrackingModes</tt> specifies a combination of
-     *                                       <tt>SessionTrackingMode.SSL</tt> with a session tracking mode other than
-     *                                       <tt>SessionTrackingMode.SSL</tt>, or if <tt>sessionTrackingModes</tt>
-     *                                       specifies a session tracking mode that is not supported by the servlet
-     *                                       container
-     *
+     * @param sessionTrackingModes 将对此<tt>ServletContext</tt>生效的会话跟踪模式集合
+     * @throws IllegalStateException         如果此ServletContext已被初始化
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给{@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在<code>web.xml</code>或
+     *                                       <code>web-fragment.xml</code>中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener}注解标注
+     * @throws IllegalArgumentException      如果<tt>sessionTrackingModes</tt>指定了<tt>SessionTrackingMode.SSL</tt>与
+     *                                       除<tt>SessionTrackingMode.SSL</tt>之外的会话跟踪模式的组合，或者如果
+     *                                       <tt>sessionTrackingModes</tt>指定了servlet容器不支持的会话跟踪模式
      * @since Servlet 3.0
      */
     public void setSessionTrackingModes(Set<SessionTrackingMode> sessionTrackingModes);
 
     /**
-     * Gets the session tracking modes that are supported by default for this <tt>ServletContext</tt>.
+     * 获取此<tt>ServletContext</tt>默认支持的会话跟踪模式。
      *
      * <p>
-     * The returned set is not backed by the {@code ServletContext} object, so changes in the returned set are not
-     * reflected in the {@code ServletContext} object, and vice-versa.
-     * </p>
+     *     返回的集合不受{@code ServletContext}对象支持，因此返回集合中的更改不会反映在{@code ServletContext}对象中，反之亦然。
      *
-     * @return set of the session tracking modes supported by default for this <tt>ServletContext</tt>
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @return 此<tt>ServletContext</tt>默认支持的会话跟踪模式集合
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给{@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在<code>web.xml</code>或
+     *                                       <code>web-fragment.xml</code>中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 3.0
      */
     public Set<SessionTrackingMode> getDefaultSessionTrackingModes();
 
     /**
-     * Gets the session tracking modes that are in effect for this <tt>ServletContext</tt>.
+     * 获取对此<tt>ServletContext</tt>生效的会话跟踪模式。
      *
      * <p>
-     * The session tracking modes in effect are those provided to {@link #setSessionTrackingModes
-     * setSessionTrackingModes}.
+     *     生效的会话跟踪模式是提供给{@link #setSessionTrackingModes setSessionTrackingModes}的那些模式。
      *
      * <p>
-     * The returned set is not backed by the {@code ServletContext} object, so changes in the returned set are not
-     * reflected in the {@code ServletContext} object, and vice-versa.
-     * </p>
+     *     返回的集合不受{@code ServletContext}对象支持，因此返回集合中的更改不会反映在{@code ServletContext}对象中，反之亦然。
      *
-     * @return set of the session tracking modes in effect for this <tt>ServletContext</tt>
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @return 此<tt>ServletContext</tt>生效的会话跟踪模式集合
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给{@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在<code>web.xml</code>或
+     *                                       <code>web-fragment.xml</code>中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 3.0
      */
     public Set<SessionTrackingMode> getEffectiveSessionTrackingModes();
 
     /**
-     * Adds the listener with the given class name to this ServletContext.
+     * 将具有给定类名的监听器添加到此ServletContext。
      *
      * <p>
-     * The class with the given name will be loaded using the classloader associated with the application represented by
-     * this ServletContext, and must implement one or more of the following interfaces:
-     * <ul>
-     * <li>{@link ServletContextAttributeListener}
-     * <li>{@link ServletRequestListener}
-     * <li>{@link ServletRequestAttributeListener}
-     * <li>{@link javax.servlet.http.HttpSessionAttributeListener}
-     * <li>{@link javax.servlet.http.HttpSessionIdListener}
-     * <li>{@link javax.servlet.http.HttpSessionListener}
-     * </ul>
+     *     具有给定名称的类将使用与此ServletContext所代表的应用程序关联的类加载器加载，
+     *     并且必须实现以下一个或多个接口：
+     *     <ul>
+     *         <li>{@link ServletContextAttributeListener}
+     *         <li>{@link ServletRequestListener}
+     *         <li>{@link ServletRequestAttributeListener}
+     *         <li>{@link javax.servlet.http.HttpSessionAttributeListener}
+     *         <li>{@link javax.servlet.http.HttpSessionIdListener}
+     *         <li>{@link javax.servlet.http.HttpSessionListener}
+     *     </ul>
      *
      * <p>
-     * If this ServletContext was passed to {@link ServletContainerInitializer#onStartup}, then the class with the given
-     * name may also implement {@link ServletContextListener}, in addition to the interfaces listed above.
+     *     如果此ServletContext被传递给{@link ServletContainerInitializer#onStartup}，那么除了上面列出的接口外，
+     *     具有给定名称的类还可以实现{@link ServletContextListener}。
      *
      * <p>
-     * As part of this method call, the container must load the class with the specified class name to ensure that it
-     * implements one of the required interfaces.
+     *     作为此方法调用的一部分，容器必须加载具有指定类名的类，以确保它实现了所需的接口之一。
      *
      * <p>
-     * If the class with the given name implements a listener interface whose invocation order corresponds to the
-     * declaration order (i.e., if it implements {@link ServletRequestListener}, {@link ServletContextListener}, or
-     * {@link javax.servlet.http.HttpSessionListener}), then the new listener will be added to the end of the ordered
-     * list of listeners of that interface.
+     *     如果具有给定名称的类实现了调用顺序与声明顺序相对应的监听器接口
+     *     （即实现了{@link ServletRequestListener}、{@link ServletContextListener}或
+     *     {@link javax.servlet.http.HttpSessionListener}），则新监听器将被添加到该接口监听器有序列表的末尾。
      *
      * <p>
-     * This method supports resource injection if the class with the given <tt>className</tt> represents a Managed Bean.
-     * See the Jakarta EE platform and CDI specifications for additional details about Managed Beans and resource
-     * injection.
+     *     如果具有给定<tt>className</tt>的类表示一个托管Bean，则此方法支持资源注入。
+     *     有关托管Bean和资源注入的更多详细信息，请参阅Jakarta EE平台和CDI规范。
      *
-     * @param className the fully qualified class name of the listener
-     *
-     * @throws IllegalArgumentException      if the class with the given name does not implement any of the above
-     *                                       interfaces, or if it implements {@link ServletContextListener} and this
-     *                                       ServletContext was not passed to
-     *                                       {@link ServletContainerInitializer#onStartup}
-     *
-     * @throws IllegalStateException         if this ServletContext has already been initialized
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @param className 监听器的完全限定类名
+     * @throws IllegalArgumentException      如果具有给定名称的类未实现上述任何接口，
+     *                                       或者它实现了{@link ServletContextListener}但此ServletContext
+     *                                       未被传递给{@link ServletContainerInitializer#onStartup}
+     * @throws IllegalStateException         如果此ServletContext已被初始化
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给{@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在<code>web.xml</code>或
+     *                                       <code>web-fragment.xml</code>中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 3.0
      */
     public void addListener(String className);
 
     /**
-     * Adds the given listener to this ServletContext.
+     * 将给定的监听器添加到此ServletContext。
      *
      * <p>
-     * The given listener must be an instance of one or more of the following interfaces:
-     * <ul>
-     * <li>{@link ServletContextAttributeListener}
-     * <li>{@link ServletRequestListener}
-     * <li>{@link ServletRequestAttributeListener}
-     * <li>{@link javax.servlet.http.HttpSessionAttributeListener}
-     * <li>{@link javax.servlet.http.HttpSessionIdListener}
-     * <li>{@link javax.servlet.http.HttpSessionListener}
-     * </ul>
+     *     给定的监听器必须是以下一个或多个接口的实例：
+     *     <ul>
+     *          <li>{@link ServletContextAttributeListener}
+     *          <li>{@link ServletRequestListener}
+     *          <li>{@link ServletRequestAttributeListener}
+     *          <li>{@link javax.servlet.http.HttpSessionAttributeListener}
+     *          <li>{@link javax.servlet.http.HttpSessionIdListener}
+     *          <li>{@link javax.servlet.http.HttpSessionListener}
+     *     </ul>
      *
      * <p>
-     * If this ServletContext was passed to {@link ServletContainerInitializer#onStartup}, then the given listener may
-     * also be an instance of {@link ServletContextListener}, in addition to the interfaces listed above.
+     *     如果此ServletContext被传递给{@link ServletContainerInitializer#onStartup}，那么除了上面列出的接口外，
+     *     给定的监听器还可以是{@link ServletContextListener}的实例。
      *
      * <p>
-     * If the given listener is an instance of a listener interface whose invocation order corresponds to the
-     * declaration order (i.e., if it is an instance of {@link ServletRequestListener}, {@link ServletContextListener},
-     * or {@link javax.servlet.http.HttpSessionListener}), then the listener will be added to the end of the ordered
-     * list of listeners of that interface.
+     *     如果给定的监听器是调用顺序与声明顺序相对应的监听器接口的实例
+     *     （即是{@link ServletRequestListener}、{@link ServletContextListener}或
+     *     {@link javax.servlet.http.HttpSessionListener}的实例），则该监听器将被添加到该接口监听器有序列表的末尾。
      *
-     * @param   <T> the class of the EventListener to add
-     * @param t the listener to be added
-     *
-     * @throws IllegalArgumentException      if the given listener is not an instance of any of the above interfaces, or
-     *                                       if it is an instance of {@link ServletContextListener} and this
-     *                                       ServletContext was not passed to
-     *                                       {@link ServletContainerInitializer#onStartup}
-     *
-     * @throws IllegalStateException         if this ServletContext has already been initialized
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @param   <T> 要添加的EventListener的类
+     * @param t 要添加的监听器
+     * @throws IllegalArgumentException      如果给定的监听器不是上述任何接口的实例，
+     *                                       或者是{@link ServletContextListener}的实例但此ServletContext
+     *                                       未被传递给{@link ServletContainerInitializer#onStartup}
+     * @throws IllegalStateException         如果此ServletContext已被初始化
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给{@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在<code>web.xml</code>或
+     *                                       <code>web-fragment.xml</code>中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 3.0
      */
     public <T extends EventListener> void addListener(T t);
 
     /**
-     * Adds a listener of the given class type to this ServletContext.
+     * 将给定类类型的监听器添加到此ServletContext。
      *
      * <p>
-     * The given <tt>listenerClass</tt> must implement one or more of the following interfaces:
+     *     给定的<tt>listenerClass</tt>必须实现以下一个或多个接口：
      * <ul>
-     * <li>{@link ServletContextAttributeListener}
-     * <li>{@link ServletRequestListener}
-     * <li>{@link ServletRequestAttributeListener}
-     * <li>{@link javax.servlet.http.HttpSessionAttributeListener}
-     * <li>{@link javax.servlet.http.HttpSessionIdListener}
-     * <li>{@link javax.servlet.http.HttpSessionListener}
+     *     <li>{@link ServletContextAttributeListener}
+     *     <li>{@link ServletRequestListener}
+     *     <li>{@link ServletRequestAttributeListener}
+     *     <li>{@link javax.servlet.http.HttpSessionAttributeListener}
+     *     <li>{@link javax.servlet.http.HttpSessionIdListener}
+     *     <li>{@link javax.servlet.http.HttpSessionListener}
      * </ul>
      *
      * <p>
-     * If this ServletContext was passed to {@link ServletContainerInitializer#onStartup}, then the given
-     * <tt>listenerClass</tt> may also implement {@link ServletContextListener}, in addition to the interfaces listed
-     * above.
+     *     如果此ServletContext被传递给{@link ServletContainerInitializer#onStartup}，那么除了上面列出的接口外，
+     *     给定的<tt>listenerClass</tt>还可以实现{@link ServletContextListener}。
      *
      * <p>
-     * If the given <tt>listenerClass</tt> implements a listener interface whose invocation order corresponds to the
-     * declaration order (i.e., if it implements {@link ServletRequestListener}, {@link ServletContextListener}, or
-     * {@link javax.servlet.http.HttpSessionListener}), then the new listener will be added to the end of the ordered
-     * list of listeners of that interface.
+     *     如果给定的<tt>listenerClass</tt>实现了调用顺序与声明顺序相对应的监听器接口
+     *     （即实现了{@link ServletRequestListener}、{@link ServletContextListener}或
+     *     {@link javax.servlet.http.HttpSessionListener}），则新监听器将被添加到该接口监听器有序列表的末尾。
      *
      * <p>
-     * This method supports resource injection if the given <tt>listenerClass</tt> represents a Managed Bean. See the
-     * Jakarta EE platform and CDI specifications for additional details about Managed Beans and resource injection.
+     *     如果给定的<tt>listenerClass</tt>表示一个托管Bean，则此方法支持资源注入。
+     *     有关托管Bean和资源注入的更多详细信息，请参阅Jakarta EE平台和CDI规范。
      *
-     * @param listenerClass the listener class to be instantiated
-     *
-     * @throws IllegalArgumentException      if the given <tt>listenerClass</tt> does not implement any of the above
-     *                                       interfaces, or if it implements {@link ServletContextListener} and this
-     *                                       ServletContext was not passed to
-     *                                       {@link ServletContainerInitializer#onStartup}
-     *
-     * @throws IllegalStateException         if this ServletContext has already been initialized
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @param listenerClass 要实例化的监听器类
+     * @throws IllegalArgumentException      如果给定的<tt>listenerClass</tt>未实现上述任何接口，
+     *                                       或者它实现了{@link ServletContextListener}但此ServletContext
+     *                                       未被传递给{@link ServletContainerInitializer#onStartup}
+     * @throws IllegalStateException         如果此ServletContext已被初始化
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给{@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在<code>web.xml</code>或
+     *                                       <code>web-fragment.xml</code>中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 3.0
      */
     public void addListener(Class<? extends EventListener> listenerClass);
 
     /**
-     * Instantiates the given EventListener class.
+     * 实例化指定的EventListener类。
      *
      * <p>
-     * The specified EventListener class must implement at least one of the {@link ServletContextListener},
-     * {@link ServletContextAttributeListener}, {@link ServletRequestListener}, {@link ServletRequestAttributeListener},
-     * {@link javax.servlet.http.HttpSessionAttributeListener}, {@link javax.servlet.http.HttpSessionIdListener}, or
-     * {@link javax.servlet.http.HttpSessionListener} interfaces.
+     *     指定的EventListener类必须至少实现以下接口之一：
+     *     <ul>
+     *         <li>{@link ServletContextListener}</li>
+     *         <li>{@link ServletContextAttributeListener}</li>
+     *         <li>{@link ServletRequestListener}</li>
+     *         <li>{@link ServletRequestAttributeListener}</li>
+     *         <li>{@link javax.servlet.http.HttpSessionListener}</li>
+     *         <li>{@link javax.servlet.http.HttpSessionAttributeListener}</li>
+     *         <li>{@link javax.servlet.http.HttpSessionIdListener}</li>
+     *     </ul>
      *
      * <p>
-     * The returned EventListener instance may be further customized before it is registered with this ServletContext
-     * via a call to {@link #addListener(EventListener)}.
+     *     返回的EventListener实例在通过调用{@link #addListener(EventListener)}注册到ServletContext之前可进一步定制。
      *
      * <p>
-     * The given EventListener class must define a zero argument constructor, which is used to instantiate it.
+     *     给定的EventListener类必须定义一个无参数构造函数，用于实例化该类。
      *
      * <p>
-     * This method supports resource injection if the given <tt>clazz</tt> represents a Managed Bean. See the Jakarta EE
-     * platform and CDI specifications for additional details about Managed Beans and resource injection.
+     *     如果给定的<tt>clazz</tt>表示一个托管Bean(Managed Bean)，则此方法支持资源注入。
+     *     有关托管Bean和资源注入的更多详细信息，请参阅Jakarta EE平台和CDI规范。
      *
-     * @param       <T> the class of the EventListener to create
-     * @param clazz the EventListener class to instantiate
-     *
-     * @return the new EventListener instance
-     *
-     * @throws ServletException              if the given <tt>clazz</tt> fails to be instantiated
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
-     * @throws IllegalArgumentException      if the specified EventListener class does not implement any of the
-     *                                       {@link ServletContextListener}, {@link ServletContextAttributeListener},
-     *                                       {@link ServletRequestListener}, {@link ServletRequestAttributeListener},
-     *                                       {@link javax.servlet.http.HttpSessionAttributeListener},
-     *                                       {@link javax.servlet.http.HttpSessionIdListener}, or
-     *                                       {@link javax.servlet.http.HttpSessionListener} interfaces.
-     *
+     * @param       <T> 要创建的EventListener的类
+     * @param clazz 要实例化的EventListener类
+     * @return 新的EventListener实例
+     * @throws ServletException              如果给定的<tt>clazz</tt>实例化失败
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给{@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在<code>web.xml</code>或
+     *                                       <code>web-fragment.xml</code>中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener}注解标注
+     * @throws IllegalArgumentException      如果指定的EventListener类未实现以下任一接口：
+     *                                       {@link ServletContextListener}、{@link ServletContextAttributeListener}、
+     *                                       {@link ServletRequestListener}、{@link ServletRequestAttributeListener}、
+     *                                       {@link javax.servlet.http.HttpSessionAttributeListener}、
+     *                                       {@link javax.servlet.http.HttpSessionIdListener}或
+     *                                       {@link javax.servlet.http.HttpSessionListener}
      * @since Servlet 3.0
      */
     public <T extends EventListener> T createListener(Class<T> clazz) throws ServletException;
 
     /**
-     * Gets the <code>&lt;jsp-config&gt;</code> related configuration that was aggregated from the <code>web.xml</code>
-     * and <code>web-fragment.xml</code> descriptor files of the web application represented by this ServletContext.
+     * 获取从此ServletContext所代表的Web应用程序的<code>web.xml</code>和<code>web-fragment.xml</code>
+     * 描述符文件中聚合的<code>&lt;jsp-config&gt;</code>相关配置。
      *
-     * @return the <code>&lt;jsp-config&gt;</code> related configuration that was aggregated from the
-     *         <code>web.xml</code> and <code>web-fragment.xml</code> descriptor files of the web application
-     *         represented by this ServletContext, or null if no such configuration exists
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @return 从此ServletContext所代表的Web应用程序的<code>web.xml</code>和<code>web-fragment.xml</code>
+     *         描述符文件中聚合的<code>&lt;jsp-config&gt;</code>相关配置，如果不存在此类配置则返回null
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给{@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在<code>web.xml</code>或
+     *                                       <code>web-fragment.xml</code>中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener}注解标注
      * @see javax.servlet.descriptor.JspConfigDescriptor
-     *
      * @since Servlet 3.0
      */
     public JspConfigDescriptor getJspConfigDescriptor();
 
     /**
-     * Gets the class loader of the web application represented by this ServletContext.
+     * 获取由此ServletContext表示的Web应用程序的类加载器。
      *
      * <p>
-     * If a security manager exists, and the caller's class loader is not the same as, or an ancestor of the requested
-     * class loader, then the security manager's <code>checkPermission</code> method is called with a
-     * <code>RuntimePermission("getClassLoader")</code> permission to check whether access to the requested class loader
-     * should be granted.
+     * 如果存在安全管理器，且调用者的类加载器与请求的类加载器不同或不是其祖先，
+     * 则将使用<code>RuntimePermission("getClassLoader")</code>权限调用安全管理器的
+     * <code>checkPermission</code>方法，以检查是否应授予对请求的类加载器的访问权限。
      *
-     * @return the class loader of the web application represented by this ServletContext
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
-     * @throws SecurityException             if a security manager denies access to the requested class loader
-     *
+     * @return 由此ServletContext表示的Web应用程序的类加载器
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给{@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在<code>web.xml</code>或
+     *                                       <code>web-fragment.xml</code>中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener}注解标注
+     * @throws SecurityException             如果安全管理器拒绝访问请求的类加载器
      * @since Servlet 3.0
      */
     public ClassLoader getClassLoader();
 
     /**
-     * Declares role names that are tested using <code>isUserInRole</code>.
+     * 声明使用<code>isUserInRole</code>进行测试的角色名称。
      *
      * <p>
-     * Roles that are implicitly declared as a result of their use within the
-     * {@link ServletRegistration.Dynamic#setServletSecurity setServletSecurity} or
-     * {@link ServletRegistration.Dynamic#setRunAsRole setRunAsRole} methods of the {@link ServletRegistration}
-     * interface need not be declared.
+     *     由于在{@link ServletRegistration.Dynamic#setServletSecurity setServletSecurity}或
+     *     {@link ServletRegistration.Dynamic#setRunAsRole setRunAsRole}方法中使用而隐式声明的角色无需再次声明。
      *
-     * @param roleNames the role names being declared
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
-     * @throws IllegalArgumentException      if any of the argument roleNames is null or the empty string
-     *
-     * @throws IllegalStateException         if the ServletContext has already been initialized
-     *
+     * @param roleNames 被声明的角色名称
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给{@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在<code>web.xml</code>或
+     *                                       <code>web-fragment.xml</code>中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener}注解标注
+     * @throws IllegalArgumentException      如果任何参数roleNames为null或空字符串
+     * @throws IllegalStateException         如果ServletContext已被初始化
      * @since Servlet 3.0
      */
     public void declareRoles(String... roleNames);
 
     /**
-     * Returns the configuration name of the logical host on which the ServletContext is deployed.
+     * 返回ServletContext所部署的逻辑主机的配置名称。
      *
-     * Servlet containers may support multiple logical hosts. This method must return the same name for all the servlet
-     * contexts deployed on a logical host, and the name returned by this method must be distinct, stable per logical
-     * host, and suitable for use in associating server configuration information with the logical host. The returned
-     * value is NOT expected or required to be equivalent to a network address or hostname of the logical host.
+     * <p>
+     *     Servlet容器可能支持多个逻辑主机。
+     *     此方法必须为部署在同一逻辑主机上的所有servlet上下文返回相同的名称，
+     *     且该名称必须具有唯一性、在每个逻辑主机上保持稳定，并适用于将服务器配置信息与逻辑主机关联。
+     *     返回值不需要也不要求等同于逻辑主机的网络地址或主机名。
      *
-     * @return a <code>String</code> containing the configuration name of the logical host on which the servlet context
-     *         is deployed.
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @return 包含servlet上下文所部署的逻辑主机配置名称的<code>String</code>
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给{@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在<code>web.xml</code>或
+     *                                       <code>web-fragment.xml</code>中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 3.1
      */
     public String getVirtualServerName();
 
     /**
-     * Gets the session timeout in minutes that are supported by default for this <tt>ServletContext</tt>.
+     * 获取此<tt>ServletContext</tt>默认支持的会话超时时间（以分钟为单位）。
      *
-     * @return the session timeout in minutes that are supported by default for this <tt>ServletContext</tt>
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @return 此<tt>ServletContext</tt>默认支持的会话超时时间（分钟）
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给{@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在<code>web.xml</code>或
+     *                                       <code>web-fragment.xml</code>中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 4.0
      */
     public int getSessionTimeout();
 
     /**
-     * Sets the session timeout in minutes for this ServletContext.
+     * 设置此ServletContext的会话超时时间（以分钟为单位）。
      *
-     * @param sessionTimeout session timeout in minutes
-     *
-     * @throws IllegalStateException         if this ServletContext has already been initialized
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @param sessionTimeout 会话超时时间（分钟）
+     * @throws IllegalStateException         如果此ServletContext已被初始化
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给{@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在<code>web.xml</code>或
+     *                                       <code>web-fragment.xml</code>中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 4.0
      */
     public void setSessionTimeout(int sessionTimeout);
 
     /**
-     * Gets the request character encoding that are supported by default for this <tt>ServletContext</tt>. This method
-     * returns null if no request encoding character encoding has been specified in deployment descriptor or container
-     * specific configuration (for all web applications in the container).
+     * 获取此<tt>ServletContext</tt>默认支持的请求字符编码。
+     * 如果在部署描述符或容器特定配置中（针对容器中的所有Web应用程序）未指定请求字符编码，则此方法返回null。
      *
-     * @return the request character encoding that are supported by default for this <tt>ServletContext</tt>
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @return 此<tt>ServletContext</tt>默认支持的请求字符编码
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给{@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在<code>web.xml</code>或
+     *                                       <code>web-fragment.xml</code>中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 4.0
      */
     public String getRequestCharacterEncoding();
 
     /**
-     * Sets the request character encoding for this ServletContext.
+     * 设置此ServletContext的请求字符编码。
      *
-     * @param encoding request character encoding
-     *
-     * @throws IllegalStateException         if this ServletContext has already been initialized
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @param encoding 请求字符编码
+     * @throws IllegalStateException         如果此ServletContext已被初始化
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给{@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在<code>web.xml</code>或
+     *                                       <code>web-fragment.xml</code>中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 4.0
      */
     public void setRequestCharacterEncoding(String encoding);
 
     /**
-     * Gets the response character encoding that are supported by default for this <tt>ServletContext</tt>. This method
-     * returns null if no response encoding character encoding has been specified in deployment descriptor or container
-     * specific configuration (for all web applications in the container).
+     * 获取此<tt>ServletContext</tt>默认支持的响应字符编码。
+     * 如果在部署描述符或容器特定配置中（针对容器中的所有Web应用程序）未指定响应字符编码，则此方法返回null。
      *
-     * @return the request character encoding that are supported by default for this <tt>ServletContext</tt>
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @return 此<tt>ServletContext</tt>默认支持的响应字符编码
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给{@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在<code>web.xml</code>或
+     *                                       <code>web-fragment.xml</code>中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 4.0
      */
     public String getResponseCharacterEncoding();
 
     /**
-     * Sets the response character encoding for this ServletContext.
+     * 设置此ServletContext的响应字符编码。
      *
-     * @param encoding response character encoding
-     *
-     * @throws IllegalStateException         if this ServletContext has already been initialized
-     *
-     * @throws UnsupportedOperationException if this ServletContext was passed to the
-     *                                       {@link ServletContextListener#contextInitialized} method of a
-     *                                       {@link ServletContextListener} that was neither declared in
-     *                                       <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated with
-     *                                       {@link javax.servlet.annotation.WebListener}
-     *
+     * @param encoding 响应字符编码
+     * @throws IllegalStateException         如果此ServletContext已被初始化
+     * @throws UnsupportedOperationException 如果此ServletContext被传递给{@link ServletContextListener#contextInitialized}方法，
+     *                                       而该{@link ServletContextListener}既未在<code>web.xml</code>或
+     *                                       <code>web-fragment.xml</code>中声明，也未使用
+     *                                       {@link javax.servlet.annotation.WebListener}注解标注
      * @since Servlet 4.0
      */
     public void setResponseCharacterEncoding(String encoding);

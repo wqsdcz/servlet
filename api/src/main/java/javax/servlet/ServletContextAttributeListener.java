@@ -21,15 +21,15 @@ package javax.servlet;
 import java.util.EventListener;
 
 /**
- * Interface for receiving notification events about ServletContext attribute changes.
+ * 用于接收关于ServletContext属性更改通知事件的接口。
  *
  * <p>
- * In order to receive these notification events, the implementation class must be either declared in the deployment
- * descriptor of the web application, annotated with {@link javax.servlet.annotation.WebListener}, or registered via one
- * of the addListener methods defined on {@link ServletContext}.
+ * 为接收这些通知事件，实现类必须在Web应用程序的部署描述符中声明，
+ * 使用{@link javax.servlet.annotation.WebListener}注解标注，
+ * 或通过{@link ServletContext}上定义的addListener方法之一进行注册。
  *
  * <p>
- * The order in which implementations of this interface are invoked is unspecified.
+ * 此接口实现的调用顺序未指定。
  *
  * @see ServletContextAttributeEvent
  *
@@ -38,34 +38,28 @@ import java.util.EventListener;
 public interface ServletContextAttributeListener extends EventListener {
 
     /**
-     * Receives notification that an attribute has been added to the ServletContext.
+     * 接收已向ServletContext添加属性的通知。
      *
-     * @param event the ServletContextAttributeEvent containing the ServletContext to which the attribute was added,
-     *              along with the attribute name and value
-     *
-     * @implSpec The default implementation takes no action.
+     * @param event 包含添加属性的ServletContext以及属性名称和值的ServletContextAttributeEvent事件对象
+     * @implSpec 默认实现不执行任何操作。
      */
     default public void attributeAdded(ServletContextAttributeEvent event) {
     }
 
     /**
-     * Receives notification that an attribute has been removed from the ServletContext.
+     * 接收已从ServletContext中移除属性的通知。
      *
-     * @param event the ServletContextAttributeEvent containing the ServletContext from which the attribute was removed,
-     *              along with the attribute name and value
-     *
-     * @implSpec The default implementation takes no action.
+     * @param event 包含被移除属性的ServletContext以及属性名称和值的ServletContextAttributeEvent事件对象
+     * @implSpec 默认实现不执行任何操作。
      */
     default public void attributeRemoved(ServletContextAttributeEvent event) {
     }
 
     /**
-     * Receives notification that an attribute has been replaced in the ServletContext.
+     * 接收ServletContext中属性已被替换的通知。
      *
-     * @param event the ServletContextAttributeEvent containing the ServletContext in which the attribute was replaced,
-     *              along with the attribute name and its old value
-     *
-     * @implSpec The default implementation takes no action.
+     * @param event 包含发生属性替换的ServletContext以及属性名称及其旧值的ServletContextAttributeEvent事件对象
+     * @implSpec 默认实现不执行任何操作。
      */
     default public void attributeReplaced(ServletContextAttributeEvent event) {
     }

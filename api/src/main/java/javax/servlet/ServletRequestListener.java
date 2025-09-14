@@ -21,44 +21,38 @@ package javax.servlet;
 import java.util.EventListener;
 
 /**
- * Interface for receiving notification events about requests coming into and going out of scope of a web application.
+ * 用于接收关于请求进入和离开Web应用程序范围的通知事件接口。
  *
  * <p>
- * A ServletRequest is defined as coming into scope of a web application when it is about to enter the first servlet or
- * filter of the web application, and as going out of scope as it exits the last servlet or the first filter in the
- * chain.
+ *     当ServletRequest即将进入Web应用程序的第一个servlet或filter时，被定义为进入Web应用程序范围；
+ *     当它退出链中的最后一个servlet或第一个过滤器时，被定义为离开范围。
  *
  * <p>
- * In order to receive these notification events, the implementation class must be either declared in the deployment
- * descriptor of the web application, annotated with {@link javax.servlet.annotation.WebListener}, or registered via one
- * of the addListener methods defined on {@link ServletContext}.
+ *     为接收这些通知事件，实现类必须在Web应用程序的部署描述符中声明，
+ *     使用{@link javax.servlet.annotation.WebListener}注解标注，
+ *     或通过{@link ServletContext}上定义的addListener方法之一进行注册。
  *
  * <p>
- * Implementations of this interface are invoked at their {@link #requestInitialized} method in the order in which they
- * have been declared, and at their {@link #requestDestroyed} method in reverse order.
+ *     此接口的实现按照声明顺序调用其{@link #requestInitialized}方法，并按照逆序调用其{@link #requestDestroyed}方法。
  *
  * @since Servlet 2.4
  */
 public interface ServletRequestListener extends EventListener {
 
     /**
-     * Receives notification that a ServletRequest is about to go out of scope of the web application.
+     * 接收ServletRequest即将离开Web应用程序范围的通知。
      *
-     * @param sre the ServletRequestEvent containing the ServletRequest and the ServletContext representing the web
-     *            application
-     *
-     * @implSpec The default implementation takes no action.
+     * @param sre 包含ServletRequest和代表Web应用程序的ServletContext的ServletRequestEvent事件对象
+     * @implSpec 默认实现不执行任何操作。
      */
     default public void requestDestroyed(ServletRequestEvent sre) {
     }
 
     /**
-     * Receives notification that a ServletRequest is about to come into scope of the web application.
+     * 接收ServletRequest即将进入Web应用程序范围的通知。
      *
-     * @param sre the ServletRequestEvent containing the ServletRequest and the ServletContext representing the web
-     *            application
-     *
-     * @implSpec The default implementation takes no action.
+     * @param sre 包含ServletRequest和代表Web应用程序的ServletContext的ServletRequestEvent事件对象
+     * @implSpec 默认实现不执行任何操作。
      */
     default public void requestInitialized(ServletRequestEvent sre) {
     }

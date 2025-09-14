@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * 组成：名称、类型名、初始化参数、异步支持；
  * 通过该接口可对 {@link Servlet} 或 {@link Filter} 进行进一步配置。
  *
  * <p>
