@@ -22,27 +22,26 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
 
 /**
- * This interface encapsulates the connection for an upgrade request. It allows the protocol handler to send service
- * requests and status queries to the container.
+ * 此接口封装了升级请求的连接。
+ * 它允许协议处理程序向容器发送服务请求和状态查询。
  *
  * @since Servlet 3.1
  */
 public interface WebConnection extends AutoCloseable {
+
     /**
-     * Returns an input stream for this web connection.
+     * 返回此Web连接的输入流。
      *
-     * @return a ServletInputStream for reading binary data
-     *
-     * @exception IOException if an I/O error occurs
+     * @return 用于读取二进制数据的ServletInputStream
+     * @exception IOException 如果发生I/O错误
      */
     public ServletInputStream getInputStream() throws IOException;
 
     /**
-     * Returns an output stream for this web connection.
+     * 返回此Web连接的输出流。
      *
-     * @return a ServletOutputStream for writing binary data
-     *
-     * @exception IOException if an I/O error occurs
+     * @return 用于写入二进制数据的ServletOutputStream
+     * @exception IOException 如果发生I/O错误
      */
     public ServletOutputStream getOutputStream() throws IOException;
 }
