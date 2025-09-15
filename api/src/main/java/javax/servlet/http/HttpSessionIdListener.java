@@ -20,27 +20,24 @@ package javax.servlet.http;
 import java.util.EventListener;
 
 /**
- * Interface for receiving notification events about HttpSession id changes.
+ * 用于接收关于HttpSession ID变化通知事件的接口。
  *
  * <p>
- * In order to receive these notification events, the implementation class must be either declared in the deployment
- * descriptor of the web application, annotated with {@link javax.servlet.annotation.WebListener}, or registered via one
- * of the addListener methods defined on {@link javax.servlet.ServletContext}.
+ *     要接收这些通知事件，实现类必须在Web应用程序的部署描述符中声明、
+ *     使用{@link javax.servlet.annotation.WebListener}注解标注、
+ *     或通过{@link javax.servlet.ServletContext}上定义的addListener方法之一进行注册。
  *
- * <p>
- * The order in which implementations of this interface are invoked is unspecified.
+ * <p>此接口实现的调用顺序未指定。
  *
  * @since Servlet 3.1
  */
 public interface HttpSessionIdListener extends EventListener {
 
     /**
-     * Receives notification that session id has been changed in a session.
+     * 接收会话ID已在会话中发生变化的通知。
      *
-     * @param event        the HttpSessionBindingEvent containing the session and the name and (old) value of the
-     *                     attribute that was replaced
-     *
-     * @param oldSessionId the old session id
+     * @param event        包含会话以及被替换属性的名称和（旧）值的HttpSessionBindingEvent事件对象
+     * @param oldSessionId 旧的会话ID
      */
     public void sessionIdChanged(HttpSessionEvent event, String oldSessionId);
 

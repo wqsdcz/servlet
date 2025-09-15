@@ -19,14 +19,13 @@ package javax.servlet.http;
 
 /**
  * <p>
- * Allows runtime discovery of the manner in which the {@link HttpServlet} for the current {@link HttpServletRequest}
- * was invoked. Invoking any of the methods must not block the caller. The implementation must be thread safe. Instances
- * are immutable and are returned from {@link HttpServletRequest#getHttpServletMapping}.
+ * 允许运行时发现当前 {@link HttpServletRequest} 所对应的 {@link HttpServlet} 被调用的方式。
+ * 调用该对象的任何方法时都不得阻塞调用者。实现必须是线程安全的。
+ * 该实例不可变，并通过 {@link HttpServletRequest#getHttpServletMapping} 方法返回。
  * </p>
  *
  * <p>
- * Following are some illustrative examples for various combinations of mappings. Consider the following Servlet
- * declaration:
+ * 以下展示了各种映射组合的示例。考虑如下 Servlet 声明：
  * </p>
  *
  * <pre>
@@ -46,14 +45,14 @@ package javax.servlet.http;
  * </pre>
  *
  * <p>
- * The expected values of the properties for various incoming URI path values are as shown in this table. The
- * {@code servletName} column is omitted as its value is always {@code MyServlet}.
+ * 针对不同传入的URI路径值，各属性的预期值如下表所示。
+ * 表中省略了 {@code servletName} 列，因为其值始终为 {@code MyServlet}。
  * </p>
- * 
+ *
  * <table border="1">
- * <caption>Expected values of properties for various URI paths</caption>
+ * <caption>不同URI路径对应的属性预期值</caption>
  * <tr>
- * <th>URI Path (in quotes)</th>
+ * <th>URI路径（带引号）</th>
  * <th>matchValue</th>
  * <th>pattern</th>
  * <th>mappingMatch</th>
@@ -88,64 +87,61 @@ package javax.servlet.http;
  * <td>/path/*</td>
  * <td>PATH</td>
  * </tr>
- * 
+ *
  * </table>
- * 
+ *
  * @since 4.0
  */
 public interface HttpServletMapping {
 
     /**
      * <p>
-     * Return the portion of the URI path that caused this request to be matched. If the {@link #getMappingMatch} value is
-     * {@code
-     * CONTEXT_ROOT} or {@code DEFAULT}, this method must return the empty string. If the {@link #getMappingMatch} value is
-     * {@code
-     * EXACT}, this method must return the portion of the path that matched the servlet, omitting any leading slash. If the
-     * {@link #getMappingMatch} value is {@code EXTENSION} or {@code PATH}, this method must return the value that matched
-     * the '*'. See the class javadoc for examples.
+     * 返回导致此请求被匹配的URI路径部分。
+     *     <ul>
+     *         <li>如果{@link #getMappingMatch}的值为{@code CONTEXT_ROOT}或{@code DEFAULT}，则此方法必须返回空字符串。</li>
+     *         <li>如果{@link #getMappingMatch}的值为{@code EXACT}，则此方法必须返回与servlet匹配的路径部分（省略前导斜杠）。</li>
+     *         <li>如果{@link #getMappingMatch}的值为{@code EXTENSION}或{@code PATH}，则此方法必须返回与'*'通配符匹配的值。</li>
+     *     </ul>
+     *     具体示例请参阅类文档。
      * </p>
-     * 
-     * @return the match.
-     * 
+     *
+     * @return 匹配值
      * @since 4.0
      */
     public String getMatchValue();
 
     /**
      * <p>
-     * Return the String representation for the {@code url-pattern} for this mapping. If the {@link #getMappingMatch} value
-     * is {@code
-     * CONTEXT_ROOT}, this method must return the empty string. If the {@link #getMappingMatch} value is {@code
-     * EXTENSION}, this method must return the pattern, without any leading slash. Otherwise, this method returns the
-     * pattern exactly as specified in the descriptor or Java configuration.
+     * 返回此映射对应的{@code url-pattern}的字符串表示形式。
+     *     <ul>
+     *         <li>如果{@link #getMappingMatch}的值为{@code CONTEXT_ROOT}，则此方法必须返回空字符串。</li>
+     *         <li>如果{@link #getMappingMatch}的值为{@code EXTENSION}，则此方法必须返回模式字符串（不含任何前导斜杠）。</li>
+     *         <li>其他情况下，此方法返回在描述符或Java配置中指定的确切模式。</li>
+     *     </ul>
      * </p>
-     * 
-     * @return the String representation for the {@code url-pattern} for this mapping.
-     * 
+     *
+     * @return 此映射对应的{@code url-pattern}的字符串表示形式。
      * @since 4.0
      */
     public String getPattern();
 
     /**
      * <p>
-     * Return the String representation for the {@code servlet-name} for this mapping. If the Servlet providing the response
-     * is the default servlet, the return from this method is the name of the default servlet, which is container specific.
+     * 返回此映射对应的{@code servlet-name}的字符串表示形式。
+     * 如果提供响应的Servlet是默认servlet，则此方法返回默认servlet的名称（该名称是容器特定的）。
      * </p>
-     * 
-     * @return the String representation for the {@code servlet-name} for this mapping.
-     * 
+     *
+     * @return 此映射对应的{@code servlet-name}的字符串表示形式。
      * @since 4.0
      */
     public String getServletName();
 
     /**
      * <p>
-     * Return the {@link MappingMatch} for this instance
+     * 返回此实例的 {@link MappingMatch} 类型。
      * </p>
-     * 
-     * @return the {@code MappingMatch} for this instance.
-     * 
+     *
+     * @return 此实例的 {@code MappingMatch} 类型。
      * @since 4.0
      */
     public MappingMatch getMappingMatch();

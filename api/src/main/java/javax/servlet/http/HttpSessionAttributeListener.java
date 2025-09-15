@@ -21,43 +21,40 @@ package javax.servlet.http;
 import java.util.EventListener;
 
 /**
- * Interface for receiving notification events about HttpSession attribute changes.
+ * 用于接收关于HttpSession属性变化通知事件的接口。
  *
  * <p>
- * In order to receive these notification events, the implementation class must be either declared in the deployment
- * descriptor of the web application, annotated with {@link javax.servlet.annotation.WebListener}, or registered via one
- * of the addListener methods defined on {@link javax.servlet.ServletContext}.
+ *     要接收这些通知事件，实现类必须在Web应用程序的部署描述符中声明、
+ *     使用{@link javax.servlet.annotation.WebListener}注解标注、
+ *     或通过{@link javax.servlet.ServletContext}上定义的addListener方法之一进行注册。
  *
  * <p>
- * The order in which implementations of this interface are invoked is unspecified.
+ * 此接口实现的调用顺序未指定。
  *
  * @since Servlet 2.3
  */
 public interface HttpSessionAttributeListener extends EventListener {
 
     /**
-     * Receives notification that an attribute has been added to a session.
+     * 接收属性已添加到会话的通知。
      *
-     * @param event the HttpSessionBindingEvent containing the session and the name and value of the attribute that was
-     *              added
+     * @param event 包含会话以及添加的属性名称和值的HttpSessionBindingEvent事件对象
      */
     default public void attributeAdded(HttpSessionBindingEvent event) {
     }
 
     /**
-     * Receives notification that an attribute has been removed from a session.
+     * 接收属性已从会话中移除的通知。
      *
-     * @param event the HttpSessionBindingEvent containing the session and the name and value of the attribute that was
-     *              removed
+     * @param event 包含会话以及被移除的属性名称和值的HttpSessionBindingEvent事件对象
      */
     default public void attributeRemoved(HttpSessionBindingEvent event) {
     }
 
     /**
-     * Receives notification that an attribute has been replaced in a session.
+     * 接收属性已在会话中被替换的通知。
      *
-     * @param event the HttpSessionBindingEvent containing the session and the name and (old) value of the attribute
-     *              that was replaced
+     * @param event 包含会话以及被替换属性的名称和（旧）值的HttpSessionBindingEvent事件对象
      */
     default public void attributeReplaced(HttpSessionBindingEvent event) {
     }

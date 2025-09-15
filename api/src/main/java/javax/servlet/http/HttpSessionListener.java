@@ -21,16 +21,15 @@ package javax.servlet.http;
 import java.util.EventListener;
 
 /**
- * Interface for receiving notification events about HttpSession lifecycle changes.
+ * 用于接收关于HttpSession生命周期变化通知事件的接口。
  *
  * <p>
- * In order to receive these notification events, the implementation class must be either declared in the deployment
- * descriptor of the web application, annotated with {@link javax.servlet.annotation.WebListener}, or registered via one
- * of the addListener methods defined on {@link javax.servlet.ServletContext}.
+ *     要接收这些通知事件，实现类必须在Web应用程序的部署描述符中声明、
+ *     使用{@link javax.servlet.annotation.WebListener}注解标注、
+ *     或通过{@link javax.servlet.ServletContext}上定义的addListener方法之一进行注册。
  *
  * <p>
- * Implementations of this interface are invoked at their {@link #sessionCreated} method in the order in which they have
- * been declared, and at their {@link #sessionDestroyed} method in reverse order.
+ *     此接口的实现按其声明顺序调用{@link #sessionCreated}方法，并按逆序调用{@link #sessionDestroyed}方法。
  *
  * @see HttpSessionEvent
  *
@@ -39,21 +38,19 @@ import java.util.EventListener;
 public interface HttpSessionListener extends EventListener {
 
     /**
-     * Receives notification that a session has been created.
+     * 接收会话已创建的通知。
      *
-     * @implSpec The default implementation takes no action.
-     *
-     * @param se the HttpSessionEvent containing the session
+     * @implSpec 默认实现不执行任何操作。
+     * @param se 包含会话的HttpSessionEvent事件对象
      */
     default public void sessionCreated(HttpSessionEvent se) {
     }
 
     /**
-     * Receives notification that a session is about to be invalidated.
+     * 接收会话即将失效的通知。
      *
-     * @implSpec The default implementation takes no action.
-     *
-     * @param se the HttpSessionEvent containing the session
+     * @implSpec 默认实现不执行任何操作。
+     * @param se 包含会话的HttpSessionEvent事件对象
      */
     default public void sessionDestroyed(HttpSessionEvent se) {
     }

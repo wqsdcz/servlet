@@ -22,43 +22,37 @@ import java.util.Enumeration;
 import javax.servlet.ServletContext;
 
 /**
- *
- * Provides a way to identify a user across more than one page request or visit to a Web site and to store information
- * about that user.
+ * 一种在多个页面请求或访问网站时，提供了识别用户并存储用户信息的方法。
  *
  * <p>
- * The servlet container uses this interface to create a session between an HTTP client and an HTTP server. The session
- * persists for a specified time period, across more than one connection or page request from the user. A session
- * usually corresponds to one user, who may visit a site many times. The server can maintain a session in many ways such
- * as using cookies or rewriting URLs.
+ *     Servlet容器使用此接口在HTTP客户端和HTTP服务器之间创建会话。
+ *     会话会在特定时间段内持续存在，跨越用户的多个连接或页面请求。
+ *     会话通常对应一个用户，该用户可能多次访问网站。
+ *     服务器可以通过多种方式维护会话，例如：使用Cookie或URL重写。
  *
  * <p>
- * This interface allows servlets to
- * <ul>
- * <li>View and manipulate information about a session, such as the session identifier, creation time, and last accessed
- * time
- * <li>Bind objects to sessions, allowing user information to persist across multiple user connections
- * </ul>
+ *     此接口允许Servlet：
+ *     <ul>
+ *         <li>查看和操作会话信息，例如：会话标识符、创建时间和最后访问时间
+ *         <li>将对象绑定到会话，使用户信息在多个用户连接间持久保持
+ *     </ul>
  *
  * <p>
- * When an application stores an object in or removes an object from a session, the session checks whether the object
- * implements {@link HttpSessionBindingListener}. If it does, the servlet notifies the object that it has been bound to
- * or unbound from the session. Notifications are sent after the binding methods complete. For session that are
- * invalidated or expire, notifications are sent after the session has been invalidated or expired.
+ *     当应用程序在会话中存储或移除对象时，会话会检查对象是否实现了{@link HttpSessionBindingListener}。
+ *     如果实现，Servlet会通知对象它已被绑定到会话或从会话中解除绑定。
+ *     通知在绑定方法完成后发送。
+ *     对于失效或过期的会话，通知在会话失效或过期后发送。
  *
  * <p>
- * When container migrates a session between VMs in a distributed container setting, all session attributes implementing
- * the {@link HttpSessionActivationListener} interface are notified.
- * 
- * <p>
- * A servlet should be able to handle cases in which the client does not choose to join a session, such as when cookies
- * are intentionally turned off. Until the client joins the session, <code>isNew</code> returns <code>true</code>. If
- * the client chooses not to join the session, <code>getSession</code> will return a different session on each request,
- * and <code>isNew</code> will always return <code>true</code>.
+ *     在分布式容器环境中，当容器在虚拟机之间迁移会话时，所有实现{@link HttpSessionActivationListener}接口的会话属性都会收到通知。
  *
  * <p>
- * Session information is scoped only to the current web application (<code>ServletContext</code>), so information
- * stored in one context will not be directly visible in another.
+ *     Servlet应该能够处理客户端选择不加入会话的情况，例如：故意关闭Cookie时。
+ *     在客户端加入会话之前，<code>isNew</code>返回<code>true</code>。
+ *     如果客户端选择不加入会话，则每次请求时<code>getSession</code>将返回不同的会话，且<code>isNew</code>将始终返回<code>true</code>。
+ *
+ * <p>
+ *     会话信息仅作用于当前Web应用程序（<code>ServletContext</code>）范围内，因此在一个上下文中存储的信息不会直接在另一个上下文中可见。
  *
  * @author Various
  *
@@ -68,206 +62,170 @@ import javax.servlet.ServletContext;
 public interface HttpSession {
 
     /**
+     * 返回此会话的创建时间，以自1970年1月1日GMT午夜以来的毫秒数计量。
      *
-     * Returns the time when this session was created, measured in milliseconds since midnight January 1, 1970 GMT.
-     *
-     * @return a <code>long</code> specifying when this session was created, expressed in milliseconds since 1/1/1970
-     *         GMT
-     *
-     * @exception IllegalStateException if this method is called on an invalidated session
+     * @return 一个<code>long</code>值，指定此会话的创建时间，表示为自1970年1月1日GMT以来的毫秒数
+     * @exception IllegalStateException 如果对已失效的会话调用此方法
      */
     public long getCreationTime();
 
     /**
-     * Returns a string containing the unique identifier assigned to this session. The identifier is assigned by the
-     * servlet container and is implementation dependent.
-     * 
-     * @return a string specifying the identifier assigned to this session
+     * 返回包含分配给此会话的唯一标识符的字符串。该标识符由Servlet容器分配且依赖于具体实现。
+     *
+     * @return 指定分配给此会话的标识符的字符串
      */
     public String getId();
 
     /**
+     * 返回客户端最后一次发送与此会话关联的请求的时间，表示为自1970年1月1日GMT午夜以来的毫秒数，该时间以容器接收到请求的时刻为准。
      *
-     * Returns the last time the client sent a request associated with this session, as the number of milliseconds since
-     * midnight January 1, 1970 GMT, and marked by the time the container received the request.
+     * <p>应用程序执行的操作（如获取或设置与会话关联的值）不会影响访问时间。
      *
-     * <p>
-     * Actions that your application takes, such as getting or setting a value associated with the session, do not
-     * affect the access time.
-     *
-     * @return a <code>long</code> representing the last time the client sent a request associated with this session,
-     *         expressed in milliseconds since 1/1/1970 GMT
-     *
-     * @exception IllegalStateException if this method is called on an invalidated session
+     * @return 一个<code>long</code>值，表示客户端最后一次发送与此会话关联请求的时间，表示为自1970年1月1日GMT以来的毫秒数
+     * @exception IllegalStateException 如果对已失效的会话调用此方法
      */
     public long getLastAccessedTime();
 
     /**
-     * Returns the ServletContext to which this session belongs.
-     * 
-     * @return The ServletContext object for the web application
+     * 返回此会话所属的ServletContext。
+     *
+     * @return 当前Web应用程序的ServletContext对象
      * @since Servlet 2.3
      */
     public ServletContext getServletContext();
 
     /**
-     * Specifies the time, in seconds, between client requests before the servlet container will invalidate this
-     * session.
+     * 指定客户端请求之间的最长时间（以秒为单位），超过此时间Servlet容器将使此会话失效。
      *
-     * <p>
-     * An <tt>interval</tt> value of zero or less indicates that the session should never timeout.
+     * <p>零或负值的<tt>interval</tt>表示会话永不过期。
      *
-     * @param interval An integer specifying the number of seconds
+     * @param interval 指定秒数的整数值
      */
     public void setMaxInactiveInterval(int interval);
 
     /**
-     * Returns the maximum time interval, in seconds, that the servlet container will keep this session open between
-     * client accesses. After this interval, the servlet container will invalidate the session. The maximum time
-     * interval can be set with the <code>setMaxInactiveInterval</code> method.
+     * 返回Servlet容器在客户端访问之间保持此会话开启的最大时间间隔（以秒为单位）。
+     * 超过此时间间隔后，Servlet容器将使会话失效。
+     * 该最大时间间隔可通过<code>setMaxInactiveInterval</code>方法设置。
      *
-     * <p>
-     * A return value of zero or less indicates that the session will never timeout.
+     * <p>返回零或负数表示会话永不过期。
      *
-     * @return an integer specifying the number of seconds this session remains open between client requests
-     *
+     * @return 一个整数，指定此会话在客户端请求之间保持开启的秒数
      * @see #setMaxInactiveInterval
      */
     public int getMaxInactiveInterval();
 
     /**
+     * @deprecated 自版本2.1起，此方法已弃用且无替代方案。它将在Jakarta Servlets的未来版本中被移除。
      *
-     * @deprecated As of Version 2.1, this method is deprecated and has no replacement. It will be removed in a future
-     *             version of Jakarta Servlets.
-     *
-     * @return the {@link HttpSessionContext} for this session.
+     * @return 此会话的 {@link HttpSessionContext}
      */
     @Deprecated
     public HttpSessionContext getSessionContext();
 
     /**
-     * Returns the object bound with the specified name in this session, or <code>null</code> if no object is bound
-     * under the name.
+     * 返回此会话中与指定名称绑定的对象，如果该名称下没有绑定对象则返回<code>null</code>。
      *
-     * @param name a string specifying the name of the object
-     *
-     * @return the object with the specified name
-     *
-     * @exception IllegalStateException if this method is called on an invalidated session
+     * @param name 指定对象名称的字符串
+     * @return 具有指定名称的对象
+     * @exception IllegalStateException 如果对已失效的会话调用此方法
      */
     public Object getAttribute(String name);
 
     /**
-     * @deprecated As of Version 2.2, this method is replaced by {@link #getAttribute}.
+     * @deprecated 自版本2.2起，此方法已被 {@link #getAttribute} 取代。
      *
-     * @param name a string specifying the name of the object
-     *
-     * @return the object with the specified name
-     *
-     * @exception IllegalStateException if this method is called on an invalidated session
+     * @param name 指定对象名称的字符串
+     * @return 具有指定名称的对象
+     * @exception IllegalStateException 如果对已失效的会话调用此方法
      */
     @Deprecated
     public Object getValue(String name);
 
     /**
-     * Returns an <code>Enumeration</code> of <code>String</code> objects containing the names of all the objects bound
-     * to this session.
+     * 返回一个包含所有绑定到此会话的对象名称的<code>String</code>对象<code>Enumeration</code>。
      *
-     * @return an <code>Enumeration</code> of <code>String</code> objects specifying the names of all the objects bound
-     *         to this session
-     *
-     * @exception IllegalStateException if this method is called on an invalidated session
+     * @return 一个<code>String</code>对象的<code>Enumeration</code>，指定所有绑定到此会话的对象名称
+     * @exception IllegalStateException 如果对已失效的会话调用此方法
      */
     public Enumeration<String> getAttributeNames();
 
     /**
-     * @deprecated As of Version 2.2, this method is replaced by {@link #getAttributeNames}
+     * @deprecated 自版本2.2起，此方法已被 {@link #getAttributeNames} 取代
      *
-     * @return an array of <code>String</code> objects specifying the names of all the objects bound to this session
-     *
-     * @exception IllegalStateException if this method is called on an invalidated session
+     * @return 一个<code>String</code>对象数组，指定所有绑定到此会话的对象名称
+     * @exception IllegalStateException 如果对已失效的会话调用此方法
      */
     @Deprecated
     public String[] getValueNames();
 
+
     /**
-     * Binds an object to this session, using the name specified. If an object of the same name is already bound to the
-     * session, the object is replaced.
+     * 使用指定名称将对象绑定到此会话。如果已存在同名对象绑定到会话，则该对象将被替换。
      *
      * <p>
-     * After this method executes, and if the new object implements <code>HttpSessionBindingListener</code>, the
-     * container calls <code>HttpSessionBindingListener.valueBound</code>. The container then notifies any
-     * <code>HttpSessionAttributeListener</code>s in the web application.
-     * 
-     * <p>
-     * If an object was already bound to this session of this name that implements
-     * <code>HttpSessionBindingListener</code>, its <code>HttpSessionBindingListener.valueUnbound</code> method is
-     * called.
+     *     此方法执行后，如果新对象实现了<code>HttpSessionBindingListener</code>，
+     *     容器将调用<code>HttpSessionBindingListener.valueBound</code>。
+     *     然后容器会通知Web应用程序中的所有<code>HttpSessionAttributeListener</code>。
      *
      * <p>
-     * If the value passed in is null, this has the same effect as calling <code>removeAttribute()</code>.
+     *     如果已绑定到此会话的同名对象实现了<code>HttpSessionBindingListener</code>，
+     *     则会调用其<code>HttpSessionBindingListener.valueUnbound</code>方法。
+     *
+     * <p>如果传入的值为null，则效果与调用<code>removeAttribute()</code>相同。
      *
      *
-     * @param name  the name to which the object is bound; cannot be null
-     *
-     * @param value the object to be bound
-     *
-     * @exception IllegalStateException if this method is called on an invalidated session
+     * @param name  绑定对象的名称；不能为null
+     * @param value 要绑定的对象
+     * @exception IllegalStateException 如果对已失效的会话调用此方法
      */
     public void setAttribute(String name, Object value);
 
     /**
-     * @deprecated As of Version 2.2, this method is replaced by {@link #setAttribute}
+     * @deprecated 自版本2.2起，此方法已被 {@link #setAttribute} 取代
      *
-     * @param name  the name to which the object is bound; cannot be null
-     *
-     * @param value the object to be bound; cannot be null
-     *
-     * @exception IllegalStateException if this method is called on an invalidated session
+     * @param name  绑定对象的名称；不能为null
+     * @param value 要绑定的对象；不能为null
+     * @exception IllegalStateException 如果对已失效的会话调用此方法
      */
     @Deprecated
     public void putValue(String name, Object value);
 
     /**
-     * Removes the object bound with the specified name from this session. If the session does not have an object bound
-     * with the specified name, this method does nothing.
+     * 从此会话中移除与指定名称绑定的对象。如果会话中没有与该名称绑定的对象，则此方法不执行任何操作。
      *
      * <p>
-     * After this method executes, and if the object implements <code>HttpSessionBindingListener</code>, the container
-     * calls <code>HttpSessionBindingListener.valueUnbound</code>. The container then notifies any
-     * <code>HttpSessionAttributeListener</code>s in the web application.
+     *     此方法执行后，如果对象实现了<code>HttpSessionBindingListener</code>，
+     *     容器将调用<code>HttpSessionBindingListener.valueUnbound</code>。
+     *     然后容器会通知Web应用程序中的所有<code>HttpSessionAttributeListener</code>。
      *
-     * @param name the name of the object to remove from this session
-     *
-     * @exception IllegalStateException if this method is called on an invalidated session
+     * @param name 要从此会话中移除的对象的名称
+     * @exception IllegalStateException 如果对已失效的会话调用此方法
      */
     public void removeAttribute(String name);
 
     /**
-     * @deprecated As of Version 2.2, this method is replaced by {@link #removeAttribute}
+     * @deprecated 自版本2.2起，此方法已被 {@link #removeAttribute} 取代
      *
-     * @param name the name of the object to remove from this session
-     *
-     * @exception IllegalStateException if this method is called on an invalidated session
+     * @param name 要从此会话中移除的对象的名称
+     * @exception IllegalStateException 如果对已失效的会话调用此方法
      */
     @Deprecated
     public void removeValue(String name);
 
     /**
-     * Invalidates this session then unbinds any objects bound to it.
+     * 使此会话失效，然后解除绑定到该会话的所有对象。
      *
-     * @exception IllegalStateException if this method is called on an already invalidated session
+     * @exception IllegalStateException 如果对已失效的会话调用此方法
      */
     public void invalidate();
 
     /**
-     * Returns <code>true</code> if the client does not yet know about the session or if the client chooses not to join
-     * the session. For example, if the server used only cookie-based sessions, and the client had disabled the use of
-     * cookies, then a session would be new on each request.
+     * 如果客户端尚未知晓该会话或客户端选择不加入会话，则返回<code>true</code>。
+     * 例如，如果服务器仅使用基于Cookie的会话，而客户端禁用了Cookie的使用，则每次请求时会话都将被视为新会话。
      *
-     * @return <code>true</code> if the server has created a session, but the client has not yet joined
-     *
-     * @exception IllegalStateException if this method is called on an already invalidated session
+     * @return 如果服务器已创建会话但客户端尚未加入，则返回<code>true</code>
+     * @exception IllegalStateException 如果对已失效的会话调用此方法
      */
     public boolean isNew();
 

@@ -25,9 +25,7 @@ import java.util.StringTokenizer;
 import java.io.IOException;
 
 /**
- * @deprecated As of Java(tm) Servlet API 2.3. These methods were only useful with the default encoding and have been
- *             moved to the request interfaces.
- *
+ * @deprecated 自 Java(tm) Servlet API 2.3 起已弃用。这些方法仅在使用默认编码时有用，并已被移至请求接口中。
  */
 @Deprecated
 public class HttpUtils {
@@ -36,30 +34,27 @@ public class HttpUtils {
     private static ResourceBundle lStrings = ResourceBundle.getBundle(LSTRING_FILE);
 
     /**
-     * Constructs an empty <code>HttpUtils</code> object.
+     * 构造一个空的 <code>HttpUtils</code> 对象。
      */
     public HttpUtils() {
     }
 
     /**
-     * Parses a query string passed from the client to the server and builds a <code>HashTable</code> object with
-     * key-value pairs. The query string should be in the form of a string packaged by the GET or POST method, that is,
-     * it should have key-value pairs in the form <i>key=value</i>, with each pair separated from the next by a &amp;
-     * character.
+     * 解析从客户端传递到服务器的查询字符串，并构建一个包含键值对的 <code>HashTable</code> 对象。
+     * 查询字符串应采用 GET 或 POST 方法打包的字符串形式，即应具有 <i>key=value</i> 形式的键值对，
+     * 每对之间用 &amp; 字符分隔。
      *
      * <p>
-     * A key can appear more than once in the query string with different values. However, the key appears only once in
-     * the hashtable, with its value being an array of strings containing the multiple values sent by the query string.
-     * 
+     * 一个键可以在查询字符串中出现多次并具有不同的值。但在哈希表中，该键仅出现一次，
+     * 其值是一个字符串数组，包含查询字符串发送的多个值。
+     *
      * <p>
-     * The keys and values in the hashtable are stored in their decoded form, so any + characters are converted to
-     * spaces, and characters sent in hexadecimal notation (like <i>%xx</i>) are converted to ASCII characters.
+     * 哈希表中的键和值以解码后的形式存储，因此任何 + 字符会被转换为空格，
+     * 以十六进制表示法发送的字符（如 <i>%xx</i>）会被转换为 ASCII 字符。
      *
-     * @param s a string containing the query to be parsed
-     *
-     * @return a <code>HashTable</code> object built from the parsed key-value pairs
-     *
-     * @exception IllegalArgumentException if the query string is invalid
+     * @param s 包含要解析的查询的字符串
+     * @return 从解析后的键值对构建的 <code>HashTable</code> 对象
+     * @exception IllegalArgumentException 如果查询字符串无效
      */
     public static Hashtable<String, String[]> parseQueryString(String s) {
 
@@ -100,27 +95,20 @@ public class HttpUtils {
     }
 
     /**
-     *
-     * Parses data from an HTML form that the client sends to the server using the HTTP POST method and the
-     * <i>application/x-www-form-urlencoded</i> MIME type.
+     * 解析客户端使用HTTP POST方法和<i>application/x-www-form-urlencoded</i> MIME类型发送到服务器的HTML表单数据。
      *
      * <p>
-     * The data sent by the POST method contains key-value pairs. A key can appear more than once in the POST data with
-     * different values. However, the key appears only once in the hashtable, with its value being an array of strings
-     * containing the multiple values sent by the POST method.
+     * POST方法发送的数据包含键值对。一个键可以在POST数据中出现多次并具有不同的值。但在哈希表中，该键仅出现一次，
+     * 其值是一个字符串数组，包含POST方法发送的多个值。
      *
      * <p>
-     * The keys and values in the hashtable are stored in their decoded form, so any + characters are converted to
-     * spaces, and characters sent in hexadecimal notation (like <i>%xx</i>) are converted to ASCII characters.
+     * 哈希表中的键和值以解码后的形式存储，因此任何 + 字符会被转换为空格，
+     * 以十六进制表示法发送的字符（如 <i>%xx</i>）会被转换为 ASCII 字符。
      *
-     * @param len an integer specifying the length, in characters, of the <code>ServletInputStream</code> object that is
-     *            also passed to this method
-     *
-     * @param in  the <code>ServletInputStream</code> object that contains the data sent from the client
-     * 
-     * @return a <code>HashTable</code> object built from the parsed key-value pairs
-     *
-     * @exception IllegalArgumentException if the data sent by the POST method is invalid
+     * @param len 指定同时传递给此方法的<code>ServletInputStream</code>对象长度的整数（以字符为单位）
+     * @param in  包含客户端发送的数据的<code>ServletInputStream</code>对象
+     * @return 从解析后的键值对构建的<code>HashTable</code>对象
+     * @exception IllegalArgumentException 如果POST方法发送的数据无效
      */
     public static Hashtable<String, String[]> parsePostData(int len, ServletInputStream in) {
         // XXX
@@ -170,8 +158,9 @@ public class HttpUtils {
         }
     }
 
-    /*
-     * Parse a name in the query string.
+
+    /**
+     * 解析查询字符串中的名称。
      */
     private static String parseName(String s, StringBuilder sb) {
         sb.setLength(0);
@@ -208,20 +197,18 @@ public class HttpUtils {
 
     /**
      *
-     * Reconstructs the URL the client used to make the request, using information in the
-     * <code>HttpServletRequest</code> object. The returned URL contains a protocol, server name, port number, and
-     * server path, but it does not include query string parameters.
-     * 
-     * <p>
-     * Because this method returns a <code>StringBuffer</code>, not a string, you can modify the URL easily, for
-     * example, to append query parameters.
+     * 使用<code>HttpServletRequest</code>对象中的信息重建客户端用于发出请求的URL。
+     * 返回的URL包含协议、服务器名称、端口号和服务器路径，但不包含查询字符串参数。
      *
      * <p>
-     * This method is useful for creating redirect messages and for reporting errors.
+     * 由于此方法返回的是<code>StringBuffer</code>而不是字符串，因此您可以轻松修改URL，
+     * 例如追加查询参数。
      *
-     * @param req a <code>HttpServletRequest</code> object containing the client's request
-     * 
-     * @return a <code>StringBuffer</code> object containing the reconstructed URL
+     * <p>
+     * 此方法对于创建重定向消息和报告错误非常有用。
+     *
+     * @param req 包含客户端请求的<code>HttpServletRequest</code>对象
+     * @return 包含重建URL的<code>StringBuffer</code>对象
      */
     public static StringBuffer getRequestURL(HttpServletRequest req) {
         StringBuffer url = new StringBuffer();

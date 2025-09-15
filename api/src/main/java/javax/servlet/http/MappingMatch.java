@@ -18,42 +18,29 @@
 package javax.servlet.http;
 
 /**
- * <p>
- * Enumeration of Servlet mapping types.
- * </p>
+ * <p>Servlet映射类型的枚举。</p>
  *
  * @since 4.0
  */
 public enum MappingMatch {
     /**
-     * <p>
-     * This is used when the mapping was achieved with an exact match to the application's context root.
-     * </p>
+     * <p>当映射是通过与应用程序上下文根完全匹配实现时使用。</p>
      */
     CONTEXT_ROOT,
     /**
-     * <p>
-     * This is used when the mapping was achieved with an exact match to the default servlet of the application, the
-     * '{@code /}' character.
-     * </p>
+     * <p>当映射是通过与应用程序的默认Servlet（即'{@code /}'字符）匹配实现时使用。</p>
      */
     DEFAULT,
     /**
-     * <p>
-     * This is used when the mapping was achieved with an exact match to the incoming request.
-     * </p>
+     * <p>当映射是通过与传入请求完全匹配实现时使用。</p>
      */
     EXACT,
     /**
-     * <p>
-     * This is used when the mapping was achieved using an extension, such as "{@code *.xhtml}".
-     * </p>
+     * <p>当映射是通过扩展名（如"{@code *.xhtml}"）实现时使用。</p>
      */
     EXTENSION,
     /**
-     * <p>
-     * This is used when the mapping was achieved using a path, such as "{@code /faces/*}".
-     * </p>
+     * <p>当映射是通过路径模式（如"{@code /faces/*}"）实现时使用。</p>
      */
     PATH
 }

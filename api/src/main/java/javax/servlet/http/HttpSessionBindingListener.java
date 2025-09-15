@@ -21,10 +21,9 @@ package javax.servlet.http;
 import java.util.EventListener;
 
 /**
- * Causes an object to be notified when it is bound to or unbound from a session. The object is notified by an
- * {@link HttpSessionBindingEvent} object. This may be as a result of a servlet programmer explicitly unbinding an
- * attribute from a session, due to a session being invalidated, or due to a session timing out.
- *
+ * 当对象被绑定到会话或从会话解绑时，此接口会通知该对象。
+ * 对象通过{@link HttpSessionBindingEvent}对象接收通知。
+ * 这可能由于Servlet程序员显式地从会话中解绑属性、会话失效或会话超时导致。
  *
  * @author Various
  *
@@ -34,30 +33,24 @@ import java.util.EventListener;
  */
 public interface HttpSessionBindingListener extends EventListener {
 
+
     /**
+     * 通知对象它正在被绑定到会话，并标识会话。
      *
-     * Notifies the object that it is being bound to a session and identifies the session.
-     *
-     * @implSpec The default implementation takes no action.
-     * 
-     * @param event the event that identifies the session
-     *
+     * @implSpec 默认实现不执行任何操作。
+     * @param event 标识会话的事件对象
      * @see #valueUnbound
-     *
      */
     default public void valueBound(HttpSessionBindingEvent event) {
     }
 
+
     /**
+     * 通知对象它正在从会话解绑，并标识会话。
      *
-     * Notifies the object that it is being unbound from a session and identifies the session.
-     *
-     * @implSpec The default implementation takes no action.
-     *
-     * @param event the event that identifies the session
-     * 
+     * @implSpec 默认实现不执行任何操作。
+     * @param event 标识会话的事件对象
      * @see #valueBound
-     *
      */
     default public void valueUnbound(HttpSessionBindingEvent event) {
     }

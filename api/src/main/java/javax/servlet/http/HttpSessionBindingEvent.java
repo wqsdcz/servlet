@@ -19,17 +19,18 @@
 package javax.servlet.http;
 
 /**
- *
- * Events of this type are either sent to an object that implements {@link HttpSessionBindingListener} when it is bound
- * or unbound from a session, or to a {@link HttpSessionAttributeListener} that has been configured in the deployment
- * descriptor when any attribute is bound, unbound or replaced in a session.
+ * 此类事件会在两种情况下被发送：
+ * <ul>
+ *     <li>一是实现了 {@link HttpSessionBindingListener} 的对象在绑定到会话或从会话解绑时；</li>
+ *     <li>二是当部署描述符中配置的 {@link HttpSessionAttributeListener} 监测到会话中的属性被绑定、解绑或替换时。</li>
+ * </ul>
  *
  * <p>
- * The session binds the object by a call to <code>HttpSession.setAttribute</code> and unbinds the object by a call to
- * <code>HttpSession.removeAttribute</code>.
+ *     会话通过调用 <code>HttpSession.setAttribute</code> 来绑定对象，
+ *     通过调用<code>HttpSession.removeAttribute</code> 来解绑对象。
  *
  * @author Various
- * 
+ *
  * @see HttpSession
  * @see HttpSessionBindingListener
  * @see HttpSessionAttributeListener
@@ -45,13 +46,11 @@ public class HttpSessionBindingEvent extends HttpSessionEvent {
     private Object value;
 
     /**
+     * 构造一个事件，用于通知对象它已被绑定到会话或从会话解绑。
+     * 要接收此事件，对象必须实现 {@link HttpSessionBindingListener}。
      *
-     * Constructs an event that notifies an object that it has been bound to or unbound from a session. To receive the
-     * event, the object must implement {@link HttpSessionBindingListener}.
-     *
-     * @param session the session to which the object is bound or unbound
-     * @param name    the name with which the object is bound or unbound
-     *
+     * @param session 对象绑定或解绑所属的会话
+     * @param name    对象绑定或解绑时使用的名称
      * @see #getName
      * @see #getSession
      */
@@ -60,15 +59,14 @@ public class HttpSessionBindingEvent extends HttpSessionEvent {
         this.name = name;
     }
 
+
     /**
+     * 构造一个事件，用于通知对象它已被绑定到会话或从会话解绑。
+     * 要接收此事件，对象必须实现 {@link HttpSessionBindingListener}。
      *
-     * Constructs an event that notifies an object that it has been bound to or unbound from a session. To receive the
-     * event, the object must implement {@link HttpSessionBindingListener}.
-     *
-     * @param session the session to which the object is bound or unbound
-     * @param name    the name with which the object is bound or unbound
-     * @param value   the object that is bound or unbound
-     *
+     * @param session 对象绑定或解绑所属的会话
+     * @param name    对象绑定或解绑时使用的名称
+     * @param value   被绑定或解绑的对象
      * @see #getName
      * @see #getSession
      */
@@ -78,28 +76,28 @@ public class HttpSessionBindingEvent extends HttpSessionEvent {
         this.value = value;
     }
 
-    /** Return the session that changed. */
+    /** 返回发生变化的会话。 */
     @Override
     public HttpSession getSession() {
         return super.getSession();
     }
 
     /**
-     * Returns the name with which the attribute is bound to or unbound from the session.
+     * 返回属性绑定到会话或从会话解绑时使用的名称。
      *
-     * @return a string specifying the name with which the object is bound to or unbound from the session
+     * @return 指定属性绑定到会话或从会话解绑时使用的名称的字符串
      */
     public String getName() {
         return name;
     }
 
     /**
-     * Returns the value of the attribute that has been added, removed or replaced. If the attribute was added (or
-     * bound), this is the value of the attribute. If the attribute was removed (or unbound), this is the value of the
-     * removed attribute. If the attribute was replaced, this is the old value of the attribute.
+     * 返回已添加、移除或替换的属性的值。
+     * 如果属性是添加（或绑定）的，则此为属性的值。
+     * 如果属性是移除（或解绑）的，则此为被移除属性的值。
+     * 如果属性是被替换的，则此为属性的旧值。
      *
-     * @return the value of the attribute that has been added, removed or replaced
-     *
+     * @return 已添加、移除或替换的属性的值
      * @since Servlet 2.3
      */
     public Object getValue() {

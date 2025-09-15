@@ -21,30 +21,28 @@ package javax.servlet.http;
 import java.util.EventListener;
 
 /**
- * Objects that are bound to a session may listen to container events notifying them that sessions will be passivated
- * and that session will be activated. A container that migrates session between VMs or persists sessions is required to
- * notify all attributes bound to sessions implementing HttpSessionActivationListener.
+ * 绑定到会话的对象可以监听容器事件，这些事件会通知它们会话即将被钝化和激活。
+ * 需要在虚拟机之间迁移会话或持久化会话的容器必须通知所有实现了HttpSessionActivationListener
+ * 接口的会话绑定属性。
  *
  * @since Servlet 2.3
  */
 public interface HttpSessionActivationListener extends EventListener {
 
     /**
-     * Notification that the session is about to be passivated.
+     * 通知会话即将被钝化。
      *
-     * @implSpec The default implementation takes no action.
-     * 
-     * @param se the {@link HttpSessionEvent} indicating the passivation of the session
+     * @implSpec 默认实现不执行任何操作。
+     * @param se 指示会话钝化的{@link HttpSessionEvent}事件
      */
     default public void sessionWillPassivate(HttpSessionEvent se) {
     }
 
     /**
-     * Notification that the session has just been activated.
+     * 通知会话刚刚被激活。
      *
-     * @implSpec The default implementation takes no action.
-     * 
-     * @param se the {@link HttpSessionEvent} indicating the activation of the session
+     * @implSpec 默认实现不执行任何操作。
+     * @param se 指示会话激活的{@link HttpSessionEvent}事件
      */
     default public void sessionDidActivate(HttpSessionEvent se) {
     }

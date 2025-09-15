@@ -25,19 +25,17 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 /**
- *
  * <p>
- * Provides an abstract class to be subclassed to create an HTTP filter suitable for a Web site. A subclass of
- * <code>HttpFilter</code> should override
- * {@link #doFilter(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, javax.servlet.FilterChain) }.
+ * 提供一个抽象类，可通过继承该类来创建适用于网站的HTTP过滤器。
+ * <code>HttpFilter</code>的子类应重写
+ * {@link #doFilter(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, javax.servlet.FilterChain) }方法。
  * </p>
  *
  * <p>
- * Filters typically run on multithreaded servers, so be aware that a filter must handle concurrent requests and be
- * careful to synchronize access to shared resources. Shared resources include in-memory data such as instance or class
- * variables and external objects such as files, database connections, and network connections. See the
- * <a href="https://docs.oracle.com/javase/tutorial/essential/concurrency/"> Java Tutorial on Multithreaded
- * Programming</a> for more information on handling multiple threads in a Java program.
+ *     过滤器通常运行在多线程服务器上，因此请注意过滤器必须处理并发请求，并小心同步对共享资源的访问。
+ *     共享资源包括内存中的数据（如实例或类变量）和外部对象（如文件、数据库连接和网络连接）。
+ *     有关Java程序中处理多线程的更多信息，
+ *     请参阅<a href="https://docs.oracle.com/javase/tutorial/essential/concurrency/">Java多线程编程教程</a>。
  *
  * @author Various
  *
@@ -48,43 +46,34 @@ public abstract class HttpFilter extends GenericFilter {
     private static final long serialVersionUID = 7478463438252262094L;
 
     /**
-     * <p>
-     * Does nothing, because this is an abstract class.
-     * </p>
-     * 
+     * <p>此方法为空实现，因为这是一个抽象类。</p>
+     *
      * @since 4.0
      */
     public HttpFilter() {
     }
 
     /**
-     *
      * <p>
-     * The <code>doFilter</code> method of the Filter is called by the container each time a request/response pair is
-     * passed through the chain due to a client request for a resource at the end of the chain. The FilterChain passed
-     * in to this method allows the Filter to pass on the request and response to the next entity in the chain. There's
-     * no need to override this method.
-     * </p>
-     * 
-     * <p>
-     * The default implementation inspects the incoming {@code req} and {@code res} objects to determine if they are
-     * instances of {@link HttpServletRequest} and {@link HttpServletResponse}, respectively. If not, a
-     * {@link ServletException} is thrown. Otherwise, the protected
-     * {@link #doFilter(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, javax.servlet.FilterChain)}
-     * method is called.
+     *     每次由于客户端请求链末端的资源而导致请求/响应对通过过滤器链传递时，容器都会调用Filter的<code>doFilter</code>方法。
+     *     传入此方法的FilterChain允许过滤器将请求和响应传递给链中的下一个实体。
+     *     无需重写此方法。
      * </p>
      *
-     * @param req   a {@link ServletRequest} object that contains the request the client has made of the filter
+     * <p>
+     *     默认实现会检查传入的{@code req}和{@code res}对象，
+     *     以确定它们是否分别为{@link HttpServletRequest}和{@link HttpServletResponse}的实例。
+     *     如果不是，则抛出{@link ServletException}。
+     *     否则，将调用受保护的
+     *     {@link #doFilter(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, javax.servlet.FilterChain)}方法。
+     * </p>
      *
-     * @param res   a {@link ServletResponse} object that contains the response the filter sends to the client
-     * 
-     * @param chain the <code>FilterChain</code> for invoking the next filter or the resource
-     * 
-     * @throws IOException      if an input or output error is detected when the filter handles the request
-     *
-     * @throws ServletException if the request for the could not be handled or either parameter is not an instance of
-     *                          the respective {@link HttpServletRequest} or {@link HttpServletResponse}.
-     *
+     * @param req   包含客户端对过滤器发出的请求的{@link ServletRequest}对象
+     * @param res   包含过滤器发送给客户端的响应的{@link ServletResponse}对象
+     * @param chain 用于调用下一个过滤器或资源的<code>FilterChain</code>
+     * @throws IOException      如果过滤器处理请求时检测到输入或输出错误
+     * @throws ServletException 如果无法处理请求，或者参数不是相应的{@link HttpServletRequest}
+     *                          或{@link HttpServletResponse}实例
      * @since Servlet 4.0
      */
     @Override
@@ -98,27 +87,18 @@ public abstract class HttpFilter extends GenericFilter {
     }
 
     /**
-     *
      * <p>
-     * The <code>doFilter</code> method of the Filter is called by the container each time a request/response pair is
-     * passed through the chain due to a client request for a resource at the end of the chain. The FilterChain passed
-     * in to this method allows the Filter to pass on the request and response to the next entity in the chain.
-     * </p>
-     * 
-     * <p>
-     * The default implementation simply calls {@link FilterChain#doFilter}
+     *     每次由于客户端请求链末端的资源而导致请求/响应对通过过滤器链传递时，容器都会调用Filter的<code>doFilter</code>方法。
+     *     传入此方法的FilterChain允许过滤器将请求和响应传递给链中的下一个实体。
      * </p>
      *
-     * @param req   a {@link HttpServletRequest} object that contains the request the client has made of the filter
+     * <p>默认实现仅调用{@link FilterChain#doFilter}</p>
      *
-     * @param res   a {@link HttpServletResponse} object that contains the response the filter sends to the client
-     * 
-     * @param chain the <code>FilterChain</code> for invoking the next filter or the resource
-     * 
-     * @throws IOException      if an input or output error is detected when the filter handles the request
-     *
-     * @throws ServletException if the request for the could not be handled
-     *
+     * @param req   包含客户端对过滤器发出的请求的{@link HttpServletRequest}对象
+     * @param res   包含过滤器发送给客户端的响应的{@link HttpServletResponse}对象
+     * @param chain 用于调用下一个过滤器或资源的<code>FilterChain</code>
+     * @throws IOException      如果过滤器处理请求时检测到输入或输出错误
+     * @throws ServletException 如果无法处理请求
      * @since Servlet 4.0
      */
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain)

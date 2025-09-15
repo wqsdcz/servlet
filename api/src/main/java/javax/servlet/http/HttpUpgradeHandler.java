@@ -18,22 +18,21 @@
 package javax.servlet.http;
 
 /**
- * This interface encapsulates the upgrade protocol processing. A HttpUpgradeHandler implementation would allow the
- * servlet container to communicate with it.
+ * 该接口封装了协议升级处理过程。HttpUpgradeHandler 的实现将允许Servlet容器与其进行通信。
  *
  * @since Servlet 3.1
  */
 public interface HttpUpgradeHandler {
+
     /**
-     * It is called once the HTTP Upgrade process has been completed and the upgraded connection is ready to start using
-     * the new protocol.
+     * 当HTTP升级过程完成且升级后的连接准备开始使用新协议时调用。
      *
-     * @param wc the WebConnection object associated to this upgrade request
+     * @param wc 与此升级请求关联的WebConnection对象
      */
     public void init(WebConnection wc);
 
     /**
-     * It is called when the client is disconnected.
+     * 当客户端断开连接时调用。
      */
     public void destroy();
 }

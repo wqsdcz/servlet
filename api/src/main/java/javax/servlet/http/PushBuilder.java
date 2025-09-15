@@ -25,226 +25,206 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Build a request to be pushed.
- * 
- * According section 8.2 of RFC 7540, a promised request must be cacheable and safe without a request body.
+ * 构建要推送的请求。
+ *
+ * 根据RFC 7540第8.2节的规定，承诺的请求必须是可缓存且安全的，且不能包含请求体。
  *
  * <p>
- * A PushBuilder is obtained by calling {@link HttpServletRequest#newPushBuilder()}. Each call to this method will a new
- * instance of a PushBuilder based off the current {@code
- * HttpServletRequest}, or null. Any mutations to the returned PushBuilder are not reflected on future returns.
+ * 通过调用{@link HttpServletRequest#newPushBuilder()}获取PushBuilder。
+ * 每次调用此方法都会基于当前{@code HttpServletRequest}返回一个新的PushBuilder实例，或者返回null。
+ * 对返回的PushBuilder的任何修改不会影响后续的返回结果。
  * </p>
  *
  * <p>
- * The instance is initialized as follows:
+ * 实例初始化如下：
  * </p>
  *
  * <ul>
  *
- * <li>The method is initialized to "GET"</li>
+ * <li>方法初始化为"GET"</li>
  *
- * <li>The existing request headers of the current {@link HttpServletRequest} are added to the builder, except for:
+ * <li>当前{@link HttpServletRequest}的现有请求头会被添加到构建器中，除了：
  *
  * <ul>
- * <li>Conditional headers (defined in RFC 7232)
- * <li>Range headers
- * <li>Expect headers
- * <li>Authorization headers
- * <li>Referrer headers
+ * <li>条件头（在RFC 7232中定义）
+ * <li>范围头
+ * <li>Expect头
+ * <li>授权头
+ * <li>Referrer头
  * </ul>
  *
  * </li>
  *
- * <li>If the request was authenticated, an Authorization header will be set with a container generated token that will
- * result in equivalent Authorization for the pushed request.</li>
+ * <li>如果请求已通过认证，将设置一个Authorization头，其中包含容器生成的令牌，
+ * 该令牌将为推送的请求提供等效的授权。</li>
  *
- * <li>The session ID will be the value returned from {@link HttpServletRequest#getRequestedSessionId()}, unless
- * {@link HttpServletRequest#getSession(boolean)} has previously been called to create a new {@link HttpSession} prior
- * to the call to create the {@code PushBuilder}, in which case the new session ID will be used as the PushBuilder's
- * requested session ID. Note that the session ID returned from the request can effectively come from one of two
- * "sources": a cookie or the URL (as specified in {@link HttpServletRequest#isRequestedSessionIdFromCookie} and
- * {@link HttpServletRequest#isRequestedSessionIdFromURL}, respectively). The session ID for the {@code PushBuilder}
- * will also come from the same source as the request.</li>
+ * <li>会话ID将是{@link HttpServletRequest#getRequestedSessionId()}返回的值，除非
+ * 在创建{@code PushBuilder}之前已调用{@link HttpServletRequest#getSession(boolean)}
+ * 创建了新的{@link HttpSession}，在这种情况下，新的会话ID将用作PushBuilder的请求会话ID。
+ * 请注意，从请求返回的会话ID实际上可以来自两个"来源"之一：Cookie或URL
+ * （分别由{@link HttpServletRequest#isRequestedSessionIdFromCookie}和
+ * {@link HttpServletRequest#isRequestedSessionIdFromURL}指定）。{@code PushBuilder}的
+ * 会话ID也将来自与请求相同的来源。</li>
  *
- * <li>The Referer(sic) header will be set to {@link HttpServletRequest#getRequestURL()} plus any
- * {@link HttpServletRequest#getQueryString()}</li>
+ * <li>Referer头（原文如此）将被设置为{@link HttpServletRequest#getRequestURL()}加上
+ * {@link HttpServletRequest#getQueryString()}（如果有的话）</li>
  *
- * <li>If {@link HttpServletResponse#addCookie(Cookie)} has been called on the associated response, then a corresponding
- * Cookie header will be added to the PushBuilder, unless the {@link Cookie#getMaxAge()} is &lt;=0, in which case the
- * Cookie will be removed from the builder.</li>
+ * <li>如果在关联的响应上调用了{@link HttpServletResponse#addCookie(Cookie)}，则相应的
+ * Cookie头将被添加到PushBuilder中，除非{@link Cookie#getMaxAge()} &lt;=0，
+ * 在这种情况下，Cookie将从构建器中移除。</li>
  *
  * </ul>
  *
  * <p>
- * The {@link #path} method must be called on the {@code PushBuilder} instance before the call to {@link #push}. Failure
- * to do so must cause an exception to be thrown from {@link #push}, as specified in that method.
+ * 在调用{@link #push}之前，必须在{@code PushBuilder}实例上调用{@link #path}方法。
+ * 如该方法所述，未能这样做必须导致从{@link #push}抛出异常。
  * </p>
- * 
+ *
  * <p>
- * A PushBuilder can be customized by chained calls to mutator methods before the {@link #push()} method is called to
- * initiate an asynchronous push request with the current state of the builder. After the call to {@link #push()}, the
- * builder may be reused for another push, however the implementation must make it so the {@link #path(String)} and
- * conditional headers (defined in RFC 7232) values are cleared before returning from {@link #push}. All other values
- * are retained over calls to {@link #push()}.
+ * 在调用{@link #push()}方法以使用构建器的当前状态启动异步推送请求之前，
+ * 可以通过链式调用突变方法来定制PushBuilder。调用{@link #push()}之后，
+ * 构建器可以重用于另一次推送，但是实现必须确保在从{@link #push}返回之前
+ * 清除{@link #path(String)}和条件头（在RFC 7232中定义）的值。
+ * 所有其他值在多次调用{@link #push()}期间都会保留。
  *
  * @since Servlet 4.0
  */
 public interface PushBuilder {
+
     /**
-     * <p>
-     * Set the method to be used for the push.
-     * </p>
-     * 
-     * @param method the method to be used for the push.
+     * <p>设置用于推送的HTTP方法。</p>
      *
-     * @throws NullPointerException     if the argument is {@code null}
-     *
-     * @throws IllegalArgumentException if the argument is the empty String, or any non-cacheable or unsafe methods
-     *                                  defined in RFC 7231, which are POST, PUT, DELETE, CONNECT, OPTIONS and TRACE.
-     *
-     * @return this builder.
+     * @param method 用于推送的HTTP方法
+     * @throws NullPointerException     如果参数为{@code null}
+     * @throws IllegalArgumentException 如果参数为空字符串，或任何RFC 7231中定义的不可缓存或不安全的方法，
+     *                                  包括POST、PUT、DELETE、CONNECT、OPTIONS和TRACE。
+     * @return 当前构建器
      */
     public PushBuilder method(String method);
 
     /**
-     * Set the query string to be used for the push.
+     * 设置用于推送的查询字符串。
      *
-     * The query string will be appended to any query String included in a call to {@link #path(String)}. Any duplicate
-     * parameters must be preserved. This method should be used instead of a query in {@link #path(String)} when
-     * multiple {@link #push()} calls are to be made with the same query string.
-     * 
-     * @param queryString the query string to be used for the push.
-     * @return this builder.
+     * 查询字符串将附加到调用{@link #path(String)}时包含的任何查询字符串。
+     * 必须保留所有重复的参数。
+     * 当需要多次使用相同查询字符串进行{@link #push()}调用时，应使用此方法而不是在{@link #path(String)}中包含查询。
+     *
+     * @param queryString 用于推送的查询字符串
+     * @return 当前构建器
      */
     public PushBuilder queryString(String queryString);
 
     /**
-     * Set the SessionID to be used for the push. The session ID will be set in the same way it was on the associated
-     * request (ie as a cookie if the associated request used a cookie, or as a url parameter if the associated request
-     * used a url parameter). Defaults to the requested session ID or any newly assigned session id from a newly created
-     * session.
-     * 
-     * @param sessionId the SessionID to be used for the push.
-     * @return this builder.
+     * 设置用于推送的会话ID。
+     * 会话ID的设置方式将与关联请求中的方式相同
+     * （即如果关联请求使用了cookie，则作为cookie设置；如果关联请求使用了URL参数，则作为URL参数设置）。
+     * 默认为请求的会话ID或新创建会话中新分配的会话ID。
+     *
+     * @param sessionId 用于推送的会话ID
+     * @return 当前构建器
      */
     public PushBuilder sessionId(String sessionId);
 
     /**
-     * <p>
-     * Set a request header to be used for the push. If the builder has an existing header with the same name, its value
-     * is overwritten.
-     * </p>
+     * <p>设置用于推送的请求头。如果构建器已存在同名的请求头，则其值将被覆盖。</p>
      *
-     * @param name  The header name to set
-     * @param value The header value to set
-     * @return this builder.
+     * @param name  要设置的请求头名称
+     * @param value 要设置的请求头值
+     * @return 当前构建器
      */
     public PushBuilder setHeader(String name, String value);
 
     /**
-     * <p>
-     * Add a request header to be used for the push.
-     * </p>
-     * 
-     * @param name  The header name to add
-     * @param value The header value to add
-     * @return this builder.
+     * <p>添加用于推送的请求头。</p>
+     *
+     * @param name  要添加的请求头名称
+     * @param value 要添加的请求头值
+     * @return 当前构建器
      */
     public PushBuilder addHeader(String name, String value);
 
     /**
-     * <p>
-     * Remove the named request header. If the header does not exist, take no action.
-     * </p>
+     * <p>移除指定名称的请求头。如果该请求头不存在，则不执行任何操作。</p>
      *
-     * @param name The name of the header to remove
-     * @return this builder.
+     * @param name 要移除的请求头名称
+     * @return 当前构建器
      */
     public PushBuilder removeHeader(String name);
 
     /**
-     * Set the URI path to be used for the push. The path may start with "/" in which case it is treated as an absolute
-     * path, otherwise it is relative to the context path of the associated request. There is no path default and
-     * {@link #path(String)} must be called before every call to {@link #push()}. If a query string is present in the
-     * argument {@code path}, its contents must be merged with the contents previously passed to {@link #queryString},
-     * preserving duplicates.
+     * 设置用于推送的URI路径。
+     * 路径可以以"/"开头，此时将被视为绝对路径；否则将被视为相对于关联请求的上下文路径的相对路径。
+     * 没有默认路径，每次调用{@link #push()}之前都必须调用{@link #path(String)}方法。
+     * 如果参数{@code path}中包含查询字符串，则其内容必须与先前传递给{@link #queryString}的内容合并，并保留重复参数。
      *
-     * @param path the URI path to be used for the push, which may include a query string.
-     * @return this builder.
+     * @param path 用于推送的URI路径，可以包含查询字符串
+     * @return 当前构建器
      */
     public PushBuilder path(String path);
 
     /**
-     * Push a resource given the current state of the builder, the method must be non-blocking.
+     * 根据构建器的当前状态推送资源，该方法必须是非阻塞的。
      *
      * <p>
-     * Push a resource based on the current state of the PushBuilder. Calling this method does not guarantee the
-     * resource will actually be pushed, since it is possible the client can decline acceptance of the pushed resource
-     * using the underlying HTTP/2 protocol.
-     * </p>
+     *     基于PushBuilder的当前状态推送资源。
+     *     调用此方法并不保证资源一定会被实际推送，因为客户端可能使用底层HTTP/2协议拒绝接收推送的资源。
      *
      * <p>
-     * If the builder has a session ID, then the pushed request will include the session ID either as a Cookie or as a
-     * URI parameter as appropriate. The builders query string is merged with any passed query string.
-     * </p>
+     *     如果构建器包含会话ID，则推送的请求将根据需要包含该会话ID，可能是作为Cookie或URI参数。
+     *     构建器的查询字符串将与任何传递的查询字符串合并。
      *
      * <p>
-     * Before returning from this method, the builder has its path, conditional headers (defined in RFC 7232) nulled.
-     * All other fields are left as is for possible reuse in another push.
-     * </p>
+     *     从此方法返回之前，构建器会将其路径和条件头（在RFC 7232中定义）置为空。
+     *     所有其他字段保持不变，以便在可能的另一次推送中重用。
      *
-     * @throws IllegalStateException if there was no call to {@link #path} on this instance either between its
-     *                               instantiation or the last call to {@code push()} that did not throw an
-     *                               IllegalStateException.
+     * @throws IllegalStateException 如果在此实例实例化后或上次未抛出IllegalStateException的
+     *                              {@code push()}调用之后，没有调用{@link #path}方法
      */
     public void push();
 
     /**
-     * Return the method to be used for the push.
+     * 返回用于推送的HTTP方法。
      *
-     * @return the method to be used for the push.
+     * @return 用于推送的HTTP方法
      */
     public String getMethod();
 
     /**
-     * Return the query string to be used for the push.
+     * 返回用于推送的查询字符串。
      *
-     * @return the query string to be used for the push.
+     * @return 用于推送的查询字符串
      */
     public String getQueryString();
 
     /**
-     * Return the SessionID to be used for the push.
-     * 
-     * @return the SessionID to be used for the push.
+     * 返回用于推送的会话ID。
+     *
+     * @return 用于推送的会话ID
      */
     public String getSessionId();
 
     /**
-     * Return the set of header to be used for the push.
+     * 返回用于推送的请求头集合。
      *
      * <p>
-     * The returned set is not backed by the {@code PushBuilder} object, so changes in the returned set are not
-     * reflected in the {@code PushBuilder} object, and vice-versa.
-     * </p>
+     *     返回的集合不受{@code PushBuilder}对象支持，因此对返回集合的更改不会反映在{@code PushBuilder}对象中，反之亦然。
      *
-     * @return the set of header to be used for the push.
+     * @return 用于推送的请求头集合
      */
     public Set<String> getHeaderNames();
 
     /**
-     * Return the header of the given name to be used for the push.
-     * 
-     * @param name the name of the header
+     * 返回用于推送的指定名称的请求头。
      *
-     * @return the header of the given name to be used for the push.
+     * @param name 请求头名称
+     * @return 用于推送的指定名称的请求头
      */
     public String getHeader(String name);
 
     /**
-     * Return the URI path to be used for the push.
+     * 返回用于推送的URI路径。
      *
-     * @return the URI path to be used for the push.
+     * @return 用于推送的URI路径
      */
     public String getPath();
 }
