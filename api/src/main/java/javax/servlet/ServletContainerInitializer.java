@@ -20,33 +20,26 @@ package javax.servlet;
 import java.util.Set;
 
 /**
- * Interface which allows a library/runtime to be notified of a web application's startup phase and perform any required
- * programmatic registration of servlets, filters, and listeners in response to it.
+ * 该接口允许库/运行时环境接收Web应用启动阶段的通知，并据此执行所需的Servlet、Filter及监听器的程序化注册操作。
  *
  * <p>
- * Implementations of this interface may be annotated with {@link javax.servlet.annotation.HandlesTypes HandlesTypes},
- * in order to receive (at their {@link #onStartup} method) the Set of application classes that implement, extend, or
- * have been annotated with the class types specified by the annotation.
- * 
- * <p>
- * If an implementation of this interface does not use <tt>HandlesTypes</tt> annotation, or none of the application
- * classes match the ones specified by the annotation, the container must pass a <tt>null</tt> Set of classes to
- * {@link #onStartup}.
+ *     此接口的实现类可以用{@link javax.servlet.annotation.HandlesTypes}注解进行修饰，
+ *     以便在其{@link #onStartup}方法中接收实现了指定类型、继承了指定类型或被指定类型注解修饰的应用类集合。
  *
  * <p>
- * When examining the classes of an application to see if they match any of the criteria specified by the
- * <tt>HandlesTypes</tt> annotation of a <tt>ServletContainerInitializer</tt>, the container may run into classloading
- * problems if any of the application's optional JAR files are missing. Because the container is not in a position to
- * decide whether these types of classloading failures will prevent the application from working correctly, it must
- * ignore them, while at the same time providing a configuration option that would log them.
+ *     若此接口的实现类未使用<tt>HandlesTypes</tt>注解，或没有任何应用类符合注解所指定的类型要求，
+ *     则容器必须向{@link #onStartup}方法传递一个<tt>null</tt>类集合。
  *
  * <p>
- * Implementations of this interface must be declared by a JAR file resource located inside the
- * <tt>META-INF/services</tt> directory and named for the fully qualified class name of this interface, and will be
- * discovered using the runtime's service provider lookup mechanism or a container specific mechanism that is
- * semantically equivalent to it. In either case, <tt>ServletContainerInitializer</tt> services from web fragment JAR
- * files excluded from an absolute ordering must be ignored, and the order in which these services are discovered must
- * follow the application's classloading delegation model.
+ *     当容器检查应用类是否符合<tt>ServletContainerInitializer</tt>的<tt>HandlesTypes</tt>注解所设定的条件时，
+ *     如果应用缺失某些可选JAR文件，可能会遇到类加载问题。由于容器无法判断这类类加载失败是否会影响应用正常运行，
+ *     所以容器虽然会选择忽略类加载失败的问题继续启动，但也会提供需记录相关失败的日志的配置选项。
+ *
+ * <p>
+ *     此接口的实现类必须通过位于<tt>META-INF/services</tt>目录下的JAR文件资源进行声明，
+ *     该资源需以本接口的全限定类名命名，并将通过运行时的服务提供者查找机制或容器特有的语义等效机制被发现。
+ *     无论采用哪种方式，从绝对排序中排除的Web片段JAR文件中的<tt>ServletContainerInitializer</tt>服务必须被忽略，
+ *     且这些服务的发现顺序必须遵循应用的类加载委托模型。
  *
  * @see javax.servlet.annotation.HandlesTypes
  *
@@ -55,25 +48,18 @@ import java.util.Set;
 public interface ServletContainerInitializer {
 
     /**
-     * Notifies this <tt>ServletContainerInitializer</tt> of the startup of the application represented by the given
-     * <tt>ServletContext</tt>.
+     * 通知此 <tt>ServletContainerInitializer</tt> 由给定 <tt>ServletContext</tt> 所代表的应用程序已启动。
      *
      * <p>
-     * If this <tt>ServletContainerInitializer</tt> is bundled in a JAR file inside the <tt>WEB-INF/lib</tt> directory
-     * of an application, its <tt>onStartup</tt> method will be invoked only once during the startup of the bundling
-     * application. If this <tt>ServletContainerInitializer</tt> is bundled inside a JAR file outside of any
-     * <tt>WEB-INF/lib</tt> directory, but still discoverable as described above, its <tt>onStartup</tt> method will be
-     * invoked every time an application is started.
+     *     若此 <tt>ServletContainerInitializer</tt> 被置于应用程序 <tt>WEB-INF/lib</tt> 目录下的 JAR 文件中，
+     *     则其 <tt>onStartup</tt> 方法仅在捆绑应用程序启动时调用一次。
+     *     若此 <tt>ServletContainerInitializer</tt>被置于任何 <tt>WEB-INF/lib</tt> 目录之外的 JAR 文件中（但仍可通过上述机制被发现），
+     *     则每次应用程序启动时都会调用其 <tt>onStartup</tt> 方法。
      *
-     * @param c   the Set of application classes that extend, implement, or have been annotated with the class types
-     *            specified by the {@link javax.servlet.annotation.HandlesTypes HandlesTypes} annotation, or
-     *            <tt>null</tt> if there are no matches, or this <tt>ServletContainerInitializer</tt> has not been
-     *            annotated with <tt>HandlesTypes</tt>
-     *
-     * @param ctx the <tt>ServletContext</tt> of the web application that is being started and in which the classes
-     *            contained in <tt>c</tt> were found
-     *
-     * @throws ServletException if an error has occurred
+     * @param c   扩展、实现或被 {@link javax.servlet.annotation.HandlesTypes HandlesTypes} 注解所指定类型标注的应用程序类集合；
+     *            若不存在匹配项，或此 <tt>ServletContainerInitializer</tt> 未标注 <tt>HandlesTypes</tt> 注解，则返回 <tt>null</tt>
+     * @param ctx 正在启动的 Web 应用的 <tt>ServletContext</tt>，其中包含了在 <tt>c</tt> 中发现的类
+     * @throws ServletException 若发生错误时抛出
      */
     public void onStartup(Set<Class<?>> c, ServletContext ctx) throws ServletException;
 }
