@@ -25,177 +25,151 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 
 /**
- *
- * Extends the {@link javax.servlet.ServletRequest} interface to provide request information for HTTP servlets.
+ * 扩展 {@link javax.servlet.ServletRequest} 接口，为 HTTP Servlet 提供请求信息。
  *
  * <p>
- * The servlet container creates an <code>HttpServletRequest</code> object and passes it as an argument to the servlet's
- * service methods (<code>doGet</code>, <code>doPost</code>, etc).
- *
+ *     Servlet 容器会创建一个 <code>HttpServletRequest</code> 对象，
+ *     并将其作为参数传递给 Servlet 的服务方法（<code>doGet</code>、<code>doPost</code> 等）。
  *
  * @author Various
  */
 public interface HttpServletRequest extends ServletRequest {
 
-    /**
-     * String identifier for Basic authentication. Value "BASIC"
-     */
+    /** 基本认证的字符串标识符。值为"BASIC" */
     public static final String BASIC_AUTH = "BASIC";
 
-    /**
-     * String identifier for Form authentication. Value "FORM"
-     */
+    /** 表单认证的字符串标识符。值为"FORM" */
     public static final String FORM_AUTH = "FORM";
 
-    /**
-     * String identifier for Client Certificate authentication. Value "CLIENT_CERT"
-     */
+    /** 客户端证书认证的字符串标识符。值为"CLIENT_CERT" */
     public static final String CLIENT_CERT_AUTH = "CLIENT_CERT";
 
-    /**
-     * String identifier for Digest authentication. Value "DIGEST"
-     */
+    /** 摘要认证的字符串标识符。值为"DIGEST" */
     public static final String DIGEST_AUTH = "DIGEST";
 
     /**
-     * Returns the name of the authentication scheme used to protect the servlet. All servlet containers support basic,
-     * form and client certificate authentication, and may additionally support digest authentication. If the servlet is
-     * not authenticated <code>null</code> is returned.
+     * 返回用于保护 Servlet 的认证方案名称。
+     * 所有 Servlet 容器都支持基本认证、表单认证和客户端证书认证，并可能额外支持摘要认证。
+     * 如果 Servlet 未经过认证，则返回 <code>null</code>。
      *
-     * <p>
-     * Same as the value of the CGI variable AUTH_TYPE.
+     * <p>与 CGI 变量 AUTH_TYPE 的值相同。
      *
-     * @return one of the static members BASIC_AUTH, FORM_AUTH, CLIENT_CERT_AUTH, DIGEST_AUTH (suitable for ==
-     *         comparison) or the container-specific string indicating the authentication scheme, or <code>null</code>
-     *         if the request was not authenticated.
+     * @return 用于 == 比较的静态成员 BASIC_AUTH, FORM_AUTH, CLIENT_CERT_AUTH, DIGEST_AUTH 之一，
+     *         或表示认证方案的容器特定字符串，如果请求未认证则返回 <code>null</code>
      */
     public String getAuthType();
 
     /**
-     * Returns an array containing all of the <code>Cookie</code> objects the client sent with this request. This method
-     * returns <code>null</code> if no cookies were sent.
+     * 返回包含客户端随此请求发送的所有 <code>Cookie</code> 对象的数组。
+     * 如果未发送任何 cookies，则此方法返回 <code>null</code>。
      *
-     * @return an array of all the <code>Cookies</code> included with this request, or <code>null</code> if the request
-     *         has no cookies
+     * @return 包含此请求中所有 <code>Cookie</code> 的数组，如果请求没有 cookies 则返回 <code>null</code>
      */
     public Cookie[] getCookies();
 
     /**
-     * Returns the value of the specified request header as a <code>long</code> value that represents a
-     * <code>Date</code> object. Use this method with headers that contain dates, such as
-     * <code>If-Modified-Since</code>.
+     * 返回指定请求头的值作为表示 <code>Date</code> 对象的 <code>long</code> 值。
+     * 将此方法用于包含日期信息的请求头，例如 <code>If-Modified-Since</code>。
      *
      * <p>
-     * The date is returned as the number of milliseconds since January 1, 1970 GMT. The header name is case
-     * insensitive.
+     *     日期返回为自 1970 年 1 月 1 日 GMT 以来的毫秒数。请求头名称不区分大小写。
      *
      * <p>
-     * If the request did not have a header of the specified name, this method returns -1. If the header can't be
-     * converted to a date, the method throws an <code>IllegalArgumentException</code>.
+     *     如果请求中没有指定名称的请求头，则该方法返回 -1。
+     *     如果请求头值无法转换为日期，该方法将抛出 <code>IllegalArgumentException</code>。
      *
-     * @param name a <code>String</code> specifying the name of the header
-     *
-     * @return a <code>long</code> value representing the date specified in the header expressed as the number of
-     *         milliseconds since January 1, 1970 GMT, or -1 if the named header was not included with the request
-     *
-     * @exception IllegalArgumentException If the header value can't be converted to a date
+     * @param name 指定请求头名称的 <code>String</code>
+     * @return 表示请求头中指定日期的 <code>long</code> 值（自 1970 年 1 月 1 日 GMT 以来的毫秒数），
+     *         如果请求中未包含指定请求头则返回 -1
+     * @exception IllegalArgumentException 如果请求头值无法转换为日期
      */
     public long getDateHeader(String name);
 
     /**
-     * Returns the value of the specified request header as a <code>String</code>. If the request did not include a
-     * header of the specified name, this method returns <code>null</code>. If there are multiple headers with the same
-     * name, this method returns the first head in the request. The header name is case insensitive. You can use this
-     * method with any request header.
+     * 返回指定请求头的值作为 <code>String</code>。
+     * 如果请求不包含指定名称的请求头，则此方法返回 <code>null</code>。
+     * 如果存在多个相同名称的请求头，则此方法返回请求中的第一个头。请求头名称不区分大小写。
+     * 此方法可用于任何请求头。
      *
-     * @param name a <code>String</code> specifying the header name
-     *
-     * @return a <code>String</code> containing the value of the requested header, or <code>null</code> if the request
-     *         does not have a header of that name
+     * @param name 指定请求头名称的 <code>String</code>
+     * @return 包含请求头值的 <code>String</code>，如果请求没有该名称的请求头则返回 <code>null</code>
      */
     public String getHeader(String name);
 
+
     /**
-     * Returns all the values of the specified request header as an <code>Enumeration</code> of <code>String</code>
-     * objects.
+     * 以 <code>String</code> 对象的 <code>Enumeration</code> 形式返回指定请求头的所有值。
      *
      * <p>
-     * Some headers, such as <code>Accept-Language</code> can be sent by clients as several headers each with a
-     * different value rather than sending the header as a comma separated list.
+     *     某些请求头（例如 <code>Accept-Language</code>）可能被客户端作为多个具有不同值的头部发送，
+     *     而不是以逗号分隔列表的形式发送单个头部。
      *
      * <p>
-     * If the request did not include any headers of the specified name, this method returns an empty
-     * <code>Enumeration</code>. The header name is case insensitive. You can use this method with any request header.
+     *     如果请求不包含任何指定名称的请求头，则此方法返回一个空的 <code>Enumeration</code>。
+     *     请求头名称不区分大小写。此方法可用于任何请求头。
      *
-     * @param name a <code>String</code> specifying the header name
-     *
-     * @return an <code>Enumeration</code> containing the values of the requested header. If the request does not have
-     *         any headers of that name return an empty enumeration. If the container does not allow access to header
-     *         information, return null
+     * @param name 指定请求头名称的 <code>String</code>
+     * @return 包含请求头值的 <code>Enumeration</code>。如果请求没有任何该名称的请求头，则返回空枚举。
+     *         如果容器不允许访问请求头信息，则返回 null
      */
     public Enumeration<String> getHeaders(String name);
 
     /**
-     * Returns an enumeration of all the header names this request contains. If the request has no headers, this method
-     * returns an empty enumeration.
+     * 返回此请求包含的所有请求头名称的枚举。如果请求没有任何请求头，则此方法返回空枚举。
      *
      * <p>
-     * Some servlet containers do not allow servlets to access headers using this method, in which case this method
-     * returns <code>null</code>
+     *     某些 Servlet 容器不允许 Servlet 使用此方法访问请求头，在这种情况下，此方法返回 <code>null</code>。
      *
-     * @return an enumeration of all the header names sent with this request; if the request has no headers, an empty
-     *         enumeration; if the servlet container does not allow servlets to use this method, <code>null</code>
+     * @return 包含此请求发送的所有请求头名称的枚举；如果请求没有请求头，则返回空枚举；
+     *         如果 Servlet 容器不允许 Servlet 使用此方法，则返回 <code>null</code>
      */
     public Enumeration<String> getHeaderNames();
 
     /**
-     * Returns the value of the specified request header as an <code>int</code>. If the request does not have a header
-     * of the specified name, this method returns -1. If the header cannot be converted to an integer, this method
-     * throws a <code>NumberFormatException</code>.
+     * 将指定请求头的值作为 <code>int</code> 类型返回。
+     * 如果请求不包含指定名称的请求头，则此方法返回 -1。
+     * 如果请求头值无法转换为整数，则此方法抛出 <code>NumberFormatException</code>。
      *
-     * <p>
-     * The header name is case insensitive.
+     * <p>请求头名称不区分大小写。
      *
-     * @param name a <code>String</code> specifying the name of a request header
-     *
-     * @return an integer expressing the value of the request header or -1 if the request doesn't have a header of this
-     *         name
-     *
-     * @exception NumberFormatException If the header value can't be converted to an <code>int</code>
+     * @param name 指定请求头名称的 <code>String</code>
+     * @return 表示请求头值的整数，如果请求没有该名称的请求头则返回 -1
+     * @exception NumberFormatException 如果请求头值无法转换为 <code>int</code>
      */
     public int getIntHeader(String name);
 
     /**
      * <p>
-     * Return the {@link HttpServletMapping} by which the {@link HttpServlet} for this {@code HttpServletRequest} was
-     * invoked. The mappings for any applicable {@link javax.servlet.Filter}s are not indicated in the result. If the
-     * currently active {@link javax.servlet.Servlet} invocation was obtained by a call to
-     * {@link ServletRequest#getRequestDispatcher} followed by a call to {@link RequestDispatcher#forward}, the returned
-     * {@code
-     * HttpServletMapping} is the one corresponding to the path used to obtain the {@link RequestDispatcher}. If the
-     * currently active {@code Servlet} invocation was obtained by a call to {@link ServletRequest#getRequestDispatcher}
-     * followed by a call to {@link RequestDispatcher#include}, the returned {@code
-     * HttpServletMapping} is the one corresponding to the path that caused the first {@code Servlet} in the invocation
-     * sequence to be invoked. If the currently active {@code Servlet} invocation was obtained by a call to
-     * {@link javax.servlet.AsyncContext#dispatch}, the returned {@code
-     * HttpServletMapping} is the one corresponding to the path that caused the first {@code Servlet} in the invocation
-     * sequence to be invoked. See {@link javax.servlet.RequestDispatcher#FORWARD_MAPPING},
-     * {@link javax.servlet.RequestDispatcher#INCLUDE_MAPPING} and {@link javax.servlet.AsyncContext#ASYNC_MAPPING} for
-     * additional request attributes related to {@code HttpServletMapping}. If the currently active {@code Servlet}
-     * invocation was obtained by a call to {@link javax.servlet.ServletContext#getNamedDispatcher}, the returned
-     * {@code HttpServletMapping} is the one corresponding to the path for the mapping last applied to this request.
-     * </p>
-     * 
-     * <p>
-     * The returned object is immutable. Servlet 4.0 compliant implementations must override this method.
-     * </p>
-     * 
-     * @implSpec The default implementation returns a {@code
-     * HttpServletMapping} that returns the empty string for the match value, pattern and servlet name and {@code null}
-     *           for the match type.
+     *     返回调用此 {@code HttpServletRequest} 对应的 {@link HttpServlet} 时所使用的 {@link HttpServletMapping}。
+     *     结果中不包含任何适用的 {@link javax.servlet.Filter} 的映射信息。
      *
-     * @return An instance of {@code HttpServletMapping} describing the manner in which the current request was invoked.
-     * 
+     * <p>
+     *     如果当前活动的 {@link javax.servlet.Servlet} 调用是通过调用 {@link ServletRequest#getRequestDispatcher}
+     *     后再调用 {@link RequestDispatcher#forward} 获得的，则返回的 {@code HttpServletMapping}
+     *     对应于用于获取 {@link RequestDispatcher} 的路径。
+     *
+     * <p>
+     *     如果当前活动的 {@code Servlet} 调用是通过调用 {@link ServletRequest#getRequestDispatcher} 后
+     *     再调用 {@link RequestDispatcher#include} 获得的，
+     *     则返回的 {@code HttpServletMapping} 对应于导致调用序列中第一个 {@code Servlet} 的路径。
+     *
+     * <p>
+     *     如果当前活动的 {@code Servlet} 调用是通过调用 {@link javax.servlet.AsyncContext#dispatch} 获得的，
+     *     则返回的 {@code HttpServletMapping} 对应于导致调用序列中第一个 {@code Servlet} 的路径。
+     *
+     * <p>
+     *     有关 {@code HttpServletMapping} 的其他请求属性，请参阅 {@link javax.servlet.RequestDispatcher#FORWARD_MAPPING}、
+     *     {@link javax.servlet.RequestDispatcher#INCLUDE_MAPPING} 和 {@link javax.servlet.AsyncContext#ASYNC_MAPPING}。
+     *
+     * <p>
+     *     如果当前活动的 {@code Servlet} 调用是通过调用 {@link javax.servlet.ServletContext#getNamedDispatcher} 获得的，
+     *     则返回的 {@code HttpServletMapping} 对应于最后应用于此请求的映射路径。
+     *
+     * <p>
+     *     返回的对象是不可变的。符合 Servlet 4.0 规范的实现必须重写此方法。
+     *
+     * @implSpec 默认实现返回一个 {@code HttpServletMapping}，其匹配值、模式和 servlet 名称均返回空字符串，匹配类型返回 {@code null}。
+     * @return 描述当前请求调用方式的 {@code HttpServletMapping} 实例
      * @since 4.0
      */
     default public HttpServletMapping getHttpServletMapping() {
@@ -231,55 +205,46 @@ public interface HttpServletRequest extends ServletRequest {
     }
 
     /**
-     * Returns the name of the HTTP method with which this request was made, for example, GET, POST, or PUT. Same as the
-     * value of the CGI variable REQUEST_METHOD.
+     * 返回此请求使用的 HTTP 方法名称，例如 GET、POST 或 PUT。
+     * 与 CGI 变量 REQUEST_METHOD 的值相同。
      *
-     * @return a <code>String</code> specifying the name of the method with which this request was made
+     * @return 指定此请求所用方法名称的 <code>String</code>
      */
     public String getMethod();
 
     /**
-     * Returns any extra path information associated with the URL the client sent when it made this request. The extra
-     * path information follows the servlet path but precedes the query string and will start with a "/" character.
+     * 返回客户端发送此请求时 URL 中包含的额外路径信息。
+     * 额外路径信息位于 servlet 路径之后、查询字符串之前，并以 "/" 字符开头。
      *
-     * <p>
-     * This method returns <code>null</code> if there was no extra path information.
+     * <p>如果没有额外路径信息，则此方法返回 <code>null</code>。
      *
-     * <p>
-     * Same as the value of the CGI variable PATH_INFO.
+     * <p>与 CGI 变量 PATH_INFO 的值相同。
      *
-     * @return a <code>String</code>, decoded by the web container, specifying extra path information that comes after
-     *         the servlet path but before the query string in the request URL; or <code>null</code> if the URL does not
-     *         have any extra path information
+     * @return 经过 Web 容器解码的 <code>String</code>，指定请求 URL 中位于 servlet 路径之后、
+     *         查询字符串之前的额外路径信息；如果 URL 没有任何额外路径信息则返回 <code>null</code>
      */
     public String getPathInfo();
 
     /**
-     * Returns any extra path information after the servlet name but before the query string, and translates it to a
-     * real path. Same as the value of the CGI variable PATH_TRANSLATED.
+     * 返回 servlet 名称之后、查询字符串之前的额外路径信息，并将其转换为真实路径。与 CGI 变量 PATH_TRANSLATED 的值相同。
      *
      * <p>
-     * If the URL does not have any extra path information, this method returns <code>null</code> or the servlet
-     * container cannot translate the virtual path to a real path for any reason (such as when the web application is
-     * executed from an archive).
+     *     如果 URL 没有任何额外路径信息，则此方法返回 <code>null</code>；
+     *     或者当 servlet 容器因任何原因（例如从归档文件执行 Web 应用程序时）无法将虚拟路径转换为真实路径时也会返回 null。
      *
-     * The web container does not decode this string.
+     * <p>Web 容器不会对此字符串进行解码。
      *
-     * @return a <code>String</code> specifying the real path, or <code>null</code> if the URL does not have any extra
-     *         path information
+     * @return 指定真实路径的 <code>String</code>，如果 URL 没有任何额外路径信息则返回 <code>null</code>
      */
     public String getPathTranslated();
 
     /**
-     * Instantiates a new instance of {@link PushBuilder} for issuing server push responses from the current request.
-     * This method returns null if the current connection does not support server push, or server push has been disabled
-     * by the client via a {@code SETTINGS_ENABLE_PUSH} settings frame value of {@code 0} (zero).
+     * 实例化一个新的 {@link PushBuilder} 实例，用于从当前请求发出服务器推送响应。
+     * 如果当前连接不支持服务器推送，或客户端通过值为 {@code 0}（零）的 {@code SETTINGS_ENABLE_PUSH}
+     * 设置帧禁用了服务器推送，则此方法返回 null。
      *
-     * @implSpec The default implementation returns null.
-     *
-     * @return a {@link PushBuilder} for issuing server push responses from the current request, or null if push is not
-     *         supported
-     *
+     * @implSpec 默认实现返回 null。
+     * @return 用于从当前请求发出服务器推送响应的 {@link PushBuilder}，如果不支持推送则返回 null
      * @since Servlet 4.0
      */
     default public PushBuilder newPushBuilder() {
@@ -287,19 +252,16 @@ public interface HttpServletRequest extends ServletRequest {
     }
 
     /**
-     * Returns the portion of the request URI that indicates the context of the request. The context path always comes
-     * first in a request URI. The path starts with a "/" character but does not end with a "/" character. For servlets
-     * in the default (root) context, this method returns "". The container does not decode this string.
+     * 返回请求 URI 中指示请求上下文的部分。上下文路径总是位于请求 URI 的开头。
+     * 路径以 "/" 字符开头但不以 "/" 字符结尾。对于默认（根）上下文中的 servlet，此方法返回 ""。
+     * 容器不会解码此字符串。
      *
      * <p>
-     * It is possible that a servlet container may match a context by more than one context path. In such cases this
-     * method will return the actual context path used by the request and it may differ from the path returned by the
-     * {@link javax.servlet.ServletContext#getContextPath()} method. The context path returned by
-     * {@link javax.servlet.ServletContext#getContextPath()} should be considered as the prime or preferred context path
-     * of the application.
+     * Servlet 容器可能会通过多个上下文路径匹配上下文。在这种情况下，此方法将返回请求实际使用的上下文路径，
+     * 该路径可能与 {@link javax.servlet.ServletContext#getContextPath()} 方法返回的路径不同。
+     * {@link javax.servlet.ServletContext#getContextPath()} 返回的上下文路径应视为应用程序的主上下文路径或首选上下文路径。
      *
-     * @return a <code>String</code> specifying the portion of the request URI that indicates the context of the request
-     *
+     * @return 指定请求 URI 中指示请求上下文部分的 <code>String</code>
      * @see javax.servlet.ServletContext#getContextPath()
      */
     public String getContextPath();
@@ -642,7 +604,7 @@ public interface HttpServletRequest extends ServletRequest {
      * upgrade processing.
      *
      * @param              <T> The {@code Class}, which extends {@link HttpUpgradeHandler}, of the {@code handlerClass}.
-     * 
+     *
      * @param handlerClass The <code>HttpUpgradeHandler</code> class used for the upgrade.
      *
      * @return an instance of the <code>HttpUpgradeHandler</code>
@@ -664,14 +626,14 @@ public interface HttpServletRequest extends ServletRequest {
      * The returned map is not backed by the {@code HttpServletRequest} object, so changes in the returned map are not
      * reflected in the {@code HttpServletRequest} object, and vice-versa.
      * </p>
-     * 
+     *
      * <p>
      * {@link #isTrailerFieldsReady()} should be called first to determine if it is safe to call this method without
      * causing an exception.
      * </p>
      *
      * @implSpec The default implementation returns an empty map.
-     * 
+     *
      * @return A map of trailer fields in which all the keys are in lowercase, regardless of the case they had at the
      *         protocol level. If there are no trailer fields, yet {@link #isTrailerFieldsReady} is returning true, the
      *         empty map is returned.
